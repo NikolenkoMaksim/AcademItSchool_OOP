@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Range/Range.iml" filepath="$PROJECT_DIR$/Range/Range.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ru.nso.oop.102020.nikolenkomaksim.iml" filepath="$PROJECT_DIR$/.idea/ru.nso.oop.102020.nikolenkomaksim.iml" />
+    </modules>
+  </component>
+</project>
