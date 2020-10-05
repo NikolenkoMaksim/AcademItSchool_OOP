@@ -1,3 +1,5 @@
+package WorkingWithRange1;
+
 import java.util.Scanner;
 
 import ClassRange.Range;

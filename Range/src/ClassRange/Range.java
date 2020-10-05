@@ -43,8 +43,7 @@ public class Range {
         }
     }
 
-    public void findIntersection(Range range1, Range range2) {
-
+    public void getIntersection(Range range1, Range range2) {
         double from1 = range1.getFrom();
         double to1 = range1.getTo();
         double from2 = range2.getFrom();
@@ -73,5 +72,72 @@ public class Range {
                 setTo(to2);
             }
         }
+    }
+
+    public Range[] getUnion(Range range2) {
+        Range range1 = new Range(from, to);
+        double from1 = from;
+        double to1 = to;
+        double from2 = range2.getFrom();
+        double to2 = range2.getTo();
+
+        Range[] union = {null, null};
+
+        if (from1 < from2) {
+            if (to1 < from2) {
+                union[1] = range2;
+            } else if (to1 < to2) {
+                range1.setTo(to2);
+            }
+
+            union[0] = range1;
+        } else {
+            if (to2 < from1) {
+                union[0] = range2;
+                union[1] = range1;
+            } else if (to2 > to1) {
+                union[0] = range2;
+            } else {
+                range1.setFrom(from2);
+                union[0] = range1;
+            }
+        }
+
+        return union;
+    }
+
+    public Range[] getDifference(Range range) {
+        Range range1 = new Range(from, to);
+        double from1 = from;
+        double to1 = to;
+        Range range2 = new Range(range.getFrom(), range.getTo());
+        double from2 = range.getFrom();
+        double to2 = range.getTo();
+
+        Range[] difference = {null, null};
+
+        if (from1 < from2) {
+            if (to1 > from2) {
+                range1.setTo(from2);
+
+                if (to1 > to2) {
+                    range2.setFrom(to2);
+                    range2.setTo(to);
+                    difference[1] = range2;
+                }
+            }
+
+            difference[0] = range1;
+
+        } else {
+            if (from1 > to2) {
+                difference[0] = range1;
+            } else if (to2 < to1) {
+                range1.setFrom(to2);
+                difference[0] = range1;
+            }
+        }
+
+        return difference;
     }
 }
