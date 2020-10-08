@@ -1,3 +1,7 @@
+package Main;
+
+import Shape.*;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -29,7 +33,7 @@ public class Main {
     public static void main(String[] args) {
         Shape[] figures = {
                 new Square(3.5),
-                new Triangle(0, 0, 6, 0, 0, 7),
+                new Triangle(0, 0, 5, 0, 0, 7),
                 new Rectangle(4, 3),
                 new Circle(1),
                 new Square(2),

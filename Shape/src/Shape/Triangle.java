@@ -1,3 +1,5 @@
+package Shape;
+
 public class Triangle implements Shape {
     private double x1;
     private double y1;
@@ -6,8 +8,7 @@ public class Triangle implements Shape {
     private double x3;
     private double y3;
 
-    public Triangle(double x1, double y1, double x2, double y2,
-                    double x3, double y3) {
+    public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
         final double epsilon = 1.0e-10;
 
         if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
@@ -47,8 +48,8 @@ public class Triangle implements Shape {
         double perimeter = 0;
         double[] triangleSideLengths = getTriangleSideLengths();
 
-        for (int i = 0; i < triangleSideLengths.length; i++) {
-            perimeter += triangleSideLengths[i];
+        for (double triangleSideLength : triangleSideLengths) {
+            perimeter += triangleSideLength;
         }
 
         return perimeter;
@@ -71,6 +72,34 @@ public class Triangle implements Shape {
         return "это треугольник со сторонами " + triangleSideLengths[0] +
                 ", " + triangleSideLengths[1] + " и " + triangleSideLengths[2] +
                 ",\nплощадью " + getArea() + " и периметром " +
-                getPerimeter();
+                getPerimeter() + ".";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (o == null || o.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Triangle t = (Triangle) o;
+        return x1 == t.x1 && x2 == t.x2 && x3 == t.x3 &&
+                y1 == t.y1 && y2 == t.y2 && y3 == t.y3;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 18;
+        int hash = 1;
+        hash = prime * hash + Double.hashCode(x1);
+        hash = prime * hash + Double.hashCode(x2);
+        hash = prime * hash + Double.hashCode(x3);
+        hash = prime * hash + Double.hashCode(y1);
+        hash = prime * hash + Double.hashCode(y2);
+        hash = prime * hash + Double.hashCode(y3);
+        return hash;
     }
 }
