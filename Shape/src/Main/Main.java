@@ -46,6 +46,5 @@ public class Main {
         Shape secondPerimeterFigure = getNByPerimeterFigure(figures, 2);
 
         System.out.println("Фигура со вторым по велечине периметром " + secondPerimeterFigure);
-
     }
 }
