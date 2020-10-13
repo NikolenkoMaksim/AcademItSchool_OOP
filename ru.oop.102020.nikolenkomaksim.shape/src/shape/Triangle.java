@@ -1,4 +1,4 @@
-package Shape;
+package shape;
 
 public class Triangle implements Shape {
     private double x1;
@@ -12,7 +12,7 @@ public class Triangle implements Shape {
         final double epsilon = 1.0e-10;
 
         if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new RuntimeException("Некорректные данные. Точки лежат на одной линии");
+            throw new IllegalArgumentException("Точки лежат на одной линии");
         }
 
         this.x1 = x1;
@@ -69,10 +69,8 @@ public class Triangle implements Shape {
     @Override
     public String toString() {
         double[] triangleSideLengths = getTriangleSideLengths();
-        return "это треугольник со сторонами " + triangleSideLengths[0] +
-                ", " + triangleSideLengths[1] + " и " + triangleSideLengths[2] +
-                ",\nплощадью " + getArea() + " и периметром " +
-                getPerimeter() + ".";
+        return "это треугольник со сторонами " + triangleSideLengths[0] + ", " + triangleSideLengths[1] +
+                " и " + triangleSideLengths[2] + ",\nплощадью " + getArea() + " и периметром " + getPerimeter() + ".";
     }
 
     @Override

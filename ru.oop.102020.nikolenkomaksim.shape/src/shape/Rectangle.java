@@ -1,4 +1,4 @@
-package Shape;
+package shape;
 
 public class Rectangle implements Shape {
     private double side1;
@@ -6,7 +6,7 @@ public class Rectangle implements Shape {
 
     public Rectangle(double side1, double side2) {
         if (side1 <= 0 || side2 <= 0) {
-            throw new RuntimeException("Некорректные данные. Строна прямоугольника меньше или равна 0");
+            throw new IllegalArgumentException("Строна прямоугольника меньше или равна 0");
         }
 
         this.side1 = side1;
@@ -35,8 +35,7 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "это прямоугольник со сторанами " + side1 +
-                " и " + side2 + ",\nплощадью " + getArea() +
+        return "это прямоугольник со сторанами " + side1 + " и " + side2 + ",\nплощадью " + getArea() +
                 " и периметром " + getPerimeter() + ".";
     }
 

@@ -1,6 +1,6 @@
-package Main;
+package main;
 
-import Shape.*;
+import shape.*;
 
 import java.util.Arrays;
 import java.util.Comparator;

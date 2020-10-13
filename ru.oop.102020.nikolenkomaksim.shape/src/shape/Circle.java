@@ -1,11 +1,11 @@
-package Shape;
+package shape;
 
 public class Circle implements Shape {
     private double radius;
 
     public Circle(double radius) {
         if (radius <= 0) {
-            throw new RuntimeException("Некорректные данные. Радиус круга меньше или равен 0");
+            throw new IllegalArgumentException("Радиус круга меньше или равен 0");
         }
 
         this.radius = radius;
@@ -33,9 +33,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "это круг с радиусом " + radius +
-                ",\nплощадью " + getArea() + " и периметром " +
-                getPerimeter() + ".";
+        return "это круг с радиусом " + radius + ",\nплощадью " + getArea() + " и периметром " + getPerimeter() + ".";
     }
 
     @Override

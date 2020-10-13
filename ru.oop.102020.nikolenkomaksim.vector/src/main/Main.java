@@ -1,6 +1,6 @@
-package Main;
+package main;
 
-import Vector.Vector;
+import vector.Vector;
 
 public class Main {
     public static void main(String[] args) {

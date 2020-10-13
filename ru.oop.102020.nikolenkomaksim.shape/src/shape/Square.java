@@ -1,11 +1,11 @@
-package Shape;
+package shape;
 
 public class Square implements Shape {
     private double side;
 
     public Square(double side) {
         if (side <= 0) {
-            throw new RuntimeException("Некорректные данные. Строна квадрата меньше или равна 0");
+            throw new IllegalArgumentException("Строна квадрата меньше или равна 0");
         }
 
         this.side = side;
@@ -33,8 +33,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "это квадварт со стороной " + side +
-                ",\nплощадью " + getArea() + " и периметром " +
+        return "это квадварт со стороной " + side + ",\nплощадью " + getArea() + " и периметром " +
                 getPerimeter() + ".";
     }
 
