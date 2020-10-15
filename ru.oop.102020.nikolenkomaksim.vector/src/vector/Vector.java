@@ -5,26 +5,6 @@ import java.util.Arrays;
 public class Vector {
     private double[] vector;
 
-    public double[] getVector() {
-        return vector;
-    }
-
-    public void setVector(double[] vector) {
-        this.vector = vector;
-    }
-
-    public void setVectorComponent(double value, int componentNumber) {
-        if (componentNumber < 0) {
-            throw new IllegalArgumentException("n < 0");
-        }
-
-        if (componentNumber >= vector.length) {
-            throw new IllegalArgumentException("n >= vector.length");
-        }
-
-        vector[componentNumber] = value;
-    }
-
     public Vector(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException("n <= 0");
@@ -72,6 +52,26 @@ public class Vector {
         for (int i = array.length; i < n; i++) {
             vector[i] = 0;
         }
+    }
+
+    public double[] getVector() {
+        return vector;
+    }
+
+    public void setVector(double[] vector) {
+        this.vector = vector;
+    }
+
+    public void setVectorComponent(double value, int componentNumber) {
+        if (componentNumber < 0) {
+            throw new IllegalArgumentException("n < 0");
+        }
+
+        if (componentNumber >= vector.length) {
+            throw new IllegalArgumentException("n >= vector.length");
+        }
+
+        vector[componentNumber] = value;
     }
 
     public int getSize() {
