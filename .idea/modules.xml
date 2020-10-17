@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ru.nso.oop.102020.nikolenkomaksim.iml" filepath="$PROJECT_DIR$/.idea/ru.nso.oop.102020.nikolenkomaksim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AcademIiSchoolOOP.iml" filepath="$PROJECT_DIR$/.idea/AcademIiSchoolOOP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Matrix/Matrix.iml" filepath="$PROJECT_DIR$/Matrix/Matrix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Range/Range.iml" filepath="$PROJECT_DIR$/Range/Range.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Shape/Shape.iml" filepath="$PROJECT_DIR$/Shape/Shape.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vector/Vector.iml" filepath="$PROJECT_DIR$/Vector/Vector.iml" />
       <module fileurl="file://$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.matrix/ru.oop.102020.nikolenkomaksim.matrix.iml" filepath="$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.matrix/ru.oop.102020.nikolenkomaksim.matrix.iml" />
       <module fileurl="file://$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.range/ru.oop.102020.nikolenkomaksim.range.iml" filepath="$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.range/ru.oop.102020.nikolenkomaksim.range.iml" />
       <module fileurl="file://$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.shape/ru.oop.102020.nikolenkomaksim.shape.iml" filepath="$PROJECT_DIR$/ru.oop.102020.nikolenkomaksim.shape/ru.oop.102020.nikolenkomaksim.shape.iml" />
