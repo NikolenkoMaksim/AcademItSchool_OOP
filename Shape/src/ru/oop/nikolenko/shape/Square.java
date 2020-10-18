@@ -5,7 +5,19 @@ public class Square implements Shape {
 
     public Square(double side) {
         if (side <= 0) {
-            throw new IllegalArgumentException("Строна квадрата меньше или равна 0");
+            throw new IllegalArgumentException("side <= 0");
+        }
+
+        this.side = side;
+    }
+
+    public double getSide() {
+        return side;
+    }
+
+    public void setSide(double side) {
+        if (side <= 0) {
+            throw new IllegalArgumentException("side <= 0");
         }
 
         this.side = side;
@@ -33,8 +45,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "это квадварт со стороной " + side + ",\nплощадью " + getArea() + " и периметром " +
-                getPerimeter() + ".";
+        return "{Square. Side = " + side + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
     }
 
     @Override
@@ -43,7 +54,7 @@ public class Square implements Shape {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 

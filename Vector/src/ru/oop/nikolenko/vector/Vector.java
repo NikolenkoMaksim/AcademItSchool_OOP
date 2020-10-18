@@ -57,6 +57,10 @@ public class Vector {
     }
 
     public void setVector(double[] vector) {
+        if (vector == null) {
+            throw new IllegalArgumentException("array is null");
+        }
+
         this.vector = vector;
     }
 
@@ -97,8 +101,9 @@ public class Vector {
         for (int i = 0; i < this.vector.length; i++) {
             vector.append(this.vector[i]);
 
-            if (i < this.vector.length - 1)
+            if (i < this.vector.length - 1) {
                 vector.append(", ");
+            }
         }
 
         vector.append("}");
@@ -192,7 +197,7 @@ public class Vector {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 

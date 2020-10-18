@@ -1,42 +1,61 @@
 package ru.oop.nikolenko.shape;
 
 public class Rectangle implements Shape {
-    private double side1;
-    private double side2;
+    private double width;
+    private double height;
 
-    public Rectangle(double side1, double side2) {
-        if (side1 <= 0 || side2 <= 0) {
-            throw new IllegalArgumentException("Строна прямоугольника меньше или равна 0");
+    public Rectangle(double width, double height) {
+        if (width <= 0) {
+            throw new IllegalArgumentException("width <= 0");
         }
 
-        this.side1 = side1;
-        this.side2 = side2;
+        if (height <= 0) {
+            throw new IllegalArgumentException("height <= 0");
+        }
+
+        this.width = width;
+        this.height = height;
+    }
+
+    public void setWidth(double width) {
+        if (width <= 0) {
+            throw new IllegalArgumentException("width <= 0");
+        }
+
+        this.width = width;
+    }
+
+    public void setHeight(double height) {
+        if (height <= 0) {
+            throw new IllegalArgumentException("height <= 0");
+        }
+
+        this.height = height;
     }
 
     @Override
     public double getWidth() {
-        return side1;
+        return width;
     }
 
     @Override
     public double getHeight() {
-        return side2;
+        return height;
     }
 
     @Override
     public double getArea() {
-        return side1 * side2;
+        return width * height;
     }
 
     @Override
     public double getPerimeter() {
-        return 2 * (side1 + side2);
+        return 2 * (width + height);
     }
 
     @Override
     public String toString() {
-        return "это прямоугольник со сторанами " + side1 + " и " + side2 + ",\nплощадью " + getArea() +
-                " и периметром " + getPerimeter() + ".";
+        return "{Rectangle. Width = " + width + ", height = " + height + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
     }
 
     @Override
@@ -45,20 +64,20 @@ public class Rectangle implements Shape {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 
         Rectangle r = (Rectangle) o;
-        return side1 == r.side1 && side2 == r.side2;
+        return width == r.width && height == r.height;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 960;
+        final int prime = 11;
         int hash = 1;
-        hash = prime * hash + Double.hashCode(side1);
-        hash = prime * hash + Double.hashCode(side2);
+        hash = prime * hash + Double.hashCode(width);
+        hash = prime * hash + Double.hashCode(height);
         return hash;
     }
 }

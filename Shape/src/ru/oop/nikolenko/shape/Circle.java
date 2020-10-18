@@ -5,7 +5,19 @@ public class Circle implements Shape {
 
     public Circle(double radius) {
         if (radius <= 0) {
-            throw new IllegalArgumentException("Радиус круга меньше или равен 0");
+            throw new IllegalArgumentException("radius <= 0");
+        }
+
+        this.radius = radius;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        if (radius <= 0) {
+            throw new IllegalArgumentException("radius <= 0");
         }
 
         this.radius = radius;
@@ -33,7 +45,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "это круг с радиусом " + radius + ",\nплощадью " + getArea() + " и периметром " + getPerimeter() + ".";
+        return "{Circle. Radios = " + radius + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
     }
 
     @Override
@@ -42,7 +54,7 @@ public class Circle implements Shape {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 

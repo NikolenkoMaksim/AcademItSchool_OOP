@@ -12,7 +12,7 @@ public class Triangle implements Shape {
         final double epsilon = 1.0e-10;
 
         if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("Точки лежат на одной линии");
+            throw new IllegalArgumentException("points are collinear");
         }
 
         this.x1 = x1;
@@ -20,6 +20,90 @@ public class Triangle implements Shape {
         this.x2 = x2;
         this.y2 = y2;
         this.x3 = x3;
+        this.y3 = y3;
+    }
+
+    public double getX1() {
+        return x1;
+    }
+
+    public double getY1() {
+        return y1;
+    }
+
+    public double getX2() {
+        return x2;
+    }
+
+    public double getY2() {
+        return y2;
+    }
+
+    public double getX3() {
+        return x3;
+    }
+
+    public double getY3() {
+        return y3;
+    }
+
+    public void setX1(double x1) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
+        this.x1 = x1;
+    }
+
+    public void setY1(double y1) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
+        this.y1 = y1;
+    }
+
+    public void setX2(double x2) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
+        this.x2 = x2;
+    }
+
+    public void setY2(double y2) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
+        this.y2 = y2;
+    }
+
+    public void setX3(double x3) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
+        this.x3 = x3;
+    }
+
+    public void setY3(double y3) {
+        final double epsilon = 1.0e-10;
+
+        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
+            throw new IllegalArgumentException("points are collinear");
+        }
+
         this.y3 = y3;
     }
 
@@ -36,7 +120,7 @@ public class Triangle implements Shape {
     @Override
     public double getArea() {
         double perimeterHalf = getPerimeter() / 2;
-        double[] triangleSideLengths = getTriangleSideLengths();
+        double[] triangleSideLengths = getTriangleSidesLengths();
         return Math.sqrt(perimeterHalf *
                 (perimeterHalf - triangleSideLengths[0]) *
                 (perimeterHalf - triangleSideLengths[1]) *
@@ -46,31 +130,28 @@ public class Triangle implements Shape {
     @Override
     public double getPerimeter() {
         double perimeter = 0;
-        double[] triangleSideLengths = getTriangleSideLengths();
+        double[] triangleSidesLengths = getTriangleSidesLengths();
 
-        for (double triangleSideLength : triangleSideLengths) {
+        for (double triangleSideLength : triangleSidesLengths) {
             perimeter += triangleSideLength;
         }
 
         return perimeter;
     }
 
-    public double[] getTriangleSideLengths() {
-        double triangleSide1Length =
-                Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-        double triangleSide2Length =
-                Math.sqrt(Math.pow(x1 - x3, 2) + Math.pow(y1 - y3, 2));
-        double triangleSide3Length =
-                Math.sqrt(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2));
-        return new double[]
-                {triangleSide1Length, triangleSide2Length, triangleSide3Length};
+    private double[] getTriangleSidesLengths() {
+        return new double[]{getSideLength(x1, y1, x2, y2), getSideLength(x1, y1, x3, y3), getSideLength(x2, y2, x3, y3)};
+    }
+
+    private double getSideLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
     @Override
     public String toString() {
-        double[] triangleSideLengths = getTriangleSideLengths();
-        return "это треугольник со сторонами " + triangleSideLengths[0] + ", " + triangleSideLengths[1] +
-                " и " + triangleSideLengths[2] + ",\nплощадью " + getArea() + " и периметром " + getPerimeter() + ".";
+        double[] triangleSidesLengths = getTriangleSidesLengths();
+        return "{Triangle. Sides = " + triangleSidesLengths[0] + ", " + triangleSidesLengths[1] +
+                ", " + triangleSidesLengths[2] + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
     }
 
     @Override
@@ -79,7 +160,7 @@ public class Triangle implements Shape {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 
@@ -90,7 +171,7 @@ public class Triangle implements Shape {
 
     @Override
     public int hashCode() {
-        final int prime = 18;
+        final int prime = 47;
         int hash = 1;
         hash = prime * hash + Double.hashCode(x1);
         hash = prime * hash + Double.hashCode(x2);
