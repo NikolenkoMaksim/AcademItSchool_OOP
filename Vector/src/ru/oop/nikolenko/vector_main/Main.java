@@ -36,7 +36,7 @@ public class Main {
         System.out.println("Вектор3 = " + vector3);
         System.out.println();
 
-        System.out.println("Четвертая компонетнта вектора3 = " + vector3.getComponent(4));
+        System.out.println("Четвертая компонента вектора3 = " + vector3.getComponent(4));
         System.out.println();
 
         double[] array2 = {8, 2, 3};
@@ -44,7 +44,7 @@ public class Main {
         System.out.println("Вектор5 = " + vector5);
         System.out.println();
 
-        Vector vector6 = vector4.unfold();
+        Vector vector6 = vector4.invert();
         System.out.println("Вектор6 - развернутый вектор 4");
         System.out.println("Вектор6 = " + vector6);
         System.out.println();
@@ -58,56 +58,56 @@ public class Main {
         System.out.println("Длина вектора5 равна " + vector5.getLength());
         System.out.println();
 
-        Vector vector7 = vector4.sum(vector5);
+        Vector vector7 = vector4.add(vector5);
         System.out.println("Вектор7 = вектор4 + вектор5 = " + vector7);
 
-        vector7 = vector5.sum(vector3);
+        vector7 = vector5.add(vector3);
         System.out.println("Вектор7 = вектор5 + вектор3 = " + vector7);
 
-        vector7 = vector3.sum(vector5);
+        vector7 = vector3.add(vector5);
         System.out.println("Вектор7 = вектор3 + вектор5 = " + vector7);
         System.out.println();
 
-        vector7 = vector4.dif(vector5);
+        vector7 = vector4.subtract(vector5);
         System.out.println("Вектор7 = вектор4 - вектор5 = " + vector7);
 
-        vector7 = vector5.dif(vector3);
+        vector7 = vector5.subtract(vector3);
         System.out.println("Вектор7 = вектор5 - вектор3 = " + vector7);
 
-        vector7 = vector3.dif(vector5);
+        vector7 = vector3.subtract(vector5);
         System.out.println("Вектор7 = вектор3 - вектор5 = " + vector7);
         System.out.println();
 
         System.out.println("Проверка статических методов");
         System.out.println();
 
-        vector7 = Vector.sum(vector4, vector5);
+        vector7 = Vector.getSum(vector4, vector5);
         System.out.println("Вектор7 = вектор4 + вектор5 = " + vector7);
 
-        vector7 = Vector.sum(vector5, vector3);
+        vector7 = Vector.getSum(vector5, vector3);
         System.out.println("Вектор7 = вектор5 + вектор3 = " + vector7);
 
-        vector7 = Vector.sum(vector3, vector5);
+        vector7 = Vector.getSum(vector3, vector5);
         System.out.println("Вектор7 = вектор3 + вектор5 = " + vector7);
         System.out.println();
 
-        vector7 = Vector.dif(vector4, vector5);
+        vector7 = Vector.getDifference(vector4, vector5);
         System.out.println("Вектор7 = вектор4 - вектор5 = " + vector7);
 
-        vector7 = Vector.dif(vector5, vector3);
+        vector7 = Vector.getDifference(vector5, vector3);
         System.out.println("Вектор7 = вектор5 - вектор3 = " + vector7);
 
-        vector7 = Vector.dif(vector3, vector5);
+        vector7 = Vector.getDifference(vector3, vector5);
         System.out.println("Вектор7 = вектор3 - вектор5 = " + vector7);
         System.out.println();
 
-        double scalarProduct = Vector.scalarMultiply(vector4, vector5);
+        double scalarProduct = Vector.getScalarMultiply(vector4, vector5);
         System.out.println("Скалярное произведение вектора4 на вектор5 равно " + scalarProduct);
 
-        scalarProduct = Vector.scalarMultiply(vector4, vector3);
+        scalarProduct = Vector.getScalarMultiply(vector4, vector3);
         System.out.println("Скалярное произведение вектора4 на вектор3 равно " + scalarProduct);
 
-        scalarProduct = Vector.scalarMultiply(vector3, vector4);
+        scalarProduct = Vector.getScalarMultiply(vector3, vector4);
         System.out.println("Скалярное произведение вектора3 на вектор4 равно " + scalarProduct);
     }
 }

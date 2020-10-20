@@ -36,19 +36,19 @@ public class Main {
         System.out.println("Проверка статических методов");
         System.out.println();
 
-        System.out.println("Первая строка матрицы D: " + matrixD.getLine(0));
+        System.out.println("Первая строка матрицы D: " + matrixD.getRow(0));
         matrixD.getColumn(0);
         System.out.println("Первый столбец матрицы D: " + matrixD.getColumn(0));
 
-        matrixB.setLine(0, vector1);
-        System.out.println("В матрице B заменили первую строку на {5, 6, 7}. Матрица B:");
+        matrixB.setRow(0, vector1);
+        System.out.println("В матрице B заменили первую строку на " + vector1 + ". Матрица B:");
         System.out.println(matrixB);
 
         System.out.println();
 
         System.out.println("Длина матрицы D: " + matrixD.getLength());
         System.out.println("Ширина матрицы D: " + matrixD.getWight());
-        System.out.println("Размеры матрицы D: " + Arrays.toString(matrixD.getSize()));
+        System.out.println("Размеры матрицы D: " + Arrays.toString(matrixD.getSizes()));
 
         System.out.println();
 
@@ -67,7 +67,7 @@ public class Main {
         Matrix matrixF = new Matrix(array4);
         System.out.println("Матрица F:");
         System.out.println(matrixF);
-        System.out.println("Детерминант матрицы F равен " +    matrixF.getDeterminant());
+        System.out.println("Детерминант матрицы F равен " + matrixF.getDeterminant());
 
         System.out.println();
 
@@ -83,12 +83,12 @@ public class Main {
         System.out.println();
 
         System.out.println("Сумма матрицы С и матрицы D:");
-        System.out.println(matrixC.sum(matrixD));
+        System.out.println(matrixC.getSum(matrixD));
 
         System.out.println();
 
         System.out.println("Разность матрицы С и матрицы D:");
-        System.out.println(matrixC.dif(matrixD));
+        System.out.println(matrixC.getDifference(matrixD));
 
         System.out.println();
 
@@ -96,12 +96,12 @@ public class Main {
         System.out.println();
 
         System.out.println("Сумма матрицы С и матрицы D:");
-        System.out.println(Matrix.sum(matrixC, matrixD));
+        System.out.println(Matrix.getSum(matrixC, matrixD));
 
         System.out.println();
 
         System.out.println("Разность матрицы С и матрицы D:");
-        System.out.println(Matrix.dif(matrixC, matrixD));
+        System.out.println(Matrix.getDifference(matrixC, matrixD));
 
         System.out.println();
 
