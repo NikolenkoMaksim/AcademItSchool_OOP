@@ -1,5 +1,7 @@
 package ru.oop.nikolenko.range;
 
+import java.util.Arrays;
+
 public class Range {
     private double from;
     private double to;
@@ -7,11 +9,6 @@ public class Range {
     public Range(double from, double to) {
         this.from = from;
         this.to = to;
-    }
-
-    public Range() {
-        this.from = 0;
-        this.to = 0;
     }
 
     public double getFrom() {
@@ -47,51 +44,23 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        Range intersection = new Range();
-
-        if (from < range.from) {
-            if (to < range.from) {
-                return null;
-            }
-
-            intersection.from = range.from;
-            intersection.to = Math.min(to, range.to);
-        } else {
-            if (from > range.to) {
-                return null;
-            }
-
-            intersection.from = from;
-            intersection.to = Math.min(range.to, to);
-        }
-
-        if (intersection.from == intersection.to) {
+        if ((from < range.from && to < range.from) || (from > range.to && to > range.to)) {
             return null;
         }
 
-        return intersection;
+        return new Range(Math.max(from, range.from), Math.min(to, range.to));
     }
 
     public Range[] getUnion(Range range) {
-        if (from < range.from) {
-            if (from < range.from) {
-                if (to < range.from) {
-                    return new Range[]{new Range(from, to), new Range(range.from, range.to)};
-                } else if (to < range.to) {
-                    return new Range[]{new Range(from, range.to)};
-                } else {
-                    return new Range[]{new Range(from, to)};
-                }
-            }
-        } else {
-            if (range.to < from) {
-                return new Range[]{new Range(range.from, range.to), new Range(from, to)};
-            } else if (range.to < to) {
-                return new Range[]{new Range(range.from, to)};
-            }
+        if (getIntersection(range) != null) {
+            return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
         }
 
-        return new Range[]{new Range(range.from, range.to)};
+        if (from < range.from) {
+            return new Range[]{new Range(from, to), new Range(range.from, range.to)};
+        }
+
+        return new Range[]{new Range(range.from, range.to), new Range(from, to)};
     }
 
     public Range[] getDifference(Range range) {
@@ -99,19 +68,15 @@ public class Range {
             return new Range[]{};
         }
 
-        Range intersection = getIntersection(range);
-
-        if (intersection == null) {
-            return new Range[]{new Range(from, to)};
+        if (from < range.from && to > range.to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        if (from == intersection.from) {
-            return new Range[]{new Range(intersection.to, to)};
-        } else if (to == intersection.to) {
-            return new Range[]{new Range(from, intersection.from)};
+        if (from < range.from) {
+            return new Range[]{new Range(from, Math.min(to, range.from))};
         }
 
-        return new Range[]{new Range(from, intersection.from), new Range(intersection.to, to)};
+        return new Range[]{new Range(Math.max(range.to, from), to)};
     }
 
     @Override
