@@ -5,7 +5,7 @@ public class Circle implements Shape {
 
     public Circle(double radius) {
         if (radius <= 0) {
-            throw new IllegalArgumentException("radius <= 0");
+            throw new IllegalArgumentException("radius value " + radius + " <= 0");
         }
 
         this.radius = radius;
@@ -17,7 +17,7 @@ public class Circle implements Shape {
 
     public void setRadius(double radius) {
         if (radius <= 0) {
-            throw new IllegalArgumentException("radius <= 0");
+            throw new IllegalArgumentException("radius value " + radius + " <= 0");
         }
 
         this.radius = radius;

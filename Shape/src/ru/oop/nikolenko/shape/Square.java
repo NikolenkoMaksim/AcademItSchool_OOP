@@ -5,7 +5,7 @@ public class Square implements Shape {
 
     public Square(double side) {
         if (side <= 0) {
-            throw new IllegalArgumentException("side <= 0");
+            throw new IllegalArgumentException("side value + " + side + " <= 0");
         }
 
         this.side = side;
@@ -17,7 +17,7 @@ public class Square implements Shape {
 
     public void setSide(double side) {
         if (side <= 0) {
-            throw new IllegalArgumentException("side <= 0");
+            throw new IllegalArgumentException("side value + " + side + " <= 0");
         }
 
         this.side = side;

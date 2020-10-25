@@ -20,7 +20,7 @@ public class Main {
                 new Square(5),
                 new Triangle(0, 0, 5, 0, 0, 7),
                 new Rectangle(4, 3),
-                new Circle(1),
+                new Circle(4),
                 new Square(2),
                 new Circle(2)
         };

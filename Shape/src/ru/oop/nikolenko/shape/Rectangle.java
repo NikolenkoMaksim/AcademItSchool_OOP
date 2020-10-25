@@ -6,11 +6,11 @@ public class Rectangle implements Shape {
 
     public Rectangle(double width, double height) {
         if (width <= 0) {
-            throw new IllegalArgumentException("width <= 0");
+            throw new IllegalArgumentException("width value " + width + " <= 0");
         }
 
         if (height <= 0) {
-            throw new IllegalArgumentException("height <= 0");
+            throw new IllegalArgumentException("height value " + height + " <= 0");
         }
 
         this.width = width;
@@ -19,7 +19,7 @@ public class Rectangle implements Shape {
 
     public void setWidth(double width) {
         if (width <= 0) {
-            throw new IllegalArgumentException("width <= 0");
+            throw new IllegalArgumentException("width value " + width + " <= 0");
         }
 
         this.width = width;
@@ -27,7 +27,7 @@ public class Rectangle implements Shape {
 
     public void setHeight(double height) {
         if (height <= 0) {
-            throw new IllegalArgumentException("height <= 0");
+            throw new IllegalArgumentException("height value " + height + " <= 0");
         }
 
         this.height = height;
