@@ -5,14 +5,14 @@ import ru.oop.nikolenko.shape.*;
 import java.util.Arrays;
 
 public class Main {
-    public static Shape getMaxAreaFigure(Shape[] shapes) {
+    public static Shape getMaxAreaShape(Shape[] shapes) {
         Arrays.sort(shapes, new SortByAreaComparator());
         return shapes[shapes.length - 1];
     }
 
-    public static Shape getFigureWithCountByPerimeterSize(Shape[] shapes, int countByPerimeterSize) {
+    public static Shape getShapeWithCountByPerimeterSize(Shape[] shapes, int countByPerimeterSize) {
         Arrays.sort(shapes, new SortByPerimeterComparator());
-        return shapes[shapes.length - countByPerimeterSize - 1];
+        return shapes[shapes.length - countByPerimeterSize];
     }
 
     public static void main(String[] args) {
@@ -22,12 +22,13 @@ public class Main {
                 new Rectangle(4, 3),
                 new Circle(1),
                 new Square(2),
-                new Circle(2)};
+                new Circle(2)
+        };
 
-        Shape maxAreaFigure = getMaxAreaFigure(shapes);
-        System.out.println("Фигура с максимальной площадь: " + maxAreaFigure);
+        Shape maxAreaShape = getMaxAreaShape(shapes);
+        System.out.println("Фигура с максимальной площадь: " + maxAreaShape);
 
-        Shape secondPerimeterFigure = getFigureWithCountByPerimeterSize(shapes, 2);
-        System.out.println("Фигура со вторым по велечине периметром: " + secondPerimeterFigure);
+        Shape secondPerimeterShape = getShapeWithCountByPerimeterSize(shapes, 2);
+        System.out.println("Фигура со вторым по велечине периметром: " + secondPerimeterShape);
     }
 }

@@ -9,11 +9,7 @@ public class Triangle implements Shape {
     private double y3;
 
     public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.x1 = x1;
         this.y1 = y1;
@@ -47,62 +43,46 @@ public class Triangle implements Shape {
         return y3;
     }
 
-    public void setX1(double x1) {
+    private static void checkPointsCollinearity(double x1, double y1, double x2, double y2, double x3, double y3) {
         final double epsilon = 1.0e-10;
 
         if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
             throw new IllegalArgumentException("points are collinear");
         }
+    }
+
+    public void setX1(double x1) {
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.x1 = x1;
     }
 
     public void setY1(double y1) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.y1 = y1;
     }
 
     public void setX2(double x2) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.x2 = x2;
     }
 
     public void setY2(double y2) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.y2 = y2;
     }
 
     public void setX3(double x3) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.x3 = x3;
     }
 
     public void setY3(double y3) {
-        final double epsilon = 1.0e-10;
-
-        if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points are collinear");
-        }
+        checkPointsCollinearity(x1, y1, x2, y2, x3, y3);
 
         this.y3 = y3;
     }
@@ -143,7 +123,7 @@ public class Triangle implements Shape {
         return new double[]{getSideLength(x1, y1, x2, y2), getSideLength(x1, y1, x3, y3), getSideLength(x2, y2, x3, y3)};
     }
 
-    private double getSideLength(double x1, double y1, double x2, double y2) {
+    private static double getSideLength(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 

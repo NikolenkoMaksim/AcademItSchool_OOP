@@ -1,4 +1,6 @@
-package ru.oop.nikolenko.shape;
+package ru.oop.nikolenko.main;
+
+import ru.oop.nikolenko.shape.Shape;
 
 import java.util.Comparator;
 
