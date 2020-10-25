@@ -47,8 +47,7 @@ public class Triangle implements Shape {
         final double epsilon = 1.0e-10;
 
         if (Math.abs((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) <= epsilon) {
-            throw new IllegalArgumentException("points (" + x1 + ", " + y1 + "), (" +
-                    x2 + ", " + y2 + "), (" + x3 + ", " + y3 + ") are collinear");
+            throw new IllegalArgumentException("points (" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), (" + x3 + ", " + y3 + ") are collinear");
         }
     }
 
