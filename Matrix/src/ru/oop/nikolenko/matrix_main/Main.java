@@ -3,8 +3,6 @@ package ru.oop.nikolenko.matrix_main;
 import ru.oop.nikolenko.matrix.Matrix;
 import ru.oop.nikolenko.vector.Vector;
 
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
         System.out.println("Проверка конструкторов");
@@ -46,20 +44,21 @@ public class Main {
 
         System.out.println();
 
-        System.out.println("Длина матрицы D: " + matrixD.getLength());
-        System.out.println("Ширина матрицы D: " + matrixD.getWight());
-        System.out.println("Размеры матрицы D: " + Arrays.toString(matrixD.getSizes()));
+        System.out.println("Число строк матрицы D: " + matrixD.getRowsCount());
+        System.out.println("Число столбцов матрицы D: " + matrixD.getColumnsCount());
 
         System.out.println();
 
-        Matrix matrixE = matrixD.transpose();
+        Matrix matrixE = new Matrix(matrixD);
+        matrixE.transpose();
         System.out.println("Матрица Е - транспонированая матрица D. Матрица E: ");
         System.out.println(matrixE);
 
         System.out.println();
 
+        matrixE.multiplyByNumber(2);
         System.out.println("Матрицу E умножили на 2:");
-        System.out.println(matrixE.multiplyByNumber(2));
+        System.out.println(matrixE);
 
         System.out.println();
 
@@ -82,13 +81,15 @@ public class Main {
 
         System.out.println();
 
-        System.out.println("Сумма матрицы С и матрицы D:");
-        System.out.println(matrixC.getSum(matrixD));
+        matrixC.getSum(matrixD);
+        System.out.println("К матрице С прибавили матрицу D. Матрица С:");
+        System.out.println(matrixC);
 
         System.out.println();
 
-        System.out.println("Разность матрицы С и матрицы D:");
-        System.out.println(matrixC.getDifference(matrixD));
+        matrixC.getDifference(matrixD);
+        System.out.println("От матрицы С отняли матрицу D. Матрица С:");
+        System.out.println(matrixC);
 
         System.out.println();
 
