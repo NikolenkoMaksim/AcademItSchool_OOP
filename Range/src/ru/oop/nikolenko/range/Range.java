@@ -1,7 +1,5 @@
 package ru.oop.nikolenko.range;
 
-import java.util.Arrays;
-
 public class Range {
     private double from;
     private double to;
@@ -44,7 +42,7 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        if ((from < range.from && to < range.from) || (from > range.to && to > range.to)) {
+        if (Math.max(from, range.from) >= Math.min(to, range.to)) {
             return null;
         }
 
@@ -52,7 +50,7 @@ public class Range {
     }
 
     public Range[] getUnion(Range range) {
-        if (getIntersection(range) != null) {
+        if (Math.max(from, range.from) <= Math.min(to, range.to)) {
             return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
         }
 
