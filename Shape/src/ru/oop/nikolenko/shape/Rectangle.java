@@ -5,32 +5,35 @@ public class Rectangle implements Shape {
     private double height;
 
     public Rectangle(double width, double height) {
-        if (width <= 0) {
-            throw new IllegalArgumentException("width value " + width + " <= 0");
-        }
-
-        if (height <= 0) {
-            throw new IllegalArgumentException("height value " + height + " <= 0");
-        }
+        checkWidth(width);
+        checkHeight(height);
 
         this.width = width;
         this.height = height;
     }
 
     public void setWidth(double width) {
-        if (width <= 0) {
-            throw new IllegalArgumentException("width value " + width + " <= 0");
-        }
+        checkWidth(width);
 
         this.width = width;
     }
 
     public void setHeight(double height) {
+        checkHeight(height);
+
+        this.height = height;
+    }
+
+    private void checkWidth(double width){
+        if (width <= 0) {
+            throw new IllegalArgumentException("width value " + width + " <= 0");
+        }
+    }
+
+    public static void checkHeight(double height) {
         if (height <= 0) {
             throw new IllegalArgumentException("height value " + height + " <= 0");
         }
-
-        this.height = height;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "{Rectangle. Width = " + width + ", height = " + height + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
+        return "{Rectangle. Width = " + width + ", height = " + height + ". S = " + getArea() + ". P = " + getPerimeter() + "}";
     }
 
     @Override

@@ -4,9 +4,7 @@ public class Square implements Shape {
     private double side;
 
     public Square(double side) {
-        if (side <= 0) {
-            throw new IllegalArgumentException("side value + " + side + " <= 0");
-        }
+        checkSide(side);
 
         this.side = side;
     }
@@ -16,11 +14,15 @@ public class Square implements Shape {
     }
 
     public void setSide(double side) {
-        if (side <= 0) {
-            throw new IllegalArgumentException("side value + " + side + " <= 0");
-        }
+        checkSide(side);
 
         this.side = side;
+    }
+
+    public static void checkSide(double side) {
+        if (side <= 0) {
+            throw new IllegalArgumentException("side value " + side + " <= 0");
+        }
     }
 
     @Override
@@ -45,7 +47,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "{Square. Side = " + side + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
+        return "{Square. Side = " + side + ". S = " + getArea() + ". P = " + getPerimeter() + "}";
     }
 
     @Override

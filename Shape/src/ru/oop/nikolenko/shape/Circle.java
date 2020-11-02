@@ -4,9 +4,7 @@ public class Circle implements Shape {
     private double radius;
 
     public Circle(double radius) {
-        if (radius <= 0) {
-            throw new IllegalArgumentException("radius value " + radius + " <= 0");
-        }
+        checkRadius(radius);
 
         this.radius = radius;
     }
@@ -16,11 +14,15 @@ public class Circle implements Shape {
     }
 
     public void setRadius(double radius) {
+        checkRadius(radius);
+
+        this.radius = radius;
+    }
+
+    private static void checkRadius(double radius){
         if (radius <= 0) {
             throw new IllegalArgumentException("radius value " + radius + " <= 0");
         }
-
-        this.radius = radius;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "{Circle. Radios = " + radius + ", S = " + getArea() + ", P = " + getPerimeter() + "}";
+        return "{Circle. Radius = " + radius + ". S = " + getArea() + ". P = " + getPerimeter() + "}";
     }
 
     @Override
