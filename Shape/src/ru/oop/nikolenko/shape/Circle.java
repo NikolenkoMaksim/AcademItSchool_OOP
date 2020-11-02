@@ -19,7 +19,7 @@ public class Circle implements Shape {
         this.radius = radius;
     }
 
-    private static void checkRadius(double radius){
+    private static void checkRadius(double radius) {
         if (radius <= 0) {
             throw new IllegalArgumentException("radius value " + radius + " <= 0");
         }

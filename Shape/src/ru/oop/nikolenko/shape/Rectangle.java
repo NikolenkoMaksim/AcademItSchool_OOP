@@ -24,7 +24,7 @@ public class Rectangle implements Shape {
         this.height = height;
     }
 
-    private void checkWidth(double width){
+    private void checkWidth(double width) {
         if (width <= 0) {
             throw new IllegalArgumentException("width value " + width + " <= 0");
         }
