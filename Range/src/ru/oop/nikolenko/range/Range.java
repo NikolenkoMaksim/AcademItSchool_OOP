@@ -42,11 +42,14 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        if (Math.max(from, range.from) >= Math.min(to, range.to)) {
+        double max = Math.max(from, range.from);
+        double min = Math.min(to, range.to);
+
+        if (max >= min) {
             return null;
         }
 
-        return new Range(Math.max(from, range.from), Math.min(to, range.to));
+        return new Range(max, min);
     }
 
     public Range[] getUnion(Range range) {
