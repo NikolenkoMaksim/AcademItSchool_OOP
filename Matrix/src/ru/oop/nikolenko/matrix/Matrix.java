@@ -364,15 +364,11 @@ public class Matrix {
 
         stringBuilder.append("{");
 
-        for (int i = 0; i < rows.length; i++) {
-            stringBuilder.append(rows[i]);
-
-            if (i < rows.length - 1) {
-                stringBuilder.append(", ");
-            }
+        for (Vector row : rows) {
+            stringBuilder.append(row).append(", ");
         }
 
-        stringBuilder.append("}");
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
 
         return stringBuilder.toString();
     }
