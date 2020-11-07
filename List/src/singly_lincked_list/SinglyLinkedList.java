@@ -37,6 +37,8 @@ public class SinglyLinkedList<T> {
     }
 
     private ListItem<T> getIndexItem(int index) {
+        checkIndex(index);
+
         ListItem<T> item = head;
 
         for (int i = 0; i < index; i++) {
