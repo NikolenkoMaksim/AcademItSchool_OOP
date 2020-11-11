@@ -201,7 +201,7 @@ public class Vector {
         return scalarProduct;
     }
 
-    private void checkVector(Vector vector) {
+    private static void checkVector(Vector vector) {
         if (vector == null) {
             throw new IllegalArgumentException("vector is null");
         }

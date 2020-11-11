@@ -12,10 +12,20 @@ public class Rectangle implements Shape {
         this.height = height;
     }
 
+    @Override
+    public double getWidth() {
+        return width;
+    }
+
     public void setWidth(double width) {
         checkWidth(width);
 
         this.width = width;
+    }
+
+    @Override
+    public double getHeight() {
+        return height;
     }
 
     public void setHeight(double height) {
@@ -24,26 +34,16 @@ public class Rectangle implements Shape {
         this.height = height;
     }
 
-    private void checkWidth(double width) {
+    private static void checkWidth(double width) {
         if (width <= 0) {
             throw new IllegalArgumentException("width value " + width + " <= 0");
         }
     }
 
-    public static void checkHeight(double height) {
+    private static void checkHeight(double height) {
         if (height <= 0) {
             throw new IllegalArgumentException("height value " + height + " <= 0");
         }
-    }
-
-    @Override
-    public double getWidth() {
-        return width;
-    }
-
-    @Override
-    public double getHeight() {
-        return height;
     }
 
     @Override

@@ -99,8 +99,9 @@ public class Triangle implements Shape {
 
     @Override
     public double getArea() {
-        double perimeterHalf = getPerimeter() / 2;
         double[] triangleSideLengths = getTriangleSidesLengths();
+        double perimeterHalf = (triangleSideLengths[0] + triangleSideLengths[1] + triangleSideLengths[2]) / 2;
+
         return Math.sqrt(perimeterHalf *
                 (perimeterHalf - triangleSideLengths[0]) *
                 (perimeterHalf - triangleSideLengths[1]) *
@@ -129,7 +130,6 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        double[] triangleSidesLengths = getTriangleSidesLengths();
         return "{Triangle. Apexes coordinates: {" + x1 + ", " + y1 + "}, {" + x2 + ", " + y2 + "}, {" + x3 + ", " + y3 +
                 "}. S = " + getArea() + ". P = " + getPerimeter() + "}";
     }

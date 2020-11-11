@@ -9,7 +9,13 @@ public class Square implements Shape {
         this.side = side;
     }
 
-    public double getSide() {
+    @Override
+    public double getWidth() {
+        return side;
+    }
+
+    @Override
+    public double getHeight() {
         return side;
     }
 
@@ -23,16 +29,6 @@ public class Square implements Shape {
         if (side <= 0) {
             throw new IllegalArgumentException("side value " + side + " <= 0");
         }
-    }
-
-    @Override
-    public double getWidth() {
-        return side;
-    }
-
-    @Override
-    public double getHeight() {
-        return side;
     }
 
     @Override
