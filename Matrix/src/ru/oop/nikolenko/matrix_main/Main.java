@@ -37,6 +37,7 @@ public class Main {
         System.out.println("Первая строка матрицы D: " + matrixD.getRow(0));
         matrixD.getColumn(0);
         System.out.println("Первый столбец матрицы D: " + matrixD.getColumn(0));
+        System.out.println();
 
         matrixB.setRow(0, vector1);
         System.out.println("В матрице B заменили первую строку на " + vector1 + ". Матрица B:");
@@ -56,8 +57,9 @@ public class Main {
 
         System.out.println();
 
-        matrixE.multiplyByNumber(2);
-        System.out.println("Матрицу E умножили на 2:");
+        double number = 2;
+        matrixE.multiplyByNumber(number);
+        System.out.println("Матрицу E умножили на " + number + ":");
         System.out.println(matrixE);
 
         System.out.println();
@@ -81,13 +83,13 @@ public class Main {
 
         System.out.println();
 
-        matrixC.getSum(matrixD);
+        matrixC.add(matrixD);
         System.out.println("К матрице С прибавили матрицу D. Матрица С:");
         System.out.println(matrixC);
 
         System.out.println();
 
-        matrixC.getDifference(matrixD);
+        matrixC.subtract(matrixD);
         System.out.println("От матрицы С отняли матрицу D. Матрица С:");
         System.out.println(matrixC);
 
@@ -97,16 +99,16 @@ public class Main {
         System.out.println();
 
         System.out.println("Сумма матрицы С и матрицы D:");
-        System.out.println(Matrix.getSum(matrixC, matrixD));
+        System.out.println(Matrix.add(matrixC, matrixD));
 
         System.out.println();
 
         System.out.println("Разность матрицы С и матрицы D:");
-        System.out.println(Matrix.getDifference(matrixC, matrixD));
+        System.out.println(Matrix.subtract(matrixC, matrixD));
 
         System.out.println();
 
-        System.out.println("Произведение матрицы G на матрицу D:");
-        System.out.println(Matrix.multiply(matrixG, matrixD));
+        System.out.println("Произведение матрицы G и матрицы D:");
+        System.out.println(Matrix.getProduct(matrixG, matrixD));
     }
 }

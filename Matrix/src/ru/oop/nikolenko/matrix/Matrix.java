@@ -2,6 +2,8 @@ package ru.oop.nikolenko.matrix;
 
 import ru.oop.nikolenko.vector.Vector;
 
+import java.util.Arrays;
+
 public class Matrix {
     private Vector[] rows;
 
@@ -38,32 +40,36 @@ public class Matrix {
             throw new IllegalArgumentException("array is null");
         }
 
-        if (array[0] == null) {
-            throw new IllegalArgumentException("array[0] is null");
-        }
-
-        if (array[0].length == 0) {
-            throw new IllegalArgumentException("array[0].length is 0");
+        if (array.length == 0) {
+            throw new IllegalArgumentException("array.length is 0");
         }
 
         rows = new Vector[array.length];
 
-        int maxArrayLength = array[0].length;
+        int maxArrayLength = 0;
+        boolean isAllArraysNull = true;
 
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] == null) {
-                throw new IllegalArgumentException("array[" + i + "] is null");
+        for (double[] e : array) {
+            if (e != null) {
+                maxArrayLength = Math.max(maxArrayLength, e.length);
+                isAllArraysNull = false;
             }
+        }
 
-            if (array[i].length == 0) {
-                throw new IllegalArgumentException("array[" + i + "].length is 0");
-            }
+        if (isAllArraysNull) {
+            throw new IllegalArgumentException("all arrays of double[][] array are null");
+        }
 
-            maxArrayLength = Math.max(array[i - 1].length, array[i].length);
+        if (maxArrayLength == 0) {
+            throw new IllegalArgumentException("all arrays of double[][] array have 0 length");
         }
 
         for (int i = 0; i < array.length; i++) {
-            rows[i] = new Vector(maxArrayLength, array[i]);
+            if (array[i] != null) {
+                rows[i] = new Vector(maxArrayLength, array[i]);
+            } else {
+                rows[i] = new Vector(maxArrayLength);
+            }
         }
     }
 
@@ -72,69 +78,76 @@ public class Matrix {
             throw new IllegalArgumentException("Vector[] vectors is null");
         }
 
-        if (vectors[0] == null) {
-            throw new IllegalArgumentException("vector[0] is null");
-        }
-
-        if (vectors[0].getSize() == 0) {
-            throw new IllegalArgumentException("vector[0] must have at least one component");
+        if (vectors.length == 0) {
+            throw new IllegalArgumentException("vectors.length is 0");
         }
 
         rows = new Vector[vectors.length];
-        int maxVectorSize = vectors[0].getSize();
 
-        for (int i = 1; i < vectors.length; i++) {
-            if (vectors[i] == null) {
-                throw new IllegalArgumentException("vector[" + i + "] is null");
+        int maxVectorSize = 0;
+        boolean isAllVectorsNull = true;
+
+        for (Vector e : vectors) {
+            if (e != null) {
+                maxVectorSize = Math.max(maxVectorSize, e.getSize());
+                isAllVectorsNull = false;
             }
+        }
 
-            if (vectors[i].getSize() == 0) {
-                throw new IllegalArgumentException("vector[" + i + "] must have at least one component");
-            }
-
-            maxVectorSize = Math.max(vectors[i - 1].getSize(), vectors[i].getSize());
+        if (isAllVectorsNull) {
+            throw new IllegalArgumentException("all vectors are null");
         }
 
         for (int i = 0; i < vectors.length; i++) {
-            rows[i] = new Vector(maxVectorSize, vectors[i].getComponentsCopy());
+            if (vectors[i] != null) {
+                rows[i] = new Vector(maxVectorSize, vectors[i].getComponentsCopy());
+            } else {
+                rows[i] = new Vector(maxVectorSize);
+            }
         }
     }
 
     public Vector getRow(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("index value " + index + " < 0");
-        }
-
-        if (index >= rows.length) {
-            throw new IndexOutOfBoundsException("index (" + index + ") >= matrix length (" + rows.length + ")");
-        }
+        checkRowIndex(index);
 
         return new Vector(rows[index]);
     }
 
     public void setRow(int index, Vector row) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("index value " + index + " < 0");
+        checkRowIndex(index);
+
+        if (row == null) {
+            throw new IllegalArgumentException("row is null");
         }
 
-        if (index >= rows.length) {
-            throw new IndexOutOfBoundsException("index (" + index + ") >= matrix length (" + rows.length + ")");
-        }
-
-        if (row.getSize() != getColumnsCount()) {
-            throw new IllegalArgumentException("incorrect vector size: " + row.getSize() + " instead of " + getColumnsCount());
+        if (row.getSize() != rows[0].getSize()) {
+            throw new IllegalArgumentException("incorrect vector size: " + row.getSize() + " instead of " + rows[0].getSize());
         }
 
         rows[index] = new Vector(row);
     }
 
-    public Vector getColumn(int index) {
+    private void checkRowIndex(int index) {
         if (index < 0) {
-            throw new IndexOutOfBoundsException("index value" + index + " < 0");
+            throw new IndexOutOfBoundsException("index value " + index + " < 0");
         }
 
-        if (index >= getColumnsCount()) {
-            throw new IndexOutOfBoundsException("index (" + index + ") >= matrix.wight (" + getColumnsCount() + ")");
+        if (index >= rows.length) {
+            throw new IndexOutOfBoundsException("index (" + index + ") >= rows count (" + rows.length + ")");
+        }
+    }
+
+    public int getRowsCount() {
+        return rows.length;
+    }
+
+    public Vector getColumn(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("index value " + index + " < 0");
+        }
+
+        if (index >= rows[0].getSize()) {
+            throw new IndexOutOfBoundsException("index (" + index + ") >= columns count (" + rows[0].getSize() + ")");
         }
 
         Vector column = new Vector(rows.length);
@@ -146,22 +159,18 @@ public class Matrix {
         return column;
     }
 
-    public int getRowsCount() {
-        return rows.length;
-    }
-
     public int getColumnsCount() {
         return rows[0].getSize();
     }
 
     public void transpose() {
-        Matrix transposedMatrix = new Matrix(getColumnsCount(), rows.length);
+        Vector[] transposedRows = new Vector[rows[0].getSize()];
 
-        for (int i = 0; i < getColumnsCount(); i++) {
-            transposedMatrix.setRow(i, getColumn(i));
+        for (int i = 0; i < rows[0].getSize(); i++) {
+            transposedRows[i] = getColumn(i);
         }
 
-        rows = transposedMatrix.rows;
+        rows = transposedRows;
     }
 
     public void multiplyByNumber(double number) {
@@ -171,8 +180,8 @@ public class Matrix {
     }
 
     public double getDeterminant() {
-        if (rows.length != getColumnsCount()) {
-            throw new IllegalArgumentException("matrix must be square");
+        if (rows.length != rows[0].getSize()) {
+            throw new UnsupportedOperationException("matrix must be square");
         }
 
         Matrix matrixCopy = new Matrix(this);
@@ -184,7 +193,7 @@ public class Matrix {
             if (Math.abs(matrixCopy.rows[i].getComponent(i)) <= epsilon) {
                 isDeterminantZero = true;
 
-                for (int j = i + 1; j < matrixCopy.getColumnsCount(); j++) {
+                for (int j = i + 1; j < matrixCopy.rows[0].getSize(); j++) {
                     if (Math.abs(matrixCopy.rows[j].getComponent(i)) > epsilon) {
                         matrixCopy.rows[i].add(matrixCopy.rows[j]);
 
@@ -199,19 +208,19 @@ public class Matrix {
             }
 
             for (int j = i + 1; j < matrixCopy.rows.length; j++) {
-                double coefficient = rows[j].getComponent(i) / rows[i].getComponent(i);
+                double coefficient = matrixCopy.rows[j].getComponent(i) / matrixCopy.rows[i].getComponent(i);
 
-                Vector subtrahend = new Vector(rows[i]);
+                Vector subtrahend = new Vector(matrixCopy.rows[i]);
                 subtrahend.multiplyByNumber(coefficient);
 
-                rows[j].subtract(subtrahend);
+                matrixCopy.rows[j].subtract(subtrahend);
             }
         }
 
         double determinant = 1;
 
         for (int i = 0; i < matrixCopy.rows.length; i++) {
-            determinant *= rows[i].getComponent(i);
+            determinant *= matrixCopy.rows[i].getComponent(i);
         }
 
         return determinant;
@@ -222,140 +231,123 @@ public class Matrix {
             throw new IllegalArgumentException("vector is null");
         }
 
-        if (getColumnsCount() != vector.getSize()) {
-            throw new IllegalArgumentException("vector length (" + vector.getSize() + ") must be equal number of matrix columns (" + getColumnsCount() + ")");
+        if (rows[0].getSize() != vector.getSize()) {
+            throw new IllegalArgumentException("vector size (" + vector.getSize() +
+                    ") must be equal matrix columns count (" + rows[0].getSize() + ")");
         }
 
-        Vector multipliedVector = new Vector(rows.length);
+        Vector resultVector = new Vector(rows.length);
 
         for (int i = 0; i < rows.length; i++) {
-            multipliedVector.setComponent(i, Vector.getScalarProduct(rows[i], vector));
+            resultVector.setComponent(i, Vector.getScalarProduct(rows[i], vector));
         }
 
-        return multipliedVector;
+        return resultVector;
     }
 
-    public void getSum(Matrix matrix) {
-        if (matrix == null) {
-            throw new IllegalArgumentException("matrix is null");
-        }
-
-        if (getRowsCount() != matrix.getRowsCount()) {
-            throw new IllegalArgumentException("matrices must have the same length");
-        }
-
-        if (getColumnsCount() != matrix.getColumnsCount()) {
-            throw new IllegalArgumentException("matrices must have the same width");
-        }
+    public void add(Matrix matrix) {
+        checkMatrix(matrix);
 
         for (int i = 0; i < rows.length; i++) {
             rows[i].add(matrix.rows[i]);
         }
     }
 
-    public void getDifference(Matrix matrix) {
-        if (matrix == null) {
-            throw new IllegalArgumentException("matrix is null");
-        }
-
-        if (getRowsCount() != matrix.getRowsCount()) {
-            throw new IllegalArgumentException("matrices must have the same length");
-        }
-
-        if (getColumnsCount() != matrix.getColumnsCount()) {
-            throw new IllegalArgumentException("matrices must have the same width");
-        }
+    public void subtract(Matrix matrix) {
+        checkMatrix(matrix);
 
         for (int i = 0; i < rows.length; i++) {
             rows[i].subtract(matrix.rows[i]);
         }
     }
 
-    public static Matrix getSum(Matrix matrix1, Matrix matrix2) {
-        if (matrix1 == null) {
-            throw new IllegalArgumentException("first matrix is null");
+    private void checkMatrix(Matrix matrix) {
+        if (matrix == null) {
+            throw new IllegalArgumentException("matrix is null");
         }
 
-        if (matrix2 == null) {
-            throw new IllegalArgumentException("second matrix is null");
+        if (rows.length != matrix.rows.length) {
+            throw new IllegalArgumentException("argument matrix has a different rows count (" + matrix.rows.length +
+                    ") than the object matrix (" + rows.length + ")");
         }
 
-        if (matrix1.getRowsCount() != matrix2.getRowsCount()) {
-            throw new IllegalArgumentException("matrices must have the same length");
+        if (rows[0].getSize() != matrix.rows[0].getSize()) {
+            throw new IllegalArgumentException("argument matrix has a different columns count (" + matrix.rows[0].getSize() +
+                    ") than the object matrix (" + rows[0].getSize() + ")");
         }
-
-        if (matrix1.getColumnsCount() != matrix2.getColumnsCount()) {
-            throw new IllegalArgumentException("matrices must have the same width");
-        }
-
-        Matrix sumMatrix = new Matrix(matrix1.rows.length, matrix1.getColumnsCount());
-
-        for (int i = 0; i < matrix1.rows.length; i++) {
-            sumMatrix.setRow(i, Vector.getSum(matrix1.rows[i], matrix2.rows[i]));
-        }
-
-        return sumMatrix;
     }
 
-    public static Matrix getDifference(Matrix matrix1, Matrix matrix2) {
-        if (matrix1 == null) {
-            throw new IllegalArgumentException("first matrix is null");
-        }
+    public static Matrix add(Matrix matrix1, Matrix matrix2) {
+        checkMatrices(matrix1, matrix2);
 
-        if (matrix2 == null) {
-            throw new IllegalArgumentException("second matrix is null");
-        }
-
-
-        if (matrix1.getRowsCount() != matrix2.getRowsCount()) {
-            throw new IllegalArgumentException("matrices must have the same length");
-        }
-
-        if (matrix1.getColumnsCount() != matrix2.getColumnsCount()) {
-            throw new IllegalArgumentException("matrices must have the same width");
-        }
-
-        Matrix resultMatrix = new Matrix(matrix1.rows.length, matrix1.getColumnsCount());
-
-        for (int i = 0; i < matrix1.rows.length; i++) {
-            resultMatrix.setRow(i, Vector.getDifference(matrix1.rows[i], (matrix2.rows[i])));
-        }
+        Matrix resultMatrix = new Matrix(matrix1);
+        resultMatrix.add(matrix2);
 
         return resultMatrix;
     }
 
-    public static Matrix multiply(Matrix matrix1, Matrix matrix2) {
+    public static Matrix subtract(Matrix matrix1, Matrix matrix2) {
+        checkMatrices(matrix1, matrix2);
+
+        Matrix resultMatrix = new Matrix(matrix1);
+        resultMatrix.subtract(matrix2);
+
+        return resultMatrix;
+    }
+
+    private static void checkMatrices(Matrix matrix1, Matrix matrix2) {
         if (matrix1 == null) {
-            throw new IllegalArgumentException("first matrix is null");
+            throw new IllegalArgumentException("matrix 1 is null");
         }
 
         if (matrix2 == null) {
-            throw new IllegalArgumentException("second matrix is null");
+            throw new IllegalArgumentException("matrix 2 is null");
         }
 
-        if (matrix1.getColumnsCount() != matrix2.rows.length) {
-            throw new IllegalArgumentException("matrix1 width (" + matrix1.getColumnsCount() + ") must be equal matrix1 length (" + matrix2.rows.length + ")");
+        if (matrix1.rows.length != matrix2.rows.length) {
+            throw new IllegalArgumentException("matrix 1 has different rows count (" + matrix1.rows.length +
+                    ") then matrix 2 (" + matrix2.rows.length + ")");
         }
 
-        Matrix multipliedMatrix = new Matrix(matrix1.rows.length, matrix2.getColumnsCount());
+        if (matrix1.rows[0].getSize() != matrix2.rows[0].getSize()) {
+            throw new IllegalArgumentException("matrix 1 has different columns count (" + matrix1.rows[0].getSize() +
+                    ") then matrix 2 (" + matrix2.rows[0].getSize() + ")");
+        }
+    }
+
+    public static Matrix getProduct(Matrix matrix1, Matrix matrix2) {
+        if (matrix1 == null) {
+            throw new IllegalArgumentException("matrix 1 is null");
+        }
+
+        if (matrix2 == null) {
+            throw new IllegalArgumentException("matrix 2 is null");
+        }
+
+        if (matrix1.rows[0].getSize() != matrix2.rows.length) {
+            throw new IllegalArgumentException("matrix 1 columns count (" + matrix1.rows[0].getSize() +
+                    ") must be equal matrix 2 rows count (" + matrix2.rows.length + ")");
+        }
+
+        Matrix resultMatrix = new Matrix(matrix1.rows.length, matrix2.rows[0].getSize());
 
         for (int i = 0; i < matrix1.rows.length; i++) {
-            Vector vector = new Vector(matrix2.getColumnsCount());
+            Vector vector = new Vector(matrix2.rows[0].getSize());
 
-            for (int j = 0; j < matrix2.getColumnsCount(); j++) {
+            for (int j = 0; j < matrix2.rows[0].getSize(); j++) {
                 double component = 0;
 
-                for (int k = 0; k < matrix1.getColumnsCount(); k++) {
+                for (int k = 0; k < matrix1.rows[0].getSize(); k++) {
                     component += matrix1.rows[i].getComponent(k) * matrix2.rows[k].getComponent(j);
                 }
 
                 vector.setComponent(j, component);
             }
 
-            multipliedMatrix.setRow(i, vector);
+            resultMatrix.rows[i] = vector;
         }
 
-        return multipliedMatrix;
+        return resultMatrix;
     }
 
     @Override
@@ -385,17 +377,7 @@ public class Matrix {
 
         Matrix m = (Matrix) o;
 
-        if (rows.length != m.rows.length) {
-            return false;
-        }
-
-        for (int i = 0; i < rows.length; i++) {
-            if (!rows[i].equals(m.rows[i])) {
-                return false;
-            }
-        }
-
-        return true;
+        return Arrays.equals(rows, m.rows);
     }
 
     @Override
@@ -403,9 +385,7 @@ public class Matrix {
         final int prime = 61;
         int hash = 1;
 
-        for (Vector row : rows) {
-            hash = prime * hash + row.hashCode();
-        }
+        hash = prime * hash + Arrays.hashCode(rows);
 
         return hash;
     }
