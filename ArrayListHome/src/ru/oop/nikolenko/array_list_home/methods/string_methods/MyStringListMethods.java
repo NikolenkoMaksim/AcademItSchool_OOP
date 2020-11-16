@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MyStringListMethods<T> {
+public class MyStringListMethods {
     public static void fillStringArrayListFromFile(String inputFileName, ArrayList<String> list) {
         if (list == null) {
             throw new IllegalArgumentException("list is null");
