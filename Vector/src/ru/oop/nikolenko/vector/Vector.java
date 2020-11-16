@@ -82,38 +82,24 @@ public class Vector {
     public void add(Vector vector) {
         checkVector(vector);
 
-        int minLength = Math.min(components.length, vector.components.length);
-
-        for (int i = 0; i < minLength; i++) {
-            components[i] += vector.components[i];
+        if (components.length < vector.components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        if (components.length < vector.components.length) {
-            double[] sum = new double[vector.components.length];
-            System.arraycopy(vector.components, components.length, sum, components.length, vector.components.length - components.length);
-            System.arraycopy(components, 0, sum, 0, components.length);
-            components = sum;
+        for (int i = 0; i < vector.components.length; i++) {
+            components[i] += vector.components[i];
         }
     }
 
     public void subtract(Vector vector) {
         checkVector(vector);
 
-        int minLength = Math.min(components.length, vector.components.length);
-
-        for (int i = 0; i < minLength; i++) {
-            components[i] -= vector.components[i];
+        if (components.length < vector.components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        if (components.length < vector.components.length) {
-            double[] difference = new double[vector.components.length];
-            System.arraycopy(components, 0, difference, 0, components.length);
-
-            for (int i = minLength; i < vector.components.length; i++) {
-                difference[i] = -vector.components[i];
-            }
-
-            components = difference;
+        for (int i = 0; i < vector.components.length; i++) {
+            components[i] -= vector.components[i];
         }
     }
 
