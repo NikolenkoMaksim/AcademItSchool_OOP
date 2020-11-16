@@ -1,53 +1,57 @@
 package singly_list_main;
 
-import singly_lincked_list.SinglyLinkedList;
+import singly_linked_list.SinglyLinkedList;
 
-public class SinglyListMain {
+public class Main {
     public static void main(String[] args) {
-        System.out.println("Проверка конструктора. Список 1:");
+        System.out.println("Проверка конструктора. Список 0:");
+        SinglyLinkedList<Integer> list0 = new SinglyLinkedList<>();
+        System.out.println(list0);
+
+        System.out.println("Список 1:");
         Integer[] data = new Integer[]{0, null, 2, 3, 4};
         SinglyLinkedList<Integer> list1 = new SinglyLinkedList<>(data);
         System.out.println(list1);
 
         System.out.println("Вывод элемента по индексу 2:");
-        System.out.println(list1.getIndexItemData(2));
+        System.out.println(list1.getData(2));
 
         System.out.println("Вывод первого элемента:");
-        System.out.println(list1.getHeadData());
+        System.out.println(list1.getFirst());
 
         System.out.println("Замена элемента по индексу 1 на 1:");
-        System.out.println(list1.setIndexItemData(1, 1));
+        System.out.println(list1.setData(1, 1));
         System.out.println(list1);
 
         System.out.println("Удаление элемента по индексу 1:");
-        System.out.println(list1.deleteIndexItem(1));
+        System.out.println(list1.delete(1));
         System.out.println(list1);
 
         System.out.println("Вставить -1 в начало списка:");
-        list1.addToHead(-1);
+        list1.addFirst(-1);
         System.out.println(list1);
 
         System.out.println("Удаление элемента по индексу 0:");
-        System.out.println(list1.deleteIndexItem(0));
+        System.out.println(list1.delete(0));
         System.out.println(list1);
 
         System.out.println("Вставить 1 по индексу 1:");
-        list1.addIndexItem(1, 1);
+        list1.add(1, 1);
         System.out.println(list1);
 
         System.out.println("Вставить 2 по индексу 1:");
-        list1.addIndexItem(1, 2);
+        list1.add(1, 2);
         System.out.println(list1);
 
         System.out.println("Вставить 5 по индексу 0:");
-        list1.addIndexItem(0, 5);
+        list1.add(0, 5);
         System.out.println(list1);
 
         System.out.println("Удаление значений 4, 9, 5, 2:");
-        System.out.println(list1.deleteValue(4));
-        System.out.println(list1.deleteValue(9));
-        System.out.println(list1.deleteValue(5));
-        System.out.println(list1.deleteValue(2));
+        System.out.println(list1.deleteData(4));
+        System.out.println(list1.deleteData(9));
+        System.out.println(list1.deleteData(5));
+        System.out.println(list1.deleteData(2));
         System.out.println(list1);
 
         System.out.println("Длина списка 1:");
@@ -67,8 +71,8 @@ public class SinglyListMain {
         System.out.println("Список 2:");
         System.out.println(list2);
 
-        System.out.println("Вставить значение 5 по индексу 1 в список 2:");
-        list2.setIndexItemData(1, 5);
+        System.out.println("Изменить значение элемента по индексу 1 в списке 2 на 5:");
+        list2.setData(1, 5);
         System.out.println(list2);
 
         System.out.println("Список 1:");

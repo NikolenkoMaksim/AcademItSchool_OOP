@@ -1,10 +1,11 @@
-package singly_lincked_list;
-
-import list_item.ListItem;
+package singly_linked_list;
 
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
     private int length;
+
+    public SinglyLinkedList() {
+    }
 
     public SinglyLinkedList(T[] array) {
         ListItem<T> previousItem = new ListItem<>(array[array.length - 1]);
@@ -36,7 +37,7 @@ public class SinglyLinkedList<T> {
         }
     }
 
-    private ListItem<T> getIndexItem(int index) {
+    private ListItem<T> getItem(int index) {
         checkIndex(index);
 
         ListItem<T> item = head;
@@ -50,6 +51,10 @@ public class SinglyLinkedList<T> {
 
     @Override
     public String toString() {
+        if (head == null) {
+            return null;
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("{");
@@ -66,27 +71,37 @@ public class SinglyLinkedList<T> {
         return stringBuilder.toString();
     }
 
-    public T getHeadData() {
+    private void checkHead() {
+        if (head == null) {
+            throw new NullPointerException("list is empty");
+        }
+    }
+
+    public T getFirst() {
+        checkHead();
+
         return head.getData();
     }
 
-    public T getIndexItemData(int index) {
+    public T getData(int index) {
         checkIndex(index);
 
-        return getIndexItem(index).getData();
+        return getItem(index).getData();
     }
 
-    public T setIndexItemData(int index, T data) {
+    public T setData(int index, T data) {
         checkIndex(index);
 
-        ListItem<T> item = getIndexItem(index);
+        ListItem<T> item = getItem(index);
         T oldData = item.getData();
         item.setData(data);
 
         return oldData;
     }
 
-    public T deleteHead() {
+    public T deleteFirst() {
+        checkHead();
+
         T data = head.getData();
         head = head.getNext();
         --length;
@@ -94,13 +109,13 @@ public class SinglyLinkedList<T> {
         return data;
     }
 
-    public T deleteIndexItem(int index) {
+    public T delete(int index) {
         checkIndex(index);
 
         if (index == 0) {
-            return deleteHead();
+            return deleteFirst();
         } else {
-            ListItem<T> item = getIndexItem(index - 1);
+            ListItem<T> item = getItem(index - 1);
             T data = item.getNext().getData();
             item.setNext(item.getNext().getNext());
             --length;
@@ -109,32 +124,35 @@ public class SinglyLinkedList<T> {
         }
     }
 
-    public void addToHead(T data) {
+    public void addFirst(T data) {
         head = new ListItem<>(data, head);
         ++length;
     }
 
-    public void addIndexItem(int index, T data) {
+    public void add(int index, T data) {
         checkIndex(index);
 
         if (index == 0) {
-            addToHead(data);
-        } else {
-            ListItem<T> item = getIndexItem(index - 1);
-            item.setNext(new ListItem<>(data, item.getNext()));
-            ++length;
+            addFirst(data);
+            return;
         }
+
+        ListItem<T> item = getItem(index - 1);
+        item.setNext(new ListItem<>(data, item.getNext()));
+        ++length;
     }
 
-    public boolean deleteValue(T value) {
-        if (head.getData() == value) {
-            deleteHead();
+    public boolean deleteData(T value) {
+        checkHead();
+
+        if (head.getData().equals(value)) {
+            deleteFirst();
             return true;
         }
 
-        for (ListItem<T> i = head; i.getNext() != null; i = i.getNext()) {
-            if (i.getNext().getData() == value) {
-                i.setNext(i.getNext().getNext());
+        for (ListItem<T> e = head; e.getNext() != null; e = e.getNext()) {
+            if (e.getNext().getData() == value) {
+                e.setNext(e.getNext().getNext());
                 --length;
 
                 return true;
@@ -145,23 +163,27 @@ public class SinglyLinkedList<T> {
     }
 
     public void invert() {
+        checkHead();
+
         ListItem<T> previousItem = head;
         ListItem<T> nextItem = head.getNext();
         head.setNext(null);
 
-        ListItem<T> i = nextItem;
+        ListItem<T> e = nextItem;
 
-        while (i != null) {
-            nextItem = i.getNext();
-            i.setNext(previousItem);
-            previousItem = i;
-            i = nextItem;
+        while (e != null) {
+            nextItem = e.getNext();
+            e.setNext(previousItem);
+            previousItem = e;
+            e = nextItem;
         }
 
         head = previousItem;
     }
 
     public SinglyLinkedList<T> getCopy() {
+        checkHead();
+
         SinglyLinkedList<T> newList = new SinglyLinkedList<>(head.getData());
         ListItem<T> previousItem = newList.head;
 

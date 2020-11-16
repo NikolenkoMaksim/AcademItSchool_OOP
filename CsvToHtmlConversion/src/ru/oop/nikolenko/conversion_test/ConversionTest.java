@@ -2,7 +2,7 @@ package ru.oop.nikolenko.conversion_test;
 
 import java.io.FileNotFoundException;
 
-import static ru.oop.nikolenko.csv_o_html_conversion.CsvToHtmlConversion.convertCsvToHtml;
+import static ru.oop.nikolenko.csv_to_html_conversion.CsvToHtmlConversion.convertCsvToHtml;
 
 public class ConversionTest {
     public static void main(String[] args) throws FileNotFoundException {

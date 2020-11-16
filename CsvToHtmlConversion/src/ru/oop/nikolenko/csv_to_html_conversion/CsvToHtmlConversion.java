@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.csv_o_html_conversion;
+package ru.oop.nikolenko.csv_to_html_conversion;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
