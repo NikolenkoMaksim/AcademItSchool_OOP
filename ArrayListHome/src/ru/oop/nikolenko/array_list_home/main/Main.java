@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.array_list_home.array_list_home_Main;
+package ru.oop.nikolenko.array_list_home.main;
 
 import java.util.ArrayList;
 
