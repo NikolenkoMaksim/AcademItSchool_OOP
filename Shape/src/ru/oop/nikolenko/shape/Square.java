@@ -9,6 +9,16 @@ public class Square implements Shape {
         this.side = side;
     }
 
+    public double getSide() {
+        return side;
+    }
+
+    public void setSide(double side) {
+        checkSide(side);
+
+        this.side = side;
+    }
+
     @Override
     public double getWidth() {
         return side;
@@ -19,13 +29,7 @@ public class Square implements Shape {
         return side;
     }
 
-    public void setSide(double side) {
-        checkSide(side);
-
-        this.side = side;
-    }
-
-    public static void checkSide(double side) {
+    private static void checkSide(double side) {
         if (side <= 0) {
             throw new IllegalArgumentException("side value " + side + " <= 0");
         }

@@ -6,13 +6,27 @@ import java.util.Arrays;
 
 public class Main {
     public static Shape getMaxAreaShape(Shape[] shapes) {
+        checkShapes(shapes);
+
         Arrays.sort(shapes, new SortByAreaComparator());
         return shapes[shapes.length - 1];
     }
 
-    public static Shape getShapeWithCountByPerimeterSize(Shape[] shapes, int countByPerimeterSize) {
+    public static Shape getShapeWithNumberByPerimeterSize(Shape[] shapes, int countByPerimeterSize) {
+        checkShapes(shapes);
+
         Arrays.sort(shapes, new SortByPerimeterComparator());
         return shapes[shapes.length - countByPerimeterSize];
+    }
+
+    private static void checkShapes(Shape[] shapes) {
+        if(shapes == null) {
+            throw new IllegalArgumentException("shapes is null");
+        }
+
+        if(shapes.length == 0) {
+            throw new IllegalArgumentException("shapes is empty");
+        }
     }
 
     public static void main(String[] args) {
@@ -28,7 +42,7 @@ public class Main {
         Shape maxAreaShape = getMaxAreaShape(shapes);
         System.out.println("Фигура с максимальной площадью: " + maxAreaShape);
 
-        Shape secondPerimeterShape = getShapeWithCountByPerimeterSize(shapes, 2);
+        Shape secondPerimeterShape = getShapeWithNumberByPerimeterSize(shapes, 2);
         System.out.println("Фигура со вторым по велечине периметром: " + secondPerimeterShape);
     }
 }
