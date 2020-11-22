@@ -83,13 +83,13 @@ public class Main {
 
         System.out.println();
 
-        matrixC.add(matrixD);
+        matrixC.getSum(matrixD);
         System.out.println("К матрице С прибавили матрицу D. Матрица С:");
         System.out.println(matrixC);
 
         System.out.println();
 
-        matrixC.subtract(matrixD);
+        matrixC.getDifference(matrixD);
         System.out.println("От матрицы С отняли матрицу D. Матрица С:");
         System.out.println(matrixC);
 
@@ -99,12 +99,12 @@ public class Main {
         System.out.println();
 
         System.out.println("Сумма матрицы С и матрицы D:");
-        System.out.println(Matrix.add(matrixC, matrixD));
+        System.out.println(Matrix.getSum(matrixC, matrixD));
 
         System.out.println();
 
         System.out.println("Разность матрицы С и матрицы D:");
-        System.out.println(Matrix.subtract(matrixC, matrixD));
+        System.out.println(Matrix.getDifference(matrixC, matrixD));
 
         System.out.println();
 
