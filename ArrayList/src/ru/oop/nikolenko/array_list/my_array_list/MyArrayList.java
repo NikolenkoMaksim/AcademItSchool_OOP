@@ -70,16 +70,16 @@ public class MyArrayList<T> implements List<T> {
         private final int DEFAULT_MOD = modCount;
 
         public boolean hasNext() {
+            if (DEFAULT_MOD != modCount) {
+                throw new ConcurrentModificationException("list was changed");
+            }
+
             return currentIndex + 1 < size;
         }
 
         public T next() {
             if (currentIndex + 1 >= size) {
                 throw new NoSuchElementException();
-            }
-
-            if (DEFAULT_MOD != modCount) {
-                throw new ConcurrentModificationException("list was changed");
             }
 
             ++currentIndex;
@@ -100,10 +100,8 @@ public class MyArrayList<T> implements List<T> {
 
         a = (T1[]) Arrays.copyOf(items, Math.max(size, a.length), a.getClass());
 
-        if (a.length > size) {
-            for (int i = size; i < a.length; i++) {
-                a[i] = null;
-            }
+        for (int i = size; i < a.length; i++) {
+            a[i] = null;
         }
 
         return a;
@@ -116,6 +114,7 @@ public class MyArrayList<T> implements List<T> {
         items[size] = data;
         ++size;
         ++modCount;
+
         return true;
     }
 
