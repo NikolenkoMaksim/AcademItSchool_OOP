@@ -69,15 +69,21 @@ public class MyArrayList<T> implements List<T> {
         private int currentIndex = -1;
         private final int DEFAULT_MOD = modCount;
 
-        public boolean hasNext() {
+        private void checkMod() {
             if (DEFAULT_MOD != modCount) {
                 throw new ConcurrentModificationException("list was changed");
             }
+        }
+
+        public boolean hasNext() {
+            checkMod();
 
             return currentIndex + 1 < size;
         }
 
         public T next() {
+            checkMod();
+
             if (currentIndex + 1 >= size) {
                 throw new NoSuchElementException();
             }

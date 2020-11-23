@@ -46,7 +46,7 @@ public class HashTable<T> implements Collection<T> {
 
     private class HashTableIterator implements Iterator<T> {
         private int count = -1;
-        private int currentIndex = 0;
+        private int currentIndex = -1;
         private int currentList = 0;
         private final int DEFAULT_MOD = modCount;
 
@@ -69,8 +69,9 @@ public class HashTable<T> implements Collection<T> {
 
             checkMod();
 
-            while (lists[currentList].isEmpty() || (currentList + 1) == lists[currentList].size()) {
+            while (lists[currentList] == null || lists[currentList].isEmpty() || (currentIndex + 1) == lists[currentList].size()) {
                 currentList++;
+                currentIndex = -1;
             }
 
             ++currentIndex;
@@ -80,15 +81,33 @@ public class HashTable<T> implements Collection<T> {
         }
     }
 
-    @Override
-    public T[][] toArray() {
-        Object[][] array = new Object[lists.length][];
+    public T[] toArray() {
+        T[] array = (T[]) new Object[size];
 
-        for (int i = 0; i < lists.length; i++) {
-            array[i] = Arrays.copyOf(lists[i].toArray(), size);
+        int i = 0;
+
+        for (T e : this) {
+            array[i] = e;
+            i++;
         }
 
-        return (T[][]) array;
+        System.out.println(array.getClass());
+
+        return (T[]) array;
+    }
+
+    public T[][] toArray2() {
+        T[][] array = (T[][]) new Object[lists.length][];
+
+        for (int i = 0; i < lists.length; i++) {
+            if (lists[i] == null) {
+                array[i] = null;
+            } else {
+                array[i] = (T[]) Arrays.copyOf(lists[i].toArray(), size);
+            }
+        }
+
+        return array;
     }
 
     @Override
@@ -115,6 +134,8 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean add(T element) {
+        checkElement(element);
+
         int listNumber = Math.abs(element.hashCode() % lists.length);
 
         checkList(listNumber);
@@ -135,9 +156,27 @@ public class HashTable<T> implements Collection<T> {
         }
     }
 
+    private void checkElement(T e) {
+        if(e == null) {
+            throw  new IllegalArgumentException("element can't be null");
+        }
+    }
+
+    private void checkObject(Object e) {
+        if(e == null) {
+            throw  new IllegalArgumentException("element can't be null");
+        }
+    }
+
     @Override
     public boolean remove(Object o) {
-        boolean isRemoved = lists[Math.abs(o.hashCode() % lists.length)].remove(o);
+        checkObject(o);
+
+        int listNumber = Math.abs(o.hashCode() % lists.length);
+
+        checkList(listNumber);
+
+        boolean isRemoved = lists[listNumber].remove(o);
 
         if (isRemoved) {
             --size;
@@ -154,6 +193,8 @@ public class HashTable<T> implements Collection<T> {
         }
 
         for (Object e : c) {
+            checkObject(e);
+
             if (!lists[Math.abs(e.hashCode() % lists.length)].contains(e)) {
                 return false;
             }
@@ -169,6 +210,8 @@ public class HashTable<T> implements Collection<T> {
         }
 
         for (T e : c) {
+            checkElement(e);
+
             int listNumber = Math.abs(e.hashCode() % lists.length);
 
             checkList(listNumber);
@@ -194,10 +237,11 @@ public class HashTable<T> implements Collection<T> {
         boolean isRemoved = false;
 
         for (Object e : c) {
-            if (remove(e)) {
+            checkObject(e);
+
+            while(remove(e)) {
                 isRemoved = true;
             }
-            ;
         }
 
         return isRemoved;
@@ -212,10 +256,17 @@ public class HashTable<T> implements Collection<T> {
         boolean isRetained = false;
 
         for (T e : this) {
-            if (c.contains(e)) {
-                remove(e);
+            if (!c.contains(e)) {
+                while(lists[Math.abs(e.hashCode() % lists.length)].remove(e)) {
+                    --size;
+                };
+
                 isRetained = true;
             }
+        }
+
+        if(isRetained) {
+            ++modCount;
         }
 
         return isRetained;
