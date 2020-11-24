@@ -33,13 +33,13 @@ public class Main {
         System.out.println(table1);
         System.out.println("Проверка \"isEmpty\" таблицы 1: " + table1.isEmpty());
 
-        System.out.println("Лист 1:");
+        System.out.println("Коллекция 1:");
         System.out.println(list1);
         table1.addAll(list1);
-        System.out.println("К таблице 1 добавили лист 1:");
+        System.out.println("К таблице 1 добавили коллекцию 1:");
         System.out.println(table1);
 
-        System.out.println("Проверка \"contains(1)\" таблицы 1: " + table1.contains(1));
+        System.out.println("Проверка \"contains(1)\" таблицы 1: " + table1.contains(1.0));
         System.out.println("Проверка \"contains(4.4)\" таблицы 1: " + table1.contains(4.4));
 
         System.out.println("Вывод результата table1.toArray(): ");
@@ -56,17 +56,15 @@ public class Main {
         System.out.println(Arrays.toString(array3));
         */
 
-        Object[][] array5 = table1.toArray2();
-
         System.out.println("Вывод результата table1.toArray(array2): ");
         array2 = table1.toArray(array2);
         System.out.println(Arrays.toString(array2));
 
-        System.out.println("В таблицу 1 добавили 7.7:" + table1.add(7.7));
+        System.out.println("В таблицу 1 добавили 7.7 :" + table1.add(7.7));
         System.out.println("Таблица 1: ");
         System.out.println(table1);
 
-        System.out.println("Из таблицы 1 удалили 1.1:" + table1.remove(1.1));
+        System.out.println("Из таблицы 1 удалили 1.1 :" + table1.remove(1.1));
         System.out.println("Таблица 1: ");
         System.out.println(table1);
 

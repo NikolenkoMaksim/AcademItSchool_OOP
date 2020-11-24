@@ -6,9 +6,9 @@ public class HashTable<T> implements Collection<T> {
     private ArrayList<T>[] lists;
     private int size;
     private int modCount;
-    private final int DEFAULT_LENGTH = 10;
 
     public HashTable() {
+        int DEFAULT_LENGTH = 10;
         lists = (ArrayList<T>[]) new ArrayList<?>[DEFAULT_LENGTH];
     }
 
@@ -36,7 +36,15 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object o) {
-        return lists[Math.abs(o.hashCode() % lists.length)].contains(o);
+        checkObject(o);
+
+        int listNumber = Math.abs(o.hashCode() % lists.length);
+
+        if (lists[listNumber] == null) {
+            return false;
+        }
+
+        return lists[listNumber].contains(o);
     }
 
     @Override
@@ -91,9 +99,7 @@ public class HashTable<T> implements Collection<T> {
             i++;
         }
 
-        System.out.println(array.getClass());
-
-        return (T[]) array;
+        return array;
     }
 
     public T[][] toArray2() {
@@ -157,14 +163,14 @@ public class HashTable<T> implements Collection<T> {
     }
 
     private void checkElement(T e) {
-        if(e == null) {
-            throw  new IllegalArgumentException("element can't be null");
+        if (e == null) {
+            throw new IllegalArgumentException("element can't be null");
         }
     }
 
     private void checkObject(Object e) {
-        if(e == null) {
-            throw  new IllegalArgumentException("element can't be null");
+        if (e == null) {
+            throw new IllegalArgumentException("element can't be null");
         }
     }
 
@@ -174,7 +180,9 @@ public class HashTable<T> implements Collection<T> {
 
         int listNumber = Math.abs(o.hashCode() % lists.length);
 
-        checkList(listNumber);
+        if (lists[listNumber] == null) {
+            return false;
+        }
 
         boolean isRemoved = lists[listNumber].remove(o);
 
@@ -195,7 +203,7 @@ public class HashTable<T> implements Collection<T> {
         for (Object e : c) {
             checkObject(e);
 
-            if (!lists[Math.abs(e.hashCode() % lists.length)].contains(e)) {
+            if (!contains(e)) {
                 return false;
             }
         }
@@ -239,7 +247,7 @@ public class HashTable<T> implements Collection<T> {
         for (Object e : c) {
             checkObject(e);
 
-            while(remove(e)) {
+            while (remove(e)) {
                 isRemoved = true;
             }
         }
@@ -257,15 +265,15 @@ public class HashTable<T> implements Collection<T> {
 
         for (T e : this) {
             if (!c.contains(e)) {
-                while(lists[Math.abs(e.hashCode() % lists.length)].remove(e)) {
-                    --size;
-                };
+                while (remove(e)) {
+                    --modCount;
+                }
 
                 isRetained = true;
             }
         }
 
-        if(isRetained) {
+        if (isRetained) {
             ++modCount;
         }
 
