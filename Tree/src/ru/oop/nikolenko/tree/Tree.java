@@ -1,8 +1,9 @@
-package tree;
+package ru.oop.nikolenko.tree;
 
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.function.UnaryOperator;
 
 public class Tree<T extends Comparable<T>> {
@@ -16,19 +17,19 @@ public class Tree<T extends Comparable<T>> {
         ++size;
     }
 
-    public T getRootValue() {
+    public T getRootData() {
         return root.getData();
     }
 
     private void checkData(T data) {
-        if(data == null) {
+        if (data == null) {
             throw new IllegalArgumentException("data can't be null");
         }
     }
 
     private void checkRoot() {
         if (root.getData() == null) {
-            throw new IllegalArgumentException("root can't be null");
+            throw new NoSuchElementException("root can't be null");
         }
     }
 
@@ -69,13 +70,15 @@ public class Tree<T extends Comparable<T>> {
             throw new IllegalArgumentException("collection can't be null");
         }
 
-        for (T e : c) {
-            add(e);
+        for (T node : c) {
+            add(node);
         }
     }
 
     public boolean contains(T data) {
-        checkRoot();
+        if (root.getData() == null) {
+            return false;
+        }
 
         TreeNode<T> currentNode = root;
 
@@ -100,7 +103,7 @@ public class Tree<T extends Comparable<T>> {
         }
     }
 
-    private TreeNode<T>[] findElementAndParent(T data) {
+    private TreeNode<T>[] findNodeAndParent(T data) {
         TreeNode<T>[] array = (TreeNode<T>[]) new TreeNode<?>[2];
         array[0] = root;
         array[1] = null;
@@ -128,31 +131,31 @@ public class Tree<T extends Comparable<T>> {
         }
     }
 
-    private void changeChild(TreeNode<T> parent, TreeNode<T> child) {
-        if (parent.getLeft() == child) {
-            parent.setLeft(child.getRight());
+    private void setNodeRigthChildToParent(TreeNode<T> node, TreeNode<T> parent) {
+        if (parent.getLeft() == node) {
+            parent.setLeft(node.getRight());
             return;
         }
 
-        if (parent.getRight() == child) {
-            parent.setRight(child.getRight());
+        if (parent.getRight() == node) {
+            parent.setRight(node.getRight());
             return;
         }
 
-        throw new IllegalArgumentException("parent hasn't this child");
+        throw new IllegalArgumentException("parent hasn't this node");
     }
 
     public boolean remove(T data) {
         checkRoot();
 
-        TreeNode<T>[] array = findElementAndParent(data);
+        TreeNode<T>[] array = findNodeAndParent(data);
 
         if (array == null) {
             return false;
         }
 
         if (array[0].getRight() == null) {
-            changeChild(array[1], array[0]);
+            setNodeRigthChildToParent(array[0], array[1]);
             --size;
             return true;
         }
@@ -166,13 +169,12 @@ public class Tree<T extends Comparable<T>> {
         }
 
         array[0].setData(lastLeftList.getData());
-        changeChild(previousNode, lastLeftList);
+        setNodeRigthChildToParent(lastLeftList, previousNode);
 
         --size;
 
         return true;
     }
-
 
     public int size() {
         return size;
@@ -252,14 +254,14 @@ public class Tree<T extends Comparable<T>> {
                 queue.addLast(node.getLeft());
                 stringBuilder.append(node.getLeft().getData()).append(", ");
             } else {
-                stringBuilder.append("-, ");
+                stringBuilder.append("null, ");
             }
 
             if (node.getRight() != null) {
                 queue.addLast(node.getRight());
                 stringBuilder.append(node.getRight().getData()).append("), ");
             } else {
-                stringBuilder.append("-), ");
+                stringBuilder.append("null), ");
             }
 
             queue.removeFirst();

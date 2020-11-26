@@ -1,7 +1,8 @@
-package main;
+package ru.oop.nikolenko.tree_main;
 
 import ru.oop.nikolenko.array_list.my_array_list.MyArrayList;
-import tree.Tree;
+import ru.oop.nikolenko.tree.Tree;
+
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
@@ -16,7 +17,7 @@ public class Tree_main {
         System.out.println("Дерево:");
         System.out.println(tree);
 
-        System.out.println("Значение коряня: " + tree.getRootValue());
+        System.out.println("Значение коряня: " + tree.getRootData());
 
         System.out.println("Добавили элемент \"78\":");
         tree.add(78);
@@ -66,6 +67,6 @@ public class Tree_main {
         System.out.println("Дерево:");
         System.out.println(tree);
 
-        System.out.println("Значение корня: " + tree.getRootValue());
+        System.out.println("Значение корня: " + tree.getRootData());
     }
 }

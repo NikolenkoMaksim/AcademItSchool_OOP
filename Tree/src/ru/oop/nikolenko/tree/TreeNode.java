@@ -1,4 +1,4 @@
-package tree;
+package ru.oop.nikolenko.tree;
 
 public class TreeNode<T extends Comparable<T>> {
     private T data;
