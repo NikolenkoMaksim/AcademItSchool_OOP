@@ -1,4 +1,4 @@
-package hash_table;
+package ru.oop.nikolenko.hash_table;
 
 import java.util.*;
 

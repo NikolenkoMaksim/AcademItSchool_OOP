@@ -1,6 +1,6 @@
-package hash_table_main;
+package ru.oop.nikolenko.hash_table_main;
 
-import hash_table.HashTable;
+import ru.oop.nikolenko.hash_table.HashTable;
 import ru.oop.nikolenko.array_list.my_array_list.MyArrayList;
 
 import java.util.Arrays;
