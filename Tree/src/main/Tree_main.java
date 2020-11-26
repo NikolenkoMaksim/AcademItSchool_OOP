@@ -16,7 +16,7 @@ public class Tree_main {
         System.out.println("Дерево:");
         System.out.println(tree);
 
-        System.out.println("Корень: " + tree.getRootValue());
+        System.out.println("Значение коряня: " + tree.getRootValue());
 
         System.out.println("Добавили элемент \"78\":");
         tree.add(78);
@@ -66,6 +66,6 @@ public class Tree_main {
         System.out.println("Дерево:");
         System.out.println(tree);
 
-        System.out.println("Корень: " + tree.getRootValue());
+        System.out.println("Значение корня: " + tree.getRootValue());
     }
 }

@@ -252,14 +252,14 @@ public class Tree<T extends Comparable<T>> {
                 queue.addLast(node.getLeft());
                 stringBuilder.append(node.getLeft().getData()).append(", ");
             } else {
-                stringBuilder.append("null, ");
+                stringBuilder.append("-, ");
             }
 
             if (node.getRight() != null) {
                 queue.addLast(node.getRight());
                 stringBuilder.append(node.getRight().getData()).append("), ");
             } else {
-                stringBuilder.append("null), ");
+                stringBuilder.append("-), ");
             }
 
             queue.removeFirst();
