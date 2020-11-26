@@ -1,4 +1,4 @@
-package singly_linked_list;
+package ru.oop.nikolenko.singly_linked_list;
 
 class ListItem<T> {
     private T data;

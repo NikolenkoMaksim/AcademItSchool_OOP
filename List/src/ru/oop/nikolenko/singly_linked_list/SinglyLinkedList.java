@@ -1,4 +1,6 @@
-package singly_linked_list;
+package ru.oop.nikolenko.singly_linked_list;
+
+import java.util.NoSuchElementException;
 
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
@@ -52,7 +54,7 @@ public class SinglyLinkedList<T> {
     @Override
     public String toString() {
         if (head == null) {
-            return null;
+            return "{}";
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -73,7 +75,7 @@ public class SinglyLinkedList<T> {
 
     private void checkHead() {
         if (head == null) {
-            throw new NullPointerException("list is empty");
+            throw new NoSuchElementException("list is empty");
         }
     }
 
@@ -109,7 +111,7 @@ public class SinglyLinkedList<T> {
         return data;
     }
 
-    public T delete(int index) {
+    public T deleteByIndex(int index) {
         checkIndex(index);
 
         if (index == 0) {
@@ -142,17 +144,32 @@ public class SinglyLinkedList<T> {
         ++length;
     }
 
-    public boolean deleteData(T value) {
-        checkHead();
+    public boolean deleteByData(T data) {
+        if (head == null) {
+            return false;
+        }
 
-        if (head.getData().equals(value)) {
+        if (data == null) {
+            for (ListItem<T> item = head; item.getNext() != null; item = item.getNext()) {
+                if (item.getNext().getData() == null) {
+                    item.setNext(item.getNext().getNext());
+                    --length;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (head.getData().equals(data)) {
             deleteFirst();
             return true;
         }
 
-        for (ListItem<T> e = head; e.getNext() != null; e = e.getNext()) {
-            if (e.getNext().getData() == value) {
-                e.setNext(e.getNext().getNext());
+        for (ListItem<T> item = head; item.getNext() != null; item = item.getNext()) {
+            if (item.getNext().getData().equals(data)) {
+                item.setNext(item.getNext().getNext());
                 --length;
 
                 return true;
@@ -163,33 +180,37 @@ public class SinglyLinkedList<T> {
     }
 
     public void invert() {
-        checkHead();
+        if (head == null) {
+            return;
+        }
 
         ListItem<T> previousItem = head;
         ListItem<T> nextItem = head.getNext();
         head.setNext(null);
 
-        ListItem<T> e = nextItem;
+        ListItem<T> currentItem = nextItem;
 
-        while (e != null) {
-            nextItem = e.getNext();
-            e.setNext(previousItem);
-            previousItem = e;
-            e = nextItem;
+        while (currentItem != null) {
+            nextItem = currentItem.getNext();
+            currentItem.setNext(previousItem);
+            previousItem = currentItem;
+            currentItem = nextItem;
         }
 
         head = previousItem;
     }
 
     public SinglyLinkedList<T> getCopy() {
-        checkHead();
+        if (head == null) {
+            return new SinglyLinkedList<>();
+        }
 
         SinglyLinkedList<T> newList = new SinglyLinkedList<>(head.getData());
         ListItem<T> previousItem = newList.head;
+        newList.length = length;
 
-        for (ListItem<T> i = head.getNext(); i != null; i = i.getNext()) {
-            previousItem.setNext(new ListItem<>(i.getData()));
-            ++newList.length;
+        for (ListItem<T> item = head.getNext(); item != null; item = item.getNext()) {
+            previousItem.setNext(new ListItem<>(item.getData()));
             previousItem = previousItem.getNext();
         }
 

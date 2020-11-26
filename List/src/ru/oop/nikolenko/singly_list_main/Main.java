@@ -1,6 +1,6 @@
-package singly_list_main;
+package ru.oop.nikolenko.singly_list_main;
 
-import singly_linked_list.SinglyLinkedList;
+import ru.oop.nikolenko.singly_linked_list.SinglyLinkedList;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Main {
         System.out.println(list1);
 
         System.out.println("Удаление элемента по индексу 1:");
-        System.out.println(list1.delete(1));
+        System.out.println(list1.deleteByIndex(1));
         System.out.println(list1);
 
         System.out.println("Вставить -1 в начало списка:");
@@ -32,7 +32,7 @@ public class Main {
         System.out.println(list1);
 
         System.out.println("Удаление элемента по индексу 0:");
-        System.out.println(list1.delete(0));
+        System.out.println(list1.deleteByIndex(0));
         System.out.println(list1);
 
         System.out.println("Вставить 1 по индексу 1:");
@@ -48,10 +48,10 @@ public class Main {
         System.out.println(list1);
 
         System.out.println("Удаление значений 4, 9, 5, 2:");
-        System.out.println(list1.deleteData(4));
-        System.out.println(list1.deleteData(9));
-        System.out.println(list1.deleteData(5));
-        System.out.println(list1.deleteData(2));
+        System.out.println(list1.deleteByData(4));
+        System.out.println(list1.deleteByData(9));
+        System.out.println(list1.deleteByData(5));
+        System.out.println(list1.deleteByData(2));
         System.out.println(list1);
 
         System.out.println("Длина списка 1:");
@@ -79,7 +79,17 @@ public class Main {
         System.out.println(list1);
 
         System.out.println("Список 3:");
-        SinglyLinkedList<String> list3 = new SinglyLinkedList<>(new String[]{"Hello,", "it", "is", "me"});
+        SinglyLinkedList<String> list3 = new SinglyLinkedList<>(new String[]{"Hello,", "it", "is", "me", null});
         System.out.println(list3);
+
+        System.out.println("Удаление элемента со значением \"null\" из списка 3: " + list3.deleteByData(null));
+        System.out.println("Список 3:");
+        System.out.println(list3);
+
+        System.out.println("Удаление элемента со значением \"null\" из списка 1: " + list1.deleteByData(null));
+        System.out.println("Удаление элемента со значением \"8\" из списка 1: " + list1.deleteByData(8));
+        System.out.println("Удаление элемента со значением \"2\" из списка 1: " + list1.deleteByData(2));
+        System.out.println("Список 1:");
+        System.out.println(list1);
     }
 }
