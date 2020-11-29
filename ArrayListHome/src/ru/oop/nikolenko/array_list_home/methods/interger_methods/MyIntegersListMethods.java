@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import static java.lang.Integer.valueOf;
 
-public class MyIntegerListMethods {
+public class MyIntegersListMethods {
     public static void removeEvenNumbers(ArrayList<Integer> list) {
         checkList(list);
 
@@ -22,8 +22,8 @@ public class MyIntegerListMethods {
         }
     }
 
-    public static void fillIntegerArrayListFromFile(String inputFileName, ArrayList<Integer> list) {
-        checkList(list);
+    public static ArrayList<Integer> fillIntegersListFromFile(String inputFileName) {
+        ArrayList<Integer> list = new ArrayList<>();
 
         if (inputFileName == null) {
             throw new IllegalArgumentException("inputFileName is null");
@@ -39,21 +39,29 @@ public class MyIntegerListMethods {
                     System.out.println("String missed. NumberFormatException: " + e.getMessage());
                 }
             }
+
+            return list;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
+
+        return null;
     }
 
-    public static void removeDuplications(ArrayList<Integer> list) {
+    public static ArrayList<Integer> removeDuplications(ArrayList<Integer> list) {
         checkList(list);
 
-        for (int i = 0; i < list.size() - 1; i++) {
-            int j = list.lastIndexOf(list.get(i));
+        ArrayList<Integer> outputList = new ArrayList<>();
 
-            if (j != i) {
-                list.remove(j);
+        for (int i = 0; i < list.size() - 1; i++) {
+            Integer number = list.get(i);
+
+            if (!outputList.contains(number)) {
+                outputList.add(number);
             }
         }
+
+        return outputList;
     }
 
     private static void checkList(ArrayList<Integer> list) {

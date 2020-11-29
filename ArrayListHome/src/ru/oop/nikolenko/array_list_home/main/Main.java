@@ -1,39 +1,33 @@
 package ru.oop.nikolenko.array_list_home.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static ru.oop.nikolenko.array_list_home.methods.string_methods.MyStringListMethods.fillStringArrayListFromFile;
-import static ru.oop.nikolenko.array_list_home.methods.interger_methods.MyIntegerListMethods.*;
+import static ru.oop.nikolenko.array_list_home.methods.string_methods.MyStringsListMethods.fillStringsListFromFile;
+import static ru.oop.nikolenko.array_list_home.methods.interger_methods.MyIntegersListMethods.*;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<String> list1 = new ArrayList<>();
-
-        fillStringArrayListFromFile("listInput.txt", list1);
+        ArrayList<String> StringsList = fillStringsListFromFile("listInput.txt");
         System.out.println("Список 1:");
-        System.out.println(list1);
+        System.out.println(StringsList);
 
-        ArrayList<Integer> list2 = new ArrayList<>();
-        boolean isAdded = list2.add(1);
-        isAdded = list2.add(2);
-        isAdded = list2.add(3);
-        isAdded = list2.add(4);
-        isAdded = list2.add(5);
-        isAdded = list2.add(0);
+        ArrayList<Integer> numbersList1 = new ArrayList<>(Arrays.asList(1, 1, 2, 3, 4, 5, 6, 5, 6, 6, 7, 8, 9, 9));
         System.out.println("Список 2:");
-        System.out.println(list2);
+        System.out.println(numbersList1);
 
-        removeEvenNumbers(list2);
+        removeEvenNumbers(numbersList1);
         System.out.println("Список 2 после удаления четных чисел:");
-        System.out.println(list2);
+        System.out.println(numbersList1);
 
-        ArrayList<Integer> list3 = new ArrayList<>();
-        fillIntegerArrayListFromFile("listInput.txt", list3);
+        ArrayList<Integer> numbersList2 = fillIntegersListFromFile("listInput.txt");
         System.out.println("Список 3:");
-        System.out.println(list3);
+        System.out.println(numbersList2);
 
-        removeDuplications(list3);
-        System.out.println("Список 3 после удаления повторяющихся чисел:");
-        System.out.println(list3);
+        if (numbersList2 != null) {
+            ArrayList<Integer> numbersList3 = removeDuplications(numbersList2);
+            System.out.println("Список 4 - это список 3 без повторяющихся чисел:");
+            System.out.println(numbersList3);
+        }
     }
 }
