@@ -1,10 +1,8 @@
-package ru.oop.nikolenko.array_list.main;
+package ru.oop.nikolenko.my_array_list_main;
 
-import ru.oop.nikolenko.array_list.my_array_list.MyArrayList;
+import ru.oop.nikolenko.my_array_list.MyArrayList;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.function.UnaryOperator;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +15,7 @@ public class Main {
         System.out.println("Коллекция 2:");
         System.out.println(list2);
 
-        MyArrayList<Integer> list3 = new MyArrayList<>(7);
+        MyArrayList<Integer> list3 = new MyArrayList<>(0);
         System.out.println("Коллекция 3:");
         System.out.println(list3);
 
@@ -53,7 +51,9 @@ public class Main {
         System.out.println("К коллекции 5 применили метод \"toArray()\":");
         System.out.println(Arrays.toString(array2));
 
-        Object[] array3 = {};
+        Object[] array3 = {8, 9, 10, 47, 78, 7, 8};
+        System.out.println("array3:");
+        System.out.println(Arrays.toString(array3));
         array3 = list5.toArray(array3);
         System.out.println("К коллекции 5 применили метод \"toArray(array3)\":");
         System.out.println(Arrays.toString(array3));
@@ -115,19 +115,6 @@ public class Main {
         System.out.println("Коллекция 6:");
         System.out.println(list6);
 
-        UnaryOperator<Integer> uo = z -> z + 2;
-        list6.replaceAll(uo);
-        System.out.println("К коллекции 6 применили метод \"replaceAll(uo)\" с тернальным оператором, прибавляющим 2 к каждому члену.");
-        System.out.println("Коллекция 6:");
-        System.out.println(list6);
-
-        Comparator<Integer> comparator = Integer::compare;
-
-        list6.sort(comparator);
-        System.out.println("К коллекции 6 применили метод \"sort(comparator)\".");
-        System.out.println("Коллекция 6:");
-        System.out.println(list6);
-
         list6.clear();
         System.out.println("К коллекции 6 применили метод \"clear()\".");
         System.out.println("Коллекция 6:");
@@ -155,10 +142,10 @@ public class Main {
         System.out.println("Коллекция 8:");
         System.out.println(list8);
 
-        System.out.println("Коллекции 7 и 8 эквиваленты:" + list7.equals(list8));
-        System.out.println("Коллекции 7 и 8 эквиваленты::" + list7.equals(list1));
+        System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
+        System.out.println("Коллекции 7 и 1 эквиваленты: " + list7.equals(list1));
         list7.trimToSize();
-        System.out.println("Размер колекции 7 сократили");
+        System.out.println("Размер колекции 7 сократили до количества элементов");
         System.out.println("Коллекции 7 и 8 эквиваленты:" + list7.equals(list8));
 
         int sum = 0;
@@ -168,5 +155,24 @@ public class Main {
         }
 
         System.out.println("Сумма элементов коллекции 7 равна " + sum);
+
+        list7.add(2, null);
+        System.out.println("К коллекции 7 применили метод \"add(2, null)\":");
+        System.out.println(list7);
+        list7.add(5, null);
+        System.out.println("К коллекции 7 применили метод \"add(5, null)\":");
+        System.out.println(list7);
+        System.out.println("К коллекции 7 применили метод \"indexOf(null)\":");
+        System.out.println(list7.indexOf(null));
+        System.out.println("К коллекции 7 применили метод \"lastIndexOf(null)\":");
+        System.out.println(list7.lastIndexOf(null));
+        System.out.println("К коллекции 7 применили метод \"indexOf(7)\":");
+        System.out.println(list7.indexOf(7));
+        System.out.println("К коллекции 7 применили метод \"lastIndexOf(9)\":");
+        System.out.println(list7.lastIndexOf(9));
+        System.out.println("К коллекции 7 применили метод \"contains(null)\":");
+        System.out.println(list7.contains(null));
+        System.out.println("К коллекции 7 применили метод \"contains(7)\":");
+        System.out.println(list7.contains(7));
     }
 }

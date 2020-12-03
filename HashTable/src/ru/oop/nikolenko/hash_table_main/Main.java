@@ -1,7 +1,7 @@
 package ru.oop.nikolenko.hash_table_main;
 
 import ru.oop.nikolenko.hash_table.HashTable;
-import ru.oop.nikolenko.array_list.my_array_list.MyArrayList;
+import ru.oop.nikolenko.my_array_list.MyArrayList;
 
 import java.util.Arrays;
 
