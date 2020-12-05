@@ -12,19 +12,23 @@ public class Main {
         return shapes[shapes.length - 1];
     }
 
-    public static Shape getShapeWithNumberByPerimeterSize(Shape[] shapes, int countByPerimeterSize) {
+    public static Shape getShapeWithNumberByPerimeterSize(Shape[] shapes, int numberByPerimeterSize) {
         checkShapes(shapes);
 
+        if (numberByPerimeterSize > shapes.length) {
+            throw new IllegalArgumentException("numberByPerimeterSize (" + numberByPerimeterSize + ") > shapes.length (" + shapes.length + ")");
+        }
+
         Arrays.sort(shapes, new SortByPerimeterComparator());
-        return shapes[shapes.length - countByPerimeterSize];
+        return shapes[shapes.length - numberByPerimeterSize];
     }
 
     private static void checkShapes(Shape[] shapes) {
-        if(shapes == null) {
+        if (shapes == null) {
             throw new IllegalArgumentException("shapes is null");
         }
 
-        if(shapes.length == 0) {
+        if (shapes.length == 0) {
             throw new IllegalArgumentException("shapes is empty");
         }
     }
@@ -39,10 +43,24 @@ public class Main {
                 new Circle(2)
         };
 
+        if (shapes == null) {
+            System.out.println("Для поиска фигур с максимальной площадью и вторым по величине переметру задайте массив фигур shapes в теле программы");
+            return;
+        }
+
+        if (shapes.length == 0) {
+            System.out.println("Для поиска фигур с максимальной площадью и вторым по величине переметру заполните массив фигур shapes в теле программы");
+            return;
+        }
+
         Shape maxAreaShape = getMaxAreaShape(shapes);
         System.out.println("Фигура с максимальной площадью: " + maxAreaShape);
 
-        Shape secondPerimeterShape = getShapeWithNumberByPerimeterSize(shapes, 2);
-        System.out.println("Фигура со вторым по велечине периметром: " + secondPerimeterShape);
+        if (shapes.length > 1) {
+            Shape secondPerimeterShape = getShapeWithNumberByPerimeterSize(shapes, 2);
+            System.out.println("Фигура со вторым по велечине периметром: " + secondPerimeterShape);
+        } else {
+            System.out.println("Невозможно вывести вторую по величине периметра фигуру, так как в массиве фигур shapes всего один элемент");
+        }
     }
 }
