@@ -9,8 +9,8 @@ public class Main {
         System.out.println(list0);
 
         System.out.println("Список 1:");
-        Integer[] data = new Integer[]{0, null, 2, 3, 4};
-        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<>(data);
+        Integer[] data1 = new Integer[]{0, null, 2, 3, 4};
+        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<>(data1);
         System.out.println(list1);
 
         System.out.println("Вывод элемента по индексу 2:");
@@ -91,5 +91,28 @@ public class Main {
         System.out.println("Удаление элемента со значением \"2\" из списка 1: " + list1.deleteByData(2));
         System.out.println("Список 1:");
         System.out.println(list1);
+
+        System.out.println("Список 4:");
+        Integer[] data2 = new Integer[]{};
+        SinglyLinkedList<Integer> list4 = new SinglyLinkedList<>(data2);
+        System.out.println(list4);
+
+        System.out.println("Список 5:");
+        Integer[] data3 = new Integer[]{null, 1, 2};
+        SinglyLinkedList<Integer> list5 = new SinglyLinkedList<>(data3);
+        System.out.println(list5);
+
+        System.out.println("Удаление элемента со значением \"null\" из списка 5: " + list5.deleteByData(null));
+        System.out.println("Список 5:");
+        System.out.println(list5);
+
+        System.out.println("Список 6:");
+        Integer[] data4 = new Integer[]{45, 21, null, 1, 2};
+        SinglyLinkedList<Integer> list6 = new SinglyLinkedList<>(data4);
+        System.out.println(list6);
+
+        System.out.println("Удаление элемента со значением \"2\" из списка 6: " + list6.deleteByData(2));
+        System.out.println("Список 6:");
+        System.out.println(list6);
     }
 }

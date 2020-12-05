@@ -1,6 +1,7 @@
 package ru.oop.nikolenko.singly_linked_list;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
@@ -10,6 +11,10 @@ public class SinglyLinkedList<T> {
     }
 
     public SinglyLinkedList(T[] array) {
+        if (array.length == 0) {
+            return;
+        }
+
         ListItem<T> previousItem = new ListItem<>(array[array.length - 1]);
 
         for (int i = array.length - 2; i >= 0; i--) {
@@ -116,14 +121,14 @@ public class SinglyLinkedList<T> {
 
         if (index == 0) {
             return deleteFirst();
-        } else {
-            ListItem<T> item = getItem(index - 1);
-            T data = item.getNext().getData();
-            item.setNext(item.getNext().getNext());
-            --length;
-
-            return data;
         }
+
+        ListItem<T> item = getItem(index - 1);
+        T data = item.getNext().getData();
+        item.setNext(item.getNext().getNext());
+        --length;
+
+        return data;
     }
 
     public void addFirst(T data) {
@@ -145,33 +150,18 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean deleteByData(T data) {
-        if (head == null) {
+        if (length == 0) {
             return false;
         }
 
-        if (data == null) {
-            for (ListItem<T> item = head; item.getNext() != null; item = item.getNext()) {
-                if (item.getNext().getData() == null) {
-                    item.setNext(item.getNext().getNext());
-                    --length;
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        if (head.getData().equals(data)) {
+        if (Objects.equals(head.getData(), data)) {
             deleteFirst();
             return true;
         }
 
         for (ListItem<T> item = head; item.getNext() != null; item = item.getNext()) {
-            if (item.getNext().getData().equals(data)) {
+            if (Objects.equals(item.getNext().getData(), data)) {
                 item.setNext(item.getNext().getNext());
-                --length;
-
                 return true;
             }
         }
