@@ -181,7 +181,7 @@ public class Matrix {
 
     public double getDeterminant() {
         if (rows.length != getColumnsCount()) {
-            throw new UnsupportedOperationException("matrix must be square");
+            throw new UnsupportedOperationException("matrix must be square. Now it's size " + getRowsCount() + "x" + getColumnsCount());
         }
 
         Matrix matrixCopy = new Matrix(this);
@@ -245,7 +245,7 @@ public class Matrix {
         return resultVector;
     }
 
-    public void getSum(Matrix matrix) {
+    public void add(Matrix matrix) {
         checkMatrix(matrix);
 
         for (int i = 0; i < rows.length; i++) {
@@ -253,7 +253,7 @@ public class Matrix {
         }
     }
 
-    public void getDifference(Matrix matrix) {
+    public void subtract(Matrix matrix) {
         checkMatrix(matrix);
 
         for (int i = 0; i < rows.length; i++) {
@@ -281,7 +281,7 @@ public class Matrix {
         checkMatrices(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
-        resultMatrix.getSum(matrix2);
+        resultMatrix.add(matrix2);
 
         return resultMatrix;
     }
@@ -290,7 +290,7 @@ public class Matrix {
         checkMatrices(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
-        resultMatrix.getDifference(matrix2);
+        resultMatrix.subtract(matrix2);
 
         return resultMatrix;
     }
