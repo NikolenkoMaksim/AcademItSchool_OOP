@@ -244,17 +244,17 @@ public class HashTable<T> implements Collection<T> {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
+        if(size == 0) {
+            return "{}";
+        }
+
         stringBuilder.append("{");
 
-        if (size > 0) {
-            for (ArrayList<T> list : lists) {
-                stringBuilder.append(list).append(", ");
-            }
-
-            stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
-        } else {
-            stringBuilder.append("}");
+        for (ArrayList<T> list : lists) {
+            stringBuilder.append(list).append(", ");
         }
+
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
 
         return stringBuilder.toString();
     }
