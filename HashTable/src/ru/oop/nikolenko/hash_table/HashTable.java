@@ -192,11 +192,18 @@ public class HashTable<T> implements Collection<T> {
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean isRemoved = false;
+        size = 0;
 
-        for (Object e : c) {
-            while (remove(e)) {
+        for (ArrayList<T> list : lists) {
+            if (list.removeAll(c)) {
                 isRemoved = true;
             }
+
+            size += list.size();
+        }
+
+        if (isRemoved) {
+            ++modCount;
         }
 
         return isRemoved;
@@ -206,16 +213,13 @@ public class HashTable<T> implements Collection<T> {
     public boolean retainAll(Collection<?> c) {
         boolean isRetained = false;
 
+        size = 0;
+
         for (ArrayList<T> list : lists) {
-            if (list != null) {
-                for (int i = list.size() - 1; i >= 0; i--) {
-                    if (!c.contains(list.get(i))) {
-                        list.remove(i);
-                        --size;
-                        isRetained = true;
-                    }
-                }
+            if (list.retainAll(c)) {
+                isRetained = true;
             }
+            size += list.size();
         }
 
         if (isRetained) {
