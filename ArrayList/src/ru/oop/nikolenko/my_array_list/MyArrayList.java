@@ -71,14 +71,10 @@ public class MyArrayList<T> implements List<T> {
         private int currentIndex = -1;
         private final int initialModCount = modCount;
 
-        private void checkMod() {
+        public boolean hasNext() {
             if (initialModCount != modCount) {
                 throw new ConcurrentModificationException("list was changed");
             }
-        }
-
-        public boolean hasNext() {
-            checkMod();
 
             return currentIndex + 1 < size;
         }
@@ -212,16 +208,16 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        boolean isRetain = false;
+        boolean isRetained = false;
 
         for (int i = size - 1; i >= 0; i--) {
             if (!c.contains(items[i])) {
                 remove(i);
-                isRetain = true;
+                isRetained = true;
             }
         }
 
-        return isRetain;
+        return isRetained;
     }
 
     @Override
