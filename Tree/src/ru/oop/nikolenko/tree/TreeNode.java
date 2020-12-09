@@ -1,20 +1,12 @@
 package ru.oop.nikolenko.tree;
 
-public class TreeNode<T extends Comparable<T>> {
+public class TreeNode<T> {
     private T data;
     private TreeNode<T> left;
     private TreeNode<T> right;
 
     public TreeNode(T data) {
-        checkData(data);
-
         this.data = data;
-    }
-
-    private void checkData(T data) {
-        if (data == null) {
-            throw new IllegalArgumentException("data can't be null");
-        }
     }
 
     public T getData() {
@@ -22,8 +14,6 @@ public class TreeNode<T extends Comparable<T>> {
     }
 
     public void setData(T data) {
-        checkData(data);
-
         this.data = data;
     }
 

@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ArrayList" />
+    <orderEntry type="module" module-name="Shape" />
+    <orderEntry type="module" module-name="Vector" exported="" />
   </component>
 </module>

@@ -2,11 +2,13 @@ package ru.oop.nikolenko.tree_main;
 
 import ru.oop.nikolenko.my_array_list.MyArrayList;
 import ru.oop.nikolenko.tree.Tree;
+import ru.oop.nikolenko.vector.Vector;
 
 import java.util.Arrays;
-import java.util.function.UnaryOperator;
+import java.util.Comparator;
 
-public class Tree_main {
+
+public class TreeMain {
     public static void main(String[] args) {
         Tree<Integer> tree1 = new Tree<>(50);
 
@@ -19,7 +21,7 @@ public class Tree_main {
 
         System.out.println("Значение коряня дерева 1: " + tree1.getRootData());
 
-        System.out.println("Добавили элемент \"78\"  в дерево 1:");
+        System.out.println("Добавили элемент \"78\" в дерево 1:");
         tree1.add(78);
         System.out.println(tree1);
 
@@ -32,7 +34,6 @@ public class Tree_main {
         tree1.add(35);
         System.out.println(tree1);
 
-        System.out.println("Удалили элемент \"35\" из дерева 1: " + tree1.remove(35));
         System.out.println("Удалили элемент \"35\" из дерева 1: " + tree1.remove(35));
         System.out.println("Дерево 1:");
         System.out.println(tree1);
@@ -63,12 +64,6 @@ public class Tree_main {
         Object[] array2 = tree1.toArray();
         System.out.println(Arrays.toString(array2));
 
-        System.out.println("К каждому объекту дерева 1 добавили 2:");
-        UnaryOperator<Integer> uo = z -> z + 2;
-        tree1.replaceAll(uo);
-        System.out.println("Дерево 1:");
-        System.out.println(tree1);
-
         System.out.println("Значение корня дерева 1: " + tree1.getRootData());
 
         Tree<Integer> tree2 = new Tree<>();
@@ -76,7 +71,7 @@ public class Tree_main {
         System.out.println(tree2);
 
         System.out.println("Дерево 2 включает \"12\": " + tree2.contains(12));
-        System.out.println("Удалить \"12\" из дерева 2: " + tree2.remove(1));
+        System.out.println("Удалить \"12\" из дерева 2: " + tree2.remove(12));
 
         System.out.println("Добавили элемент \"97\" в дерево 2:");
         tree2.add(97);
@@ -107,5 +102,46 @@ public class Tree_main {
         System.out.println("Массив объектов дерева 2:");
         Object[] array3 = tree2.toArray();
         System.out.println(Arrays.toString(array3));
+
+        tree2.add(null);
+        System.out.println("Добавили элемент \"null\" в дерево 2:");
+        System.out.println(tree2);
+
+        System.out.println("Дерево2 содержит \"null\": " + tree2.contains(null));
+
+        tree2.add(50);
+        System.out.println("Добавили элемент \"50\" в дерево 2:");
+        System.out.println(tree2);
+
+        tree2.add(40);
+        System.out.println("Добавили элемент \"40\" в дерево 2:");
+        System.out.println(tree2);
+
+        tree2.add(null);
+        System.out.println("Добавили элемент \"null\" в дерево 2:");
+        System.out.println(tree2);
+
+        System.out.println("Удалили элемент \"null\" из дерева 2: " + tree2.remove(null));
+        System.out.println("Дерево 2:");
+        System.out.println(tree2);
+
+        System.out.println("Удалили элемент \"null\" из дерева 2: " + tree2.remove(null));
+        System.out.println("Дерево 2:");
+        System.out.println(tree2);
+
+        tree2.add(null);
+        System.out.println("Добавили элемент \"null\" в дерево 2:");
+        System.out.println(tree2);
+
+        Comparator<Vector> comparator = Comparator.comparing(obj -> obj.getSize());
+
+        Tree<Vector> tree3 = new Tree<>(comparator);
+        tree3.add(new Vector(3));
+        tree3.add(new Vector(3));
+        tree3.add(new Vector(5));
+        tree3.add(new Vector(2));
+
+        System.out.println("Дерево 3:");
+        System.out.println(tree3);
     }
 }
