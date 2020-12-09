@@ -133,7 +133,7 @@ public class TreeMain {
         System.out.println("Добавили элемент \"null\" в дерево 2:");
         System.out.println(tree2);
 
-        Comparator<Vector> comparator = Comparator.comparing(obj -> obj.getSize());
+        Comparator<Vector> comparator = Comparator.comparing(Vector::getSize);
 
         Tree<Vector> tree3 = new Tree<>(comparator);
         tree3.add(new Vector(3));
