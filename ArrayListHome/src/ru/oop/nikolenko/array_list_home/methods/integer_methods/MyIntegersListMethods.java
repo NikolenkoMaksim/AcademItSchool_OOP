@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.array_list_home.methods.interger_methods;
+package ru.oop.nikolenko.array_list_home.methods.integer_methods;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,7 +22,7 @@ public class MyIntegersListMethods {
         }
     }
 
-    public static ArrayList<Integer> fillIntegersListFromFile(String inputFileName) {
+    public static ArrayList<Integer> getIntegersListFromFile(String inputFileName) {
         ArrayList<Integer> list = new ArrayList<>();
 
         if (inputFileName == null) {
@@ -48,20 +48,18 @@ public class MyIntegersListMethods {
         return null;
     }
 
-    public static ArrayList<Integer> removeDuplications(ArrayList<Integer> list) {
+    public static ArrayList<Integer> getListWithOutDuplications(ArrayList<Integer> list) {
         checkList(list);
 
-        ArrayList<Integer> outputList = new ArrayList<>();
+        ArrayList<Integer> resultList = new ArrayList<>(list.size());
 
-        for (int i = 0; i < list.size() - 1; i++) {
-            Integer number = list.get(i);
-
-            if (!outputList.contains(number)) {
-                outputList.add(number);
+        for (Integer data : list) {
+            if (!resultList.contains(data)) {
+                resultList.add(data);
             }
         }
 
-        return outputList;
+        return resultList;
     }
 
     private static void checkList(ArrayList<Integer> list) {

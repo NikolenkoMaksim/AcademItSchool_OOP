@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MyStringsListMethods {
-    public static ArrayList<String> fillStringsListFromFile(String inputFileName) {
+    public static ArrayList<String> getStringsListFromFile(String inputFileName) {
         if (inputFileName == null) {
             throw new IllegalArgumentException("inputFileName is null");
         }
@@ -15,8 +15,7 @@ public class MyStringsListMethods {
 
         try (Scanner scanner = new Scanner(new FileInputStream(inputFileName))) {
             while (scanner.hasNextLine()) {
-                String s = scanner.nextLine();
-                list.add(s);
+                list.add(scanner.nextLine());
             }
 
             return list;
