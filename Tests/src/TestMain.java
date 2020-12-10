@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Hashtable;
+import javax.swing.*;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class TestMain {
@@ -24,6 +22,8 @@ public class TestMain {
         System.out.println("К коллекции 6 применили метод \"sort(comparator)\".");
         System.out.println("Коллекция 6:");
         System.out.println(list);
+
+
     }
 
 

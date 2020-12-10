@@ -1,0 +1,75 @@
+    public boolean remove(T data) {
+        if (root == null) {
+            return false;
+        }
+
+        if (size == 1) {
+            if (data != root.getData()) {
+                return false;
+            }
+
+            root = null;
+            return true;
+        }
+
+        if (compare(root.getData(), data) == 0 && root.getRight() == null) {
+            root = root.getLeft();
+
+            return true;
+        }
+
+        TreeNode<T>[] array = findNodeAndParent(data);
+
+        if (array == null) {
+            return false;
+        }
+
+        if (array[0].getRight() == null) {
+            setNodeRightChildToParent(array[0], array[1]);
+            --size;
+            return true;
+        }
+
+        TreeNode<T> previousNode = array[0];
+        TreeNode<T> lastLeftList = array[0].getRight();
+
+        while (lastLeftList.getLeft() != null) {
+            previousNode = lastLeftList;
+            lastLeftList = lastLeftList.getLeft();
+        }
+
+        array[0].setData(lastLeftList.getData());
+        setNodeRightChildToParent(lastLeftList, previousNode);
+
+        --size;
+
+        return true;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void replaceAll(UnaryOperator<T> operator) {
+        if (root == null) {
+            return;
+        }
+
+        if (operator == null) {
+            throw new IllegalArgumentException("operator can't be null");
+        }
+
+        visit(root, operator);
+    }
+
+    private void visit(TreeNode<T> node, UnaryOperator<T> operator) {
+        node.setData(operator.apply(node.getData()));
+
+        if (node.getLeft() != null) {
+            visit(node.getLeft(), operator);
+        }
+
+        if (node.getRight() != null) {
+            visit(node.getRight(), operator);
+        }
+    }
