@@ -7,7 +7,7 @@
 	<body>
 		<table>
 			<tr><td>и такого не было</br></td><td>1</td><td>2</td></tr>
-			<tr><td>и немного извращения</td><td></br></br></td><td>""</td></tr>
+			<tr><td>и немного запутанее</td><td></br></br></td><td>""</td></tr>
 			<tr><td>и такого не было</br></td><td>1</td><td>2</td></tr>
 			<tr><td>на будующее</td><td>строка с &amp;</td><td> ячейка с &lt;</td></tr>
 			<tr><td>ячейка с &gt;</td><td> c &amp;&lt;&gt;</td><td> это конец=)</td></tr>
