@@ -117,16 +117,6 @@ public class MyArrayList<T> implements List<T> {
         return true;
     }
 
-    private void checkSize() {
-        if (items.length == 0) {
-            items = Arrays.copyOf(items, DEFAULT_CAPACITY);
-        }
-
-        if (size == items.length) {
-            ensureCapacity(2 * size);
-        }
-    }
-
     public void ensureCapacity(int desiredCapacity) {
         checkCapacity(desiredCapacity);
 
@@ -136,7 +126,9 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public void trimToSize() {
-        items = Arrays.copyOf(items, size);
+        if (items.length > size) {
+            items = Arrays.copyOf(items, size);
+        }
     }
 
     @Override
@@ -191,7 +183,7 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public boolean removeAll(Collection<?> c) {
         if (c.isEmpty()) {
-            return true;
+            return false;
         }
 
         boolean isRemoved = false;
@@ -271,7 +263,12 @@ public class MyArrayList<T> implements List<T> {
     public void add(int index, T data) {
         checkIndexForAdd(index);
 
-        checkSize();
+        if (items.length == 0) {
+            //noinspection unchecked
+            items = (T[]) new Object[DEFAULT_CAPACITY];
+        } else if (size == items.length) {
+            items = Arrays.copyOf(items, 2 * size);
+        }
 
         System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = data;
@@ -299,18 +296,8 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int indexOf(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (items[i] == null) {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
         for (int i = 0; i < size; i++) {
-            if (items[i] != null && items[i].equals(o)) {
+            if (Objects.equals(items[i], o)) {
                 return i;
             }
         }
@@ -320,18 +307,8 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int lastIndexOf(Object o) {
-        if (o == null) {
-            for (int i = size - 1; i >= 0; i--) {
-                if (items[i] == null) {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
         for (int i = size - 1; i >= 0; i--) {
-            if (items[i] != null && items[i].equals(o)) {
+            if (Objects.equals(items[i], o)) {
                 return i;
             }
         }
@@ -341,7 +318,14 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(Arrays.copyOf(items, size));
+        final int prime = 11;
+        int hash = 1;
+
+        for (int i = 0; i < size; i++) {
+            hash = prime * hash + items[i].hashCode();
+        }
+
+        return hash;
     }
 
     @Override
@@ -355,9 +339,19 @@ public class MyArrayList<T> implements List<T> {
         }
 
         //noinspection unchecked
-        MyArrayList<T> m = (MyArrayList<T>) obj;
+        MyArrayList<T> list = (MyArrayList<T>) obj;
 
-        return Arrays.equals(Arrays.copyOf(items, size), Arrays.copyOf(m.items, m.size));
+        if (size != list.size) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (!items[i].equals(list.items[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
