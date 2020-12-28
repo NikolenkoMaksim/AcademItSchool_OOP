@@ -1,4 +1,5 @@
 package ru.oop.nikolenko.my_grath_main;
+
 import ru.oop.nikolenko.my_grath.MyGrath;
 
 public class MyGrathMain {
