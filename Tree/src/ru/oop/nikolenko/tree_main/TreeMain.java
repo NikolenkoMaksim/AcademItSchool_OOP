@@ -29,7 +29,7 @@ public class TreeMain {
         tree1.add(97);
         System.out.println(tree1);
 
-        System.out.println("Добавили элемент \"85\" и \"35\" в дерево 1:");
+        System.out.println("Добавили элементы \"85\" и \"35\" в дерево 1:");
         tree1.add(85);
         tree1.add(35);
         System.out.println(tree1);
@@ -58,6 +58,9 @@ public class TreeMain {
         System.out.println("Количество элементов дерева 1: " + tree1.size());
 
         System.out.println("Дерево 1 включает \"12\": " + tree1.contains(12));
+        System.out.println("Дерево 1 включает \"50\": " + tree1.contains(50));
+        System.out.println("Дерево 1 включает \"69\": " + tree1.contains(69));
+        System.out.println("Дерево 1 включает \"97\": " + tree1.contains(97));
         System.out.println("Дерево 1 включает \"71\": " + tree1.contains(71));
 
         System.out.println("Массив объектов дерева 1:");

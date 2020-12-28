@@ -17,8 +17,6 @@ public class Tree<T> {
     }
 
     public Tree(T data) {
-        checkData(data);
-
         root = new TreeNode<>(data);
         size = 1;
     }
@@ -29,7 +27,7 @@ public class Tree<T> {
         }
 
         //noinspection unchecked
-        Comparable<T> data3 = (Comparable<T>) data1;
+        Comparable<T> comparableData1 = (Comparable<T>) data1;
 
         if (data1 == null) {
             if (data2 == null) {
@@ -43,7 +41,7 @@ public class Tree<T> {
             return 1;
         }
 
-        return data3.compareTo(data2);
+        return comparableData1.compareTo(data2);
     }
 
     public T getRootData() {
@@ -54,18 +52,7 @@ public class Tree<T> {
         return root.getData();
     }
 
-    private void checkData(T data) {
-        if (comparator == null) {
-            //noinspection unchecked
-            Comparable<T> comparableData = (Comparable<T>) data;
-        }
-    }
-
     public void add(T data) {
-        checkData(data);
-
-        boolean isNotAdded = true;
-
         if (root == null) {
             root = new TreeNode<>(data);
             ++size;
@@ -74,7 +61,7 @@ public class Tree<T> {
 
         TreeNode<T> currentNode = root;
 
-        while (isNotAdded) {
+        while (true) {
             if (compare(data, currentNode.getData()) < 0) {
                 TreeNode<T> leftNode = currentNode.getLeft();
 
@@ -82,7 +69,7 @@ public class Tree<T> {
                     currentNode = leftNode;
                 } else {
                     currentNode.setLeft(new TreeNode<>(data));
-                    isNotAdded = false;
+                    break;
                 }
             } else {
                 TreeNode<T> rightNode = currentNode.getRight();
@@ -91,7 +78,7 @@ public class Tree<T> {
                     currentNode = rightNode;
                 } else {
                     currentNode.setRight(new TreeNode<>(data));
-                    isNotAdded = false;
+                    break;
                 }
             }
         }
@@ -131,7 +118,7 @@ public class Tree<T> {
                 }
             } else {
                 if (currentNode.getRight() != null) {
-                    currentNode = currentNode.getLeft();
+                    currentNode = currentNode.getRight();
                 } else {
                     return false;
                 }
@@ -142,27 +129,29 @@ public class Tree<T> {
     private TreeNode<T>[] findNodeAndParent(T data) {
         //noinspection unchecked
         TreeNode<T>[] array = (TreeNode<T>[]) new TreeNode<?>[2];
-        array[0] = root;
-        array[1] = null;
+        TreeNode<T> node = root;
+        TreeNode<T> parent = null;
 
         while (true) {
-            int comparisonResult = compare(data, array[0].getData());
+            int comparisonResult = compare(data, node.getData());
 
             if (comparisonResult == 0) {
+                array[0] = node;
+                array[1] = parent;
                 return array;
             }
 
             if (comparisonResult < 0) {
-                if (array[0].getLeft() != null) {
-                    array[1] = array[0];
-                    array[0] = array[0].getLeft();
+                if (node.getLeft() != null) {
+                    parent = node;
+                    node = node.getLeft();
                 } else {
                     return null;
                 }
             } else {
-                if (array[0].getRight() != null) {
-                    array[1] = array[0];
-                    array[0] = array[0].getRight();
+                if (node.getRight() != null) {
+                    parent = node;
+                    node = node.getRight();
                 } else {
                     return null;
                 }
@@ -171,12 +160,12 @@ public class Tree<T> {
     }
 
     private void setNodeRightChildToParent(TreeNode<T> node, TreeNode<T> parent) {
-        if (parent.getLeft() == node) {
+        if (parent.getLeft().equals(node)) {
             parent.setLeft(node.getRight());
             return;
         }
 
-        if (parent.getRight() == node) {
+        if (parent.getRight().equals(node)) {
             parent.setRight(node.getRight());
             return;
         }
@@ -190,7 +179,7 @@ public class Tree<T> {
         }
 
         if (size == 1) {
-            if (data != root.getData()) {
+            if (compare(data, root.getData()) != 0) {
                 return false;
             }
 
@@ -204,27 +193,30 @@ public class Tree<T> {
             return true;
         }
 
-        TreeNode<T>[] array = findNodeAndParent(data);
+        TreeNode<T>[] nodeAndParentArray = findNodeAndParent(data);
 
-        if (array == null) {
+        if (nodeAndParentArray == null) {
             return false;
         }
 
-        if (array[0].getRight() == null) {
-            setNodeRightChildToParent(array[0], array[1]);
+        TreeNode<T> node = nodeAndParentArray[0];
+        TreeNode<T> parent = nodeAndParentArray[1];
+
+        if (node.getRight() == null) {
+            setNodeRightChildToParent(node, parent);
             --size;
             return true;
         }
 
-        TreeNode<T> previousNode = array[0];
-        TreeNode<T> lastLeftList = array[0].getRight();
+        TreeNode<T> previousNode = node;
+        TreeNode<T> lastLeftList = node.getRight();
 
         while (lastLeftList.getLeft() != null) {
             previousNode = lastLeftList;
             lastLeftList = lastLeftList.getLeft();
         }
 
-        array[0].setData(lastLeftList.getData());
+        nodeAndParentArray[0].setData(lastLeftList.getData());
         setNodeRightChildToParent(lastLeftList, previousNode);
 
         --size;
@@ -276,7 +268,7 @@ public class Tree<T> {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        Deque<TreeNode<T>> queue = new LinkedList<>();
+        Queue<TreeNode<T>> queue = new LinkedList<>();
 
         queue.add(root);
         TreeNode<T> node;
@@ -284,7 +276,7 @@ public class Tree<T> {
         stringBuilder.append("{");
 
         while (!queue.isEmpty()) {
-            node = queue.getFirst();
+            node = queue.remove();
 
             stringBuilder.append(node.getData());
 
@@ -292,21 +284,19 @@ public class Tree<T> {
                 stringBuilder.append(", ");
             } else {
                 if (node.getLeft() != null) {
-                    queue.addLast(node.getLeft());
+                    queue.add(node.getLeft());
                     stringBuilder.append(" (").append(node.getLeft().getData()).append(", ");
                 } else {
                     stringBuilder.append(" (-, ");
                 }
 
                 if (node.getRight() != null) {
-                    queue.addLast(node.getRight());
+                    queue.add(node.getRight());
                     stringBuilder.append(node.getRight().getData()).append("), ");
                 } else {
                     stringBuilder.append("-), ");
                 }
             }
-
-            queue.removeFirst();
         }
 
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
@@ -314,37 +304,37 @@ public class Tree<T> {
         return stringBuilder.toString();
     }
 
-    private void visitInWidth(TreeNode<T> node, Consumer<T> consumer) {
-        if (node == null) {
+    public void visitInWidth(Consumer<T> consumer) {
+        if (root == null) {
             return;
         }
 
-        Deque<TreeNode<T>> queue = new LinkedList<>();
-        TreeNode<T> queueNode;
-
-        queue.add(node);
+        Queue<TreeNode<T>> queue = new LinkedList<>();
+        queue.add(root);
 
         while (!queue.isEmpty()) {
-            queueNode = queue.getFirst();
+            TreeNode<T> queueNode = queue.remove();
             consumer.accept(queueNode.getData());
 
             if (queueNode.getLeft() != null) {
-                queue.addLast(queueNode.getLeft());
+                queue.add(queueNode.getLeft());
             }
 
             if (queueNode.getRight() != null) {
-                queue.addLast(queueNode.getRight());
+                queue.add(queueNode.getRight());
             }
-
-            queue.removeFirst();
         }
     }
 
-    private void visitInDeepWithRecursion(TreeNode<T> node, Consumer<T> consumer) {
-        if (node == null) {
+    public void visitInDeepWithRecursion(Consumer<T> consumer) {
+        if (root == null) {
             return;
         }
 
+        visitInDeepWithRecursion(root, consumer);
+    }
+
+    private void visitInDeepWithRecursion(TreeNode<T> node, Consumer<T> consumer) {
         consumer.accept(node.getData());
 
         if (node.getLeft() != null) {
@@ -356,21 +346,17 @@ public class Tree<T> {
         }
     }
 
-    private void visitInDeep(TreeNode<T> node, Consumer<T> consumer) {
-        if (node == null) {
+    public void visitInDeep(Consumer<T> consumer) {
+        if (root == null) {
             return;
         }
 
         Deque<TreeNode<T>> stack = new LinkedList<>();
-        stack.addLast(node);
-
-        TreeNode<T> dequeNode;
+        stack.addLast(root);
 
         while (!stack.isEmpty()) {
-            dequeNode = stack.getLast();
+            TreeNode<T> dequeNode = stack.removeLast();
             consumer.accept(dequeNode.getData());
-
-            stack.removeLast();
 
             if (dequeNode.getRight() != null) {
                 stack.addLast(dequeNode.getRight());
