@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 public class MyGrath {
-    private int[][] myGrath;
+    private final int[][] myGrath;
 
     public MyGrath(int[][] myGrath) {
         this.myGrath = myGrath;
