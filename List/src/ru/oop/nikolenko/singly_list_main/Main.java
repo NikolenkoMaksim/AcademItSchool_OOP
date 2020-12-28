@@ -91,6 +91,8 @@ public class Main {
         System.out.println("Удаление элемента со значением \"2\" из списка 1: " + list1.deleteByData(2));
         System.out.println("Список 1:");
         System.out.println(list1);
+        System.out.println("Длина списка 1:");
+        System.out.println(list1.getLength());
 
         System.out.println("Список 4:");
         Integer[] data2 = new Integer[]{};
@@ -114,5 +116,8 @@ public class Main {
         System.out.println("Удаление элемента со значением \"2\" из списка 6: " + list6.deleteByData(2));
         System.out.println("Список 6:");
         System.out.println(list6);
+
+        System.out.println("Длина списка 6:");
+        System.out.println(list6.getLength());
     }
 }

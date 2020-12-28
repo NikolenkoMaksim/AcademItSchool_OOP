@@ -162,6 +162,7 @@ public class SinglyLinkedList<T> {
         for (ListItem<T> item = head; item.getNext() != null; item = item.getNext()) {
             if (Objects.equals(item.getNext().getData(), data)) {
                 item.setNext(item.getNext().getNext());
+                --length;
                 return true;
             }
         }
