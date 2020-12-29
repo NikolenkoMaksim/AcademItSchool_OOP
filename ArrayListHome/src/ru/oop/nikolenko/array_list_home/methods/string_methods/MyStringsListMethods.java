@@ -11,9 +11,9 @@ public class MyStringsListMethods {
             throw new IllegalArgumentException("inputFileName is null");
         }
 
-        ArrayList<String> list = new ArrayList<>();
-
         try (Scanner scanner = new Scanner(new FileInputStream(inputFileName))) {
+            ArrayList<String> list = new ArrayList<>();
+
             while (scanner.hasNextLine()) {
                 list.add(scanner.nextLine());
             }

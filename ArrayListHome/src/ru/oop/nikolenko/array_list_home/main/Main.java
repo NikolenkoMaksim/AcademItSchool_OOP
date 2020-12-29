@@ -25,7 +25,7 @@ public class Main {
         System.out.println(fileIntegers);
 
         if (fileIntegers != null) {
-            ArrayList<Integer> fileIntegersWithOutDuplications = MyIntegersListMethods.getListWithOutDuplications(fileIntegers);
+            ArrayList<Integer> fileIntegersWithOutDuplications = MyIntegersListMethods.getListWithoutDuplications(fileIntegers);
             System.out.println("Список 4 - это список 3 без повторяющихся чисел:");
             System.out.println(fileIntegersWithOutDuplications);
         }

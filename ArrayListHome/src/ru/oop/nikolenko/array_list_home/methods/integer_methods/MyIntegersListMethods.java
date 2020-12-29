@@ -5,11 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static java.lang.Integer.valueOf;
-
 public class MyIntegersListMethods {
     public static void removeEvenNumbers(ArrayList<Integer> list) {
-        checkList(list);
+        checkListForNull(list);
 
         int i = 0;
 
@@ -23,20 +21,18 @@ public class MyIntegersListMethods {
     }
 
     public static ArrayList<Integer> getIntegersListFromFile(String inputFileName) {
-        ArrayList<Integer> list = new ArrayList<>();
-
         if (inputFileName == null) {
             throw new IllegalArgumentException("inputFileName is null");
         }
 
         try (Scanner scanner = new Scanner(new FileInputStream(inputFileName))) {
-            while (scanner.hasNextLine()) {
-                String s = scanner.nextLine();
+            ArrayList<Integer> list = new ArrayList<>();
 
-                try {
-                    list.add(valueOf(s));
-                } catch (NumberFormatException e) {
-                    System.out.println("String missed. NumberFormatException: " + e.getMessage());
+            while (scanner.hasNextLine()) {
+                if (scanner.hasNextInt()) {
+                    list.add(scanner.nextInt());
+                } else {
+                    scanner.nextLine();
                 }
             }
 
@@ -48,21 +44,21 @@ public class MyIntegersListMethods {
         return null;
     }
 
-    public static ArrayList<Integer> getListWithOutDuplications(ArrayList<Integer> list) {
-        checkList(list);
+    public static ArrayList<Integer> getListWithoutDuplications(ArrayList<Integer> list) {
+        checkListForNull(list);
 
         ArrayList<Integer> resultList = new ArrayList<>(list.size());
 
-        for (Integer data : list) {
-            if (!resultList.contains(data)) {
-                resultList.add(data);
+        for (Integer number : list) {
+            if (!resultList.contains(number)) {
+                resultList.add(number);
             }
         }
 
         return resultList;
     }
 
-    private static void checkList(ArrayList<Integer> list) {
+    private static void checkListForNull(ArrayList<Integer> list) {
         if (list == null) {
             throw new IllegalArgumentException("list is null");
         }
