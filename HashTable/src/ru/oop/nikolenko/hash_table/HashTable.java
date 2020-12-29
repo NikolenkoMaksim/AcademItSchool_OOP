@@ -3,9 +3,9 @@ package ru.oop.nikolenko.hash_table;
 import java.util.*;
 
 public class HashTable<T> implements Collection<T> {
-    final static int DEFAULT_LENGTH = 10;
+    private final static int DEFAULT_LENGTH = 10;
 
-    private ArrayList<T>[] lists;
+    private final ArrayList<T>[] lists;
     private int size;
     private int modCount;
 
@@ -77,7 +77,7 @@ public class HashTable<T> implements Collection<T> {
             }
 
             while (lists[listIndex] == null || lists[listIndex].isEmpty() || (elementIndex + 1) == lists[listIndex].size()) {
-                listIndex++;
+                ++listIndex;
                 elementIndex = -1;
             }
 
@@ -105,16 +105,10 @@ public class HashTable<T> implements Collection<T> {
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < size) {
             //noinspection unchecked
-            return (T1[]) Arrays.copyOf(lists, size, a.getClass());
+            return (T1[]) toArray();
         }
 
-        int i = 0;
-
-        for (T e : this) {
-            //noinspection unchecked
-            a[i] = (T1) e;
-            i++;
-        }
+        System.arraycopy(toArray(), 0, a, 0, size);
 
         if (a.length > size) {
             a[size] = null;
@@ -127,7 +121,7 @@ public class HashTable<T> implements Collection<T> {
     public boolean add(T element) {
         int listIndex = getListIndex(element);
 
-        createList(listIndex);
+        provideList(listIndex);
 
         boolean isAdded = lists[listIndex].add(element);
 
@@ -139,7 +133,7 @@ public class HashTable<T> implements Collection<T> {
         return isAdded;
     }
 
-    private void createList(int listIndex) {
+    private void provideList(int listIndex) {
         if (lists[listIndex] == null) {
             lists[listIndex] = new ArrayList<>();
         }
@@ -148,6 +142,10 @@ public class HashTable<T> implements Collection<T> {
     @Override
     public boolean remove(Object o) {
         int listIndex = getListIndex(o);
+
+        if (lists[listIndex] == null) {
+            return false;
+        }
 
         boolean isRemoved = lists[listIndex].remove(o);
 
@@ -173,18 +171,10 @@ public class HashTable<T> implements Collection<T> {
     @Override
     public boolean addAll(Collection<? extends T> c) {
         for (T e : c) {
-            int listIndex = getListIndex(e);
-
-            createList(listIndex);
-
-            if (!lists[listIndex].add(e)) {
+            if (!add(e)) {
                 return false;
             }
-
-            ++size;
         }
-
-        ++modCount;
 
         return true;
     }
@@ -195,11 +185,13 @@ public class HashTable<T> implements Collection<T> {
         size = 0;
 
         for (ArrayList<T> list : lists) {
-            if (list.removeAll(c)) {
-                isRemoved = true;
-            }
+            if (list != null) {
+                if (list.removeAll(c)) {
+                    isRemoved = true;
+                }
 
-            size += list.size();
+                size += list.size();
+            }
         }
 
         if (isRemoved) {
@@ -212,14 +204,16 @@ public class HashTable<T> implements Collection<T> {
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean isRetained = false;
-
         size = 0;
 
         for (ArrayList<T> list : lists) {
-            if (list.retainAll(c)) {
-                isRetained = true;
+            if (list != null) {
+                if (list.retainAll(c)) {
+                    isRetained = true;
+                }
+
+                size += list.size();
             }
-            size += list.size();
         }
 
         if (isRetained) {
@@ -242,11 +236,11 @@ public class HashTable<T> implements Collection<T> {
     }
 
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if(size == 0) {
+        if (size == 0) {
             return "{}";
         }
+
+        StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("{");
 

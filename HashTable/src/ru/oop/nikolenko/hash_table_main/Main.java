@@ -29,7 +29,7 @@ public class Main {
 
         System.out.println("Проверка \"isEmpty\" таблицы 1: " + table1.isEmpty());
         table1.clear();
-        System.out.println("Применили \"clear()\"  к таблице 1: ");
+        System.out.println("Применили \"clear()\" к таблице 1: ");
         System.out.println(table1);
         System.out.println("Проверка \"isEmpty\" таблицы 1: " + table1.isEmpty());
 
@@ -54,9 +54,21 @@ public class Main {
         Object[] array2 = table1.toArray();
         System.out.println(Arrays.toString(array2));
 
-        System.out.println("Вывод результата table1.toArray(array2): ");
-        array2 = table1.toArray(array2);
-        System.out.println(Arrays.toString(array2));
+        Object[] array3 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+        System.out.println("Array3:");
+        System.out.println(Arrays.toString(array3));
+
+        System.out.println("Вывод результата table1.toArray(array3): ");
+        array3 = table1.toArray(array3);
+        System.out.println(Arrays.toString(array3));
+
+        Object[] array4 = new Object[1];
+        System.out.println("Array4:");
+        System.out.println(Arrays.toString(array4));
+
+        System.out.println("Вывод результата table1.toArray(array4): ");
+        array4 = table1.toArray(array4);
+        System.out.println(Arrays.toString(array4));
 
         System.out.println("В таблицу 1 добавили 7.7: " + table1.add(7.7));
         System.out.println("Таблица 1: ");
