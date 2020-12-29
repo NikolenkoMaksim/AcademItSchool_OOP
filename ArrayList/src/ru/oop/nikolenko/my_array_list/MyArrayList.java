@@ -267,7 +267,7 @@ public class MyArrayList<T> implements List<T> {
             //noinspection unchecked
             items = (T[]) new Object[DEFAULT_CAPACITY];
         } else if (size == items.length) {
-            items = Arrays.copyOf(items, 2 * size);
+            items = Arrays.copyOf(items, 2 * items.length);
         }
 
         System.arraycopy(items, index, items, index + 1, size - index);
@@ -318,14 +318,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int hashCode() {
-        final int prime = 11;
-        int hash = 1;
-
-        for (int i = 0; i < size; i++) {
-            hash = prime * hash + items[i].hashCode();
-        }
-
-        return hash;
+        return Arrays.hashCode(items);
     }
 
     @Override
@@ -346,7 +339,11 @@ public class MyArrayList<T> implements List<T> {
         }
 
         for (int i = 0; i < size; i++) {
-            if (!items[i].equals(list.items[i])) {
+            if (items[i] == null) {
+                if (list.items[i] != null) {
+                    return false;
+                }
+            } else if (!items[i].equals(list.items[i])) {
                 return false;
             }
         }

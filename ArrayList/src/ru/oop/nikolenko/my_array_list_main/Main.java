@@ -146,7 +146,7 @@ public class Main {
         System.out.println("Коллекции 7 и 1 эквиваленты: " + list7.equals(list1));
         list7.trimToSize();
         System.out.println("Размер колекции 7 сократили до количества элементов");
-        System.out.println("Коллекции 7 и 8 эквиваленты:" + list7.equals(list8));
+        System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
 
         int sum = 0;
 
@@ -159,6 +159,16 @@ public class Main {
         list7.add(2, null);
         System.out.println("К коллекции 7 применили метод \"add(2, null)\":");
         System.out.println(list7);
+        System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
+        list8.add(2, null);
+        System.out.println("К коллекции 8 применили метод \"add(2, null)\":");
+        System.out.println(list8);
+        System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
+        list8.add(5, null);
+        System.out.println("К коллекции 8 применили метод \"add(5, null)\":");
+        System.out.println(list8);
+        System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
+
         list7.add(5, null);
         System.out.println("К коллекции 7 применили метод \"add(5, null)\":");
         System.out.println(list7);
