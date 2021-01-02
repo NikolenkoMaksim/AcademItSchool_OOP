@@ -164,6 +164,8 @@ public class Main {
         System.out.println("К коллекции 8 применили метод \"add(2, null)\":");
         System.out.println(list8);
         System.out.println("Коллекции 7 и 8 эквиваленты: " + list7.equals(list8));
+        System.out.println("Хешкод коллекции 7: " + list7.hashCode());
+        System.out.println("Хешкод коллекции 8: " + list8.hashCode());
         list8.add(5, null);
         System.out.println("К коллекции 8 применили метод \"add(5, null)\":");
         System.out.println(list8);
