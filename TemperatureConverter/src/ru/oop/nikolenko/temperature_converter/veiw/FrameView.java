@@ -22,8 +22,8 @@ public class FrameView implements View {
             } catch (Exception ignored) {
             }
 
-            final int frameDefaultWidth = 400;
-            final int frameDefaultHeight = 500;
+            final int frameDefaultWidth = 430;
+            final int frameDefaultHeight = 550;
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
             JFrame frame = new JFrame("Temperature Converter");
@@ -31,7 +31,7 @@ public class FrameView implements View {
             frame.setSize(frameDefaultWidth, frameDefaultHeight);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-            frame.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
+            frame.getRootPane().setBorder(new EmptyBorder(20, 25, 20, 20));
 
             GridBagLayout gbl = new GridBagLayout();
             frame.setLayout(gbl);
@@ -70,7 +70,7 @@ public class FrameView implements View {
             c.anchor = GridBagConstraints.WEST;
             c.fill = GridBagConstraints.NONE;
             c.gridwidth = 1;
-            c.insets = new Insets(20, 15, 0, 0);
+            c.insets = new Insets(20, 25, 0, 0);
             gbl.setConstraints(convertLabel, c);
             frame.add(convertLabel);
 
