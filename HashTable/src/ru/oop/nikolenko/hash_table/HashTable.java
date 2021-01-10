@@ -105,7 +105,7 @@ public class HashTable<T> implements Collection<T> {
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < size) {
             //noinspection unchecked
-            return (T1[]) toArray();
+            return (T1[]) Arrays.copyOf(toArray(), size, a.getClass());
         }
 
         System.arraycopy(toArray(), 0, a, 0, size);
@@ -170,13 +170,19 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
+        if (c.isEmpty()) {
+            return false;
+        }
+
+        boolean isAllAdded = true;
+
         for (T e : c) {
             if (!add(e)) {
-                return false;
+                isAllAdded = false;
             }
         }
 
-        return true;
+        return isAllAdded;
     }
 
     @Override
@@ -203,24 +209,24 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        boolean isRetained = false;
+        boolean isRemoved = false;
         size = 0;
 
         for (ArrayList<T> list : lists) {
             if (list != null) {
                 if (list.retainAll(c)) {
-                    isRetained = true;
+                    isRemoved = true;
                 }
 
                 size += list.size();
             }
         }
 
-        if (isRetained) {
+        if (isRemoved) {
             ++modCount;
         }
 
-        return isRetained;
+        return isRemoved;
     }
 
     @Override
@@ -267,5 +273,10 @@ public class HashTable<T> implements Collection<T> {
         HashTable<T> h = (HashTable<T>) obj;
 
         return Arrays.equals(lists, h.lists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(lists);
     }
 }

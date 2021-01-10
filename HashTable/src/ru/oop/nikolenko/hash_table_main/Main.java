@@ -108,5 +108,10 @@ public class Main {
         System.out.println("Таблица 1: ");
         System.out.println(table1);
         System.out.println("Размер таблицы 1: " + table1.size());
+
+        list1.clear();
+        System.out.println("К таблице 1 добавили пустую коллекцию: " + table1.addAll(list1));
+
+        System.out.println("Хешкод таблицы 1: " + table1.hashCode());
     }
 }
