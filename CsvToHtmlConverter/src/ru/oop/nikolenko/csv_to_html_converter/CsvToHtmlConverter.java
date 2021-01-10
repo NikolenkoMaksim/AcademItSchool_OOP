@@ -1,18 +1,18 @@
-package ru.oop.nikolenko.csv_to_html_conversion;
+package ru.oop.nikolenko.csv_to_html_converter;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class CsvToHtmlConversion {
+public class CsvToHtmlConverter {
     public static void convertCsvToHtml(String inputFileName, String outputFileName) throws FileNotFoundException {
         try (Scanner scanner = new Scanner(new FileInputStream(inputFileName));
              PrintWriter writer = new PrintWriter(outputFileName)) {
             writer.println("<!DOCTYPE html>");
             writer.println("<html>");
             writer.println("\t<head>");
-            writer.println("\t\t<title>" + "CSV таблица конвектированная в HTML" + "</title>");
+            writer.println("\t\t<title>CSV таблица, конвертированная в HTML</title>");
             writer.println("\t\t<meta charset=\"UTF-8\">");
             writer.println("\t</head>");
             writer.println("\t<body>");
@@ -55,11 +55,11 @@ public class CsvToHtmlConversion {
                             if (i != s.length() - 1) {
                                 i++;
                             } else {
-                                writer.print("</br>");
+                                writer.print("<br>");
                                 s = scanner.nextLine();
 
                                 while (s.isEmpty()) {
-                                    writer.print("</br>");
+                                    writer.print("<br>");
                                     s = scanner.nextLine();
                                 }
 
@@ -102,7 +102,7 @@ public class CsvToHtmlConversion {
                         if (!cellIsOpened) {
                             writer.print("</td>");
                         } else {
-                            writer.print("</br>");
+                            writer.print("<br>");
                             s = scanner.nextLine();
                             i = 0;
                         }
