@@ -7,7 +7,6 @@ import ru.oop.nikolenko.vector.Vector;
 import java.util.Arrays;
 import java.util.Comparator;
 
-
 public class TreeMain {
     public static void main(String[] args) {
         Tree<Integer> tree1 = new Tree<>(50);
@@ -34,7 +33,15 @@ public class TreeMain {
         tree1.add(35);
         System.out.println(tree1);
 
+        System.out.println("Добавили элемент \"33\" в дерево 1:");
+        tree1.add(33);
+        System.out.println(tree1);
+
         System.out.println("Удалили элемент \"35\" из дерева 1: " + tree1.remove(35));
+        System.out.println("Дерево 1:");
+        System.out.println(tree1);
+
+        System.out.println("Удалили элемент \"33\" из дерева 1: " + tree1.remove(33));
         System.out.println("Дерево 1:");
         System.out.println(tree1);
 
@@ -98,7 +105,23 @@ public class TreeMain {
         System.out.println("Дерево 2:");
         System.out.println(tree2);
 
+        tree2.add(50);
+        System.out.println("Добавили элемент \"50\" в дерево 2:");
+        System.out.println(tree2);
+
+        tree2.add(45);
+        System.out.println("Добавили элемент \"45\" в дерево 2:");
+        System.out.println(tree2);
+
         System.out.println("Удалили элемент \"40\" из дерева 2: " + tree2.remove(40));
+        System.out.println("Дерево 2:");
+        System.out.println(tree2);
+
+        System.out.println("Удалили элемент \"50\" из дерева 2: " + tree2.remove(50));
+        System.out.println("Дерево 2:");
+        System.out.println(tree2);
+
+        System.out.println("Удалили элемент \"45\" из дерева 2: " + tree2.remove(45));
         System.out.println("Дерево 2:");
         System.out.println(tree2);
 

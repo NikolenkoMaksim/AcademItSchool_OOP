@@ -9,7 +9,6 @@ public class Tree<T> {
     private Comparator<? super T> comparator;
 
     public Tree() {
-
     }
 
     public Tree(Comparator<T> comparator) {
@@ -101,29 +100,7 @@ public class Tree<T> {
             return false;
         }
 
-        TreeNode<T> currentNode = root;
-
-        while (true) {
-            int comparisonResult = compare(data, currentNode.getData());
-
-            if (comparisonResult == 0) {
-                return true;
-            }
-
-            if (comparisonResult < 0) {
-                if (currentNode.getLeft() != null) {
-                    currentNode = currentNode.getLeft();
-                } else {
-                    return false;
-                }
-            } else {
-                if (currentNode.getRight() != null) {
-                    currentNode = currentNode.getRight();
-                } else {
-                    return false;
-                }
-            }
-        }
+        return findNodeAndParent(data) != null;
     }
 
     private TreeNode<T>[] findNodeAndParent(T data) {
@@ -160,13 +137,27 @@ public class Tree<T> {
     }
 
     private void setNodeRightChildToParent(TreeNode<T> node, TreeNode<T> parent) {
-        if (parent.getLeft().equals(node)) {
+        if (Objects.equals(node, parent.getLeft())) {
             parent.setLeft(node.getRight());
             return;
         }
 
-        if (parent.getRight().equals(node)) {
+        if (Objects.equals(parent.getRight(), (node))) {
             parent.setRight(node.getRight());
+            return;
+        }
+
+        throw new IllegalArgumentException("parent hasn't this node");
+    }
+
+    private void setNodeLeftChildToParent(TreeNode<T> node, TreeNode<T> parent) {
+        if (Objects.equals(node, parent.getLeft())) {
+            parent.setLeft(node.getLeft());
+            return;
+        }
+
+        if (Objects.equals(parent.getRight(), node)) {
+            parent.setRight(node.getLeft());
             return;
         }
 
@@ -184,13 +175,25 @@ public class Tree<T> {
             }
 
             root = null;
+            size = 0;
+
             return true;
         }
 
-        if (compare(root.getData(), data) == 0 && root.getRight() == null) {
-            root = root.getLeft();
+        if (compare(root.getData(), data) == 0) {
+            if(root.getRight() == null) {
+                root = root.getLeft();
+                --size;
 
-            return true;
+                return true;
+            }
+
+            if(root.getLeft() == null) {
+                root = root.getRight();
+                --size;
+
+                return true;
+            }
         }
 
         TreeNode<T>[] nodeAndParentArray = findNodeAndParent(data);
@@ -203,7 +206,7 @@ public class Tree<T> {
         TreeNode<T> parent = nodeAndParentArray[1];
 
         if (node.getRight() == null) {
-            setNodeRightChildToParent(node, parent);
+            setNodeLeftChildToParent(node, parent);
             --size;
             return true;
         }
@@ -229,36 +232,11 @@ public class Tree<T> {
     }
 
     public Object[] toArray() {
-        if (root == null) {
-            return new Object[0];
-        }
+        List<T> list = new ArrayList<>();
+        Consumer<T> consumer = list::add;
+        visitInDeep(consumer);
 
-        Deque<TreeNode<T>> stack = new LinkedList<>();
-        stack.addLast(root);
-
-        TreeNode<T> node;
-
-        Object[] array = new Object[size];
-        int i = 0;
-
-        while (!stack.isEmpty()) {
-            node = stack.getLast();
-
-            array[i] = node.getData();
-            ++i;
-
-            stack.removeLast();
-
-            if (node.getRight() != null) {
-                stack.addLast(node.getRight());
-            }
-
-            if (node.getLeft() != null) {
-                stack.addLast(node.getLeft());
-            }
-        }
-
-        return array;
+        return list.toArray();
     }
 
     @Override
@@ -367,5 +345,24 @@ public class Tree<T> {
             }
         }
     }
-}
 
+    /*
+    @Override
+    public String toString() {
+        if (root == null) {
+            return "{}";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+
+        Consumer<T> consumer = x -> stringBuilder.append(x).append(", ");
+
+        visitInWidth(consumer);
+
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).append("}");
+
+        return stringBuilder.toString();
+    }
+     */
+}
