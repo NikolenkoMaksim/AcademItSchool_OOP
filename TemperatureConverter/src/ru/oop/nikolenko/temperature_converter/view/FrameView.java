@@ -50,7 +50,7 @@ public class FrameView implements View {
             constraints.anchor = GridBagConstraints.WEST;
             constraints.fill = GridBagConstraints.NONE;
             constraints.gridheight = 1;
-            constraints.gridwidth = 1;
+            constraints.gridwidth = GridBagConstraints.REMAINDER;
             constraints.gridx = GridBagConstraints.RELATIVE;
             constraints.gridy = GridBagConstraints.RELATIVE;
             constraints.insets = new Insets(0, 15, 0, 0);
@@ -61,15 +61,6 @@ public class FrameView implements View {
 
             frameLayout.setConstraints(valueLabel, constraints);
             frame.add(valueLabel);
-
-            JPanel emptyPanel1 = new JPanel();
-            frameLayout.setConstraints(emptyPanel1, constraints);
-            frame.add(emptyPanel1);
-
-            JPanel emptyPanel2 = new JPanel();
-            constraints.gridwidth = GridBagConstraints.REMAINDER;
-            frameLayout.setConstraints(emptyPanel2, constraints);
-            frame.add(emptyPanel2);
 
             JTextField inputText = new JTextField(20);
             inputText.setFont(font);
