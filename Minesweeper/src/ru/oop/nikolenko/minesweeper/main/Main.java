@@ -11,6 +11,6 @@ public class Main {
         FrameView view = new FrameView(controller);
         controller.setView(view);
 
-        view.start();
+        view.run();
     }
 }

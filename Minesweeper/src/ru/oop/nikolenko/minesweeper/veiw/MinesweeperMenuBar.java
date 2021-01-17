@@ -1,42 +1,26 @@
 package ru.oop.nikolenko.minesweeper.veiw;
 
-import ru.oop.nikolenko.minesweeper.controller.Controller;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MinesweeperMenuBar {
-    public static JMenuBar createJMenuBar(Controller controller) {
-        JMenuBar mb = new JMenuBar();
+    public static JMenuBar createJMenuBar(FrameView frameView) {
+        JMenuBar menuBar = new JMenuBar();
         JMenu mFile = new JMenu("File");
         JMenu mHelp = new JMenu("Help");
 
         JMenuItem miNewGame = new JMenuItem("New game");
+        miNewGame.addActionListener(e -> frameView.startNewGame());
         mFile.add(miNewGame);
-
-        miNewGame.addActionListener(e -> controller.startNewGame());
 
         mFile.add(new JSeparator());
 
         JMenuItem miChampions = new JMenuItem("Champions");
+        miChampions.addActionListener(e -> frameView.openLeaderboardsFrame());
         mFile.add(miChampions);
 
-        miChampions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
         JMenuItem miOptions = new JMenuItem("Options");
+        miOptions.addActionListener(e -> frameView.openOptionalsFrame());
         mFile.add(miOptions);
-
-        miOptions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
 
         mFile.add(new JSeparator());
 
@@ -45,27 +29,19 @@ public class MinesweeperMenuBar {
 
         miExit.addActionListener(e -> System.exit(0));
 
+        /*
         JMenuItem miRules = new JMenuItem("Rules");
         mHelp.add(miRules);
+         */
 
-        miRules.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        JMenuItem miAbout = new JMenuItem("About...");
+        JMenuItem miAbout = new JMenuItem("About");
         mHelp.add(miAbout);
 
-        miAbout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        miAbout.addActionListener(e -> frameView.openAboutFrame());
 
-            }
-        });
+        menuBar.add(mFile);
+        menuBar.add(mHelp);
 
-        mb.add(mFile);
-        mb.add(mHelp);
-
-        return mb;
+        return menuBar;
     }
 }
