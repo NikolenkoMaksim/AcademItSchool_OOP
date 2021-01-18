@@ -21,12 +21,8 @@ public class CsvToHtmlConverter {
             while (scanner.hasNextLine()) {
                 String s = scanner.nextLine();
 
-                while (s.isEmpty() && scanner.hasNextLine()) {
-                    s = scanner.nextLine();
-                }
-
-                if (s.isEmpty() && !scanner.hasNextLine()) {
-                    break;
+                if (s.isEmpty()) {
+                    continue;
                 }
 
                 writer.print("\t\t\t<tr>");
