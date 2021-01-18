@@ -174,15 +174,15 @@ public class HashTable<T> implements Collection<T> {
             return false;
         }
 
-        boolean isAllAdded = true;
+        boolean isListsChanged = false;
 
         for (T e : c) {
-            if (!add(e)) {
-                isAllAdded = false;
+            if (add(e)) {
+                isListsChanged = true;
             }
         }
 
-        return isAllAdded;
+        return isListsChanged;
     }
 
     @Override
