@@ -1,6 +1,7 @@
 package ru.oop.nikolenko.tree;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class Tree<T> {
@@ -25,9 +26,6 @@ public class Tree<T> {
             return comparator.compare(data1, data2);
         }
 
-        //noinspection unchecked
-        Comparable<T> comparableData1 = (Comparable<T>) data1;
-
         if (data1 == null) {
             if (data2 == null) {
                 return 0;
@@ -39,6 +37,9 @@ public class Tree<T> {
         if (data2 == null) {
             return 1;
         }
+
+        //noinspection unchecked
+        Comparable<T> comparableData1 = (Comparable<T>) data1;
 
         return comparableData1.compareTo(data2);
     }
@@ -136,28 +137,14 @@ public class Tree<T> {
         }
     }
 
-    private void setNodeRightChildToParent(TreeNode<T> node, TreeNode<T> parent) {
-        if (Objects.equals(node, parent.getLeft())) {
-            parent.setLeft(node.getRight());
+    private void setNodeChildToParent(TreeNode<T> node, TreeNode<T> nodeChild, TreeNode<T> nodeParent) {
+        if (node == nodeParent.getLeft()) {
+            nodeParent.setLeft(nodeChild);
             return;
         }
 
-        if (Objects.equals(parent.getRight(), (node))) {
-            parent.setRight(node.getRight());
-            return;
-        }
-
-        throw new IllegalArgumentException("parent hasn't this node");
-    }
-
-    private void setNodeLeftChildToParent(TreeNode<T> node, TreeNode<T> parent) {
-        if (Objects.equals(node, parent.getLeft())) {
-            parent.setLeft(node.getLeft());
-            return;
-        }
-
-        if (Objects.equals(parent.getRight(), node)) {
-            parent.setRight(node.getLeft());
+        if (node == nodeParent.getRight()) {
+            nodeParent.setRight(nodeChild);
             return;
         }
 
@@ -181,14 +168,14 @@ public class Tree<T> {
         }
 
         if (compare(root.getData(), data) == 0) {
-            if(root.getRight() == null) {
+            if (root.getRight() == null) {
                 root = root.getLeft();
                 --size;
 
                 return true;
             }
 
-            if(root.getLeft() == null) {
+            if (root.getLeft() == null) {
                 root = root.getRight();
                 --size;
 
@@ -206,7 +193,7 @@ public class Tree<T> {
         TreeNode<T> parent = nodeAndParentArray[1];
 
         if (node.getRight() == null) {
-            setNodeLeftChildToParent(node, parent);
+            setNodeChildToParent(node, node.getLeft(), parent);
             --size;
             return true;
         }
@@ -220,7 +207,7 @@ public class Tree<T> {
         }
 
         nodeAndParentArray[0].setData(lastLeftList.getData());
-        setNodeRightChildToParent(lastLeftList, previousNode);
+        setNodeChildToParent(lastLeftList, lastLeftList.getRight(), previousNode);
 
         --size;
 
@@ -232,11 +219,18 @@ public class Tree<T> {
     }
 
     public Object[] toArray() {
-        List<T> list = new ArrayList<>();
-        Consumer<T> consumer = list::add;
+        Object[] treeArray = new Object[size];
+
+        AtomicInteger i = new AtomicInteger();
+
+        Consumer<T> consumer = t -> {
+            treeArray[i.get()] = t;
+            i.getAndIncrement();
+        };
+
         visitInDeep(consumer);
 
-        return list.toArray();
+        return treeArray;
     }
 
     @Override

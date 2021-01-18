@@ -23,6 +23,8 @@ public class TestMain {
         System.out.println("Коллекция 6:");
         System.out.println(list);
 
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        treeSet.toArray();
 
     }
 
