@@ -1,6 +1,6 @@
 package ru.oop.nikolenko.minesweeper.veiw;
 
-import ru.oop.nikolenko.minesweeper.controller.Controller;
+import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,42 +10,63 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FrameView implements View {
-    private final Controller controller;
+    private final MinesweeperController controller;
     private JFrame frame;
-    private final String[] categoriesNames;
-    private final Champions champions;
-    private int[] mineSweeperOptionals;
-    private final String optionalsFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/optionals.txt";
+    private final MinesweeperLeaders leaders;
+    private final MinesweeperOptions minesweeperOptions;
+    private final OptionsFrame optionsFrame = new OptionsFrame();
+    private final LeaderboardsFrame leaderboardsFrame = new LeaderboardsFrame();
+    private final MinesweeperMenuBar menuBar;
+    private final AboutView aboutView = new AboutView();
 
     JLabel timerLabel;
     AtomicInteger secondsCount;
     boolean isFirstCellOpened;
     private Timer timer;
-    private JButton smileButton;
-    private final SmileButtonIcons smileIcons = new SmileButtonIcons();
+    private JButton mainButton;
+    private final MainButtonIcons mainButtonIcons;
     private int remainingMinesCount;
     private JLabel remainingMinesLabel;
+    private int currentMode;
+    private final int[][] defaultOptionals;
+    final String[] categoriesNames;
 
     private JPanel centrePanel;
     private boolean[][] isOpened;
     private boolean[][] isMarked;
-    private final FieldIcons fieldIcons = new FieldIcons();
+    private final FieldIcons fieldIcons;
     private int notOpenCellCount;
-    private int fieldWidth;
-    private int fieldHeight;
-    private int minesCount;
+    private int cellsInWidthAmount;
+    private int cellsInHeightAmount;
+    private int minesAmount;
 
-    public FrameView(Controller controller) {
+    public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons,
+                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders) {
         this.controller = controller;
+        this.fieldIcons = fieldIcons;
+        this.mainButtonIcons = mainButtonIcons;
+        this.minesweeperOptions = minesweeperOptions;
+        this.leaders = leaders;
+        this.menuBar = new MenuBar();
+        this.defaultOptionals = minesweeperOptions.getDefaultOptions();
+        this.categoriesNames = leaders.getCategoriesNames();
 
-        categoriesNames = new String[]{"Beginner", "Amateur", "Professional"};
-        String championsFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/champions.txt";
-        champions = new Champions(championsFilePath, 5, categoriesNames);
+        if (categoriesNames.length != defaultOptionals.length) {
+            throw new IllegalArgumentException("categoriesNames.length = [" + categoriesNames.length +
+                    "] != defaultOptionals.length = [" + defaultOptionals.length + "]");
+        }
 
-        mineSweeperOptionals = MineSweeperOptions.getMimeSweeperOptions(optionalsFilePath);
-        fieldWidth = mineSweeperOptionals[0];
-        fieldHeight = mineSweeperOptionals[1];
-        minesCount = mineSweeperOptionals[2];
+        int[] optionals = minesweeperOptions.getMimeSweeperOptions();
+
+        if (optionals.length != 4) {
+            throw new IllegalArgumentException("optionals.length = " + optionals.length +
+                    "must be 4: {cellsInWidthAmount, cellsInHeightAmount, minesCount, currentMode}");
+        }
+
+        cellsInWidthAmount = optionals[0];
+        cellsInHeightAmount = optionals[1];
+        minesAmount = optionals[2];
+        currentMode = optionals[3];
     }
 
     @Override
@@ -58,9 +79,7 @@ public class FrameView implements View {
 
             frame = new JFrame("Minesweeper");
 
-            JMenuBar menuBar = MinesweeperMenuBar.createJMenuBar(this);
-
-            frame.setJMenuBar(menuBar);
+            frame.setJMenuBar(menuBar.getJMenuBar(this));
 
             GridBagLayout pageStartLayout = new GridBagLayout();
             JPanel pageStartPanel = new JPanel(pageStartLayout);
@@ -93,14 +112,14 @@ public class FrameView implements View {
                 }
             });
 
-            smileButton = new JButton(smileIcons.getNormalFace());
-            smileButton.setSize(26, 26);
+            mainButton = new JButton(mainButtonIcons.getNormalButtonIcon());
+            mainButton.setSize(26, 26);
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            pageStartLayout.setConstraints(smileButton, c);
-            pageStartPanel.add(smileButton);
+            pageStartLayout.setConstraints(mainButton, c);
+            pageStartPanel.add(mainButton);
 
-            smileButton.addActionListener(e -> startNewGame());
+            mainButton.addActionListener(e -> startNewGame());
 
             remainingMinesLabel = new JLabel();
             remainingMinesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -122,69 +141,76 @@ public class FrameView implements View {
     }
 
     private void setFrameSizes() {
-        int frameWidth = Math.max(16 * fieldWidth, 200);
-        int frameHeight = Math.max(16, frameWidth / fieldWidth) * fieldHeight + 100;
+        int fieldIconsWidth = fieldIcons.getIconsWidth();
+        int fieldIconsHeight = fieldIcons.getIconsHeight();
+
+        int frameWidth = Math.max(fieldIconsWidth * cellsInWidthAmount, 200);
+        int frameHeight = Math.max(fieldIconsHeight, frameWidth / cellsInWidthAmount) * cellsInHeightAmount + 100;
         frame.setSize(frameWidth, frameHeight);
     }
 
+    @Override
     public void startNewGame() {
-        controller.startNewGame(fieldWidth, fieldHeight, minesCount);
-        isMarked = new boolean[fieldHeight][fieldWidth];
-        isOpened = new boolean[fieldHeight][fieldWidth];
+        controller.startNewGame(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+        isMarked = new boolean[cellsInHeightAmount][cellsInWidthAmount];
+        isOpened = new boolean[cellsInHeightAmount][cellsInWidthAmount];
         createField(false);
         setFrameSizes();
-        notOpenCellCount = fieldWidth * fieldHeight;
+        notOpenCellCount = cellsInWidthAmount * cellsInHeightAmount;
         isFirstCellOpened = false;
-        remainingMinesCount = minesCount;
+        remainingMinesCount = minesAmount;
         remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
         timer.stop();
         secondsCount = new AtomicInteger();
         timerLabel.setText(String.valueOf(secondsCount));
-        smileButton.setIcon(smileIcons.getNormalFace());
+        mainButton.setIcon(mainButtonIcons.getNormalButtonIcon());
     }
 
+    @Override
     public void endGame(boolean isWinner) {
         timer.stop();
         createField(true);
 
         if (isWinner) {
-            smileButton.setIcon(smileIcons.getWinnerFace());
-            int gamerPlace = champions.getChampionPlace(0, secondsCount.get());
+            mainButton.setIcon(mainButtonIcons.getWinnerButtonIcon());
 
-            if (gamerPlace != -1) {
-                String message = "You are on the leaderboards!" + System.lineSeparator() + "Please enter  your name:";
-                String championName = JOptionPane.showInputDialog(frame, message, "", JOptionPane.PLAIN_MESSAGE);
+            if (currentMode < defaultOptionals.length) {
+                int gamerPlace = leaders.getNewWinnerPlace(currentMode, secondsCount.get());
 
-                try {
-                    champions.saveChampion(0, secondsCount.get(), championName, gamerPlace);
-                } catch (FileNotFoundException e) {
-                    JOptionPane.showMessageDialog(frame, "Failed to update the leaderboard", "Error", JOptionPane.ERROR_MESSAGE);
+                if (gamerPlace != -1) {
+                    String message = "You are on the leaderboards!" + System.lineSeparator() + "Please enter  your name:";
+                    String championName = JOptionPane.showInputDialog(frame, message, "", JOptionPane.PLAIN_MESSAGE);
+
+                    try {
+                        leaders.saveLeader(currentMode, secondsCount.get(), championName, gamerPlace);
+                    } catch (FileNotFoundException e) {
+                        JOptionPane.showMessageDialog(frame, "Failed to update the leaderboard", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    openLeaderboardsFrame();
                 }
-
-                openLeaderboardsFrame();
             }
         } else {
-            smileButton.setIcon(smileIcons.getLoserFace());
+            mainButton.setIcon(mainButtonIcons.getLoserButtonIcon());
         }
     }
-
 
     private void openCells(int openedCellX, int openedCellY) {
         boolean[][] needBeOpened = controller.openCells(openedCellX, openedCellY, isOpened, isMarked);
 
         if (needBeOpened != null) {
             isOpened = controller.openCells(openedCellX, openedCellY, isOpened, isMarked);
-            notOpenCellCount = fieldHeight * fieldWidth;
+            notOpenCellCount = cellsInHeightAmount * cellsInWidthAmount;
 
-            for (int i = 0; i < fieldHeight; i++) {
-                for (int j = 0; j < fieldWidth; j++) {
+            for (int i = 0; i < cellsInHeightAmount; i++) {
+                for (int j = 0; j < cellsInWidthAmount; j++) {
                     if (isOpened[i][j]) {
                         notOpenCellCount--;
                     }
                 }
             }
 
-            if (notOpenCellCount == minesCount) {
+            if (notOpenCellCount == minesAmount) {
                 endGame(true);
             } else {
                 createField(false);
@@ -192,18 +218,18 @@ public class FrameView implements View {
         }
     }
 
-    public void createField(boolean isGameEnd) {
+    private void createField(boolean isGameEnd) {
         if (centrePanel != null) {
             frame.remove(centrePanel);
         }
 
-        GridLayout centreLayout = new GridLayout(fieldHeight, fieldWidth, 0, 0);
+        GridLayout centreLayout = new GridLayout(cellsInHeightAmount, cellsInWidthAmount, 0, 0);
         centrePanel = new JPanel(centreLayout);
         frame.add(centrePanel, BorderLayout.CENTER);
 
-        for (int y = 0; y < fieldHeight; y++) {
+        for (int y = 0; y < cellsInHeightAmount; y++) {
 
-            for (int x = 0; x < fieldWidth; x++) {
+            for (int x = 0; x < cellsInWidthAmount; x++) {
                 JPanel panelXY = new JPanel(new BorderLayout());
                 centrePanel.add(panelXY);
 
@@ -260,7 +286,7 @@ public class FrameView implements View {
                         } else {
                             notOpenCellCount--;
 
-                            if (notOpenCellCount == minesCount) {
+                            if (notOpenCellCount == minesAmount) {
                                 endGame(true);
                             } else {
                                 panelXY.remove(buttonXY);
@@ -288,12 +314,12 @@ public class FrameView implements View {
 
                 public void mousePressed(MouseEvent e) {
                     if (e.getButton() == 1) {
-                        smileButton.setIcon(smileIcons.getAnxiousFace());
+                        mainButton.setIcon(mainButtonIcons.getCellClickButtonIcon());
                     }
                 }
 
                 public void mouseReleased(MouseEvent e) {
-                    smileButton.setIcon(smileIcons.getNormalFace());
+                    mainButton.setIcon(mainButtonIcons.getNormalButtonIcon());
                 }
             });
         }
@@ -354,20 +380,20 @@ public class FrameView implements View {
     }
 
     public void openLeaderboardsFrame() {
-        LeaderboardsView.createLeaderboardsView(champions.getChampionsNames(), champions.getChampionsTimes(), categoriesNames);
+        leaderboardsFrame.openLeaderboardsFrame(leaders.getLeadersNames(), leaders.getLeadersTimes(), categoriesNames);
     }
 
     public void openOptionalsFrame() {
-        OptionalsView.createOptionalsView(mineSweeperOptionals, this);
+        optionsFrame.openOptionsFrame(new int[]{cellsInWidthAmount, cellsInHeightAmount, minesAmount}, this, defaultOptionals, categoriesNames);
     }
 
-    public void saveOptions(int[] newOptionals) {
+    public void saveOptions(int[] newOptions, int newMode) {
         try {
-            MineSweeperOptions.saveOptionals(optionalsFilePath, newOptionals);
-            mineSweeperOptionals = newOptionals;
-            fieldWidth = mineSweeperOptionals[0];
-            fieldHeight = mineSweeperOptionals[1];
-            minesCount = mineSweeperOptionals[2];
+            minesweeperOptions.saveOptionals(newOptions);
+            cellsInWidthAmount = newOptions[0];
+            cellsInHeightAmount = newOptions[1];
+            minesAmount = newOptions[2];
+            currentMode = newMode;
             startNewGame();
             SwingUtilities.updateComponentTreeUI(frame);
         } catch (FileNotFoundException e) {
@@ -377,6 +403,6 @@ public class FrameView implements View {
 
     public void openAboutFrame() {
         final String fileAboutPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/about.txt";
-        AboutView.createAboutFrame(fileAboutPath);
+        aboutView.openAboutFrame(fileAboutPath);
     }
 }

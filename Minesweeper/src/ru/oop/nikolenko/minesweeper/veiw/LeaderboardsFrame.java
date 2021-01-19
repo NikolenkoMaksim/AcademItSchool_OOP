@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class LeaderboardsView {
-    public static void createLeaderboardsView(String[][] championsNames, Integer[][] championsTimes, String[] categoriesNames) {
+public class LeaderboardsFrame {
+    public void openLeaderboardsFrame(String[][] championsNames, Integer[][] championsTimes, String[] categoriesNames) {
         if (championsNames.length != categoriesNames.length) {
             throw new IllegalArgumentException("championsNames.length = " + championsNames.length
                     + " is not equal categoriesNames.length = " + categoriesNames.length);

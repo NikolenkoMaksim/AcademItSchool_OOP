@@ -6,13 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class OptionalsView {
-    public static void createOptionalsView(int[] currentOptionals, FrameView frameView) {
-        //final String[] categoriesNames = new String[]{"Beginner", "Amateur", "Professional"};
-        final int[] defaultBeginnersOptionals = new int[]{9, 9, 10};
-        final int[] defaultAmateurOptionals = new int[]{16, 16, 40};
-        final int[] defaultProfessionalOptionals = new int[]{30, 16, 99};
-
+public class OptionsFrame {
+    public void openOptionsFrame(int[] currentOptionals, FrameView frameView, int[][] defaultOptions, String[] categoryNames) {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -49,15 +44,18 @@ public class OptionalsView {
             optionalsLayoutConstraints.weightx = 0;
             optionalsLayoutConstraints.weighty = 0;
 
-            JRadioButton beginnersButton = new JRadioButton("Beginner (Field: 9x9; mines: 10)");
+            JRadioButton beginnersButton = new JRadioButton(categoryNames[0] + ". (Field: " +
+                    defaultOptions[0][0] + "x" + defaultOptions[0][1] + "; mines: " + defaultOptions[0][2] + ")");
             optionalsFrameLayout.setConstraints(beginnersButton, optionalsLayoutConstraints);
             optionsFrame.add(beginnersButton);
 
-            JRadioButton amateurButton = new JRadioButton("Amateur (Field: 16x16; mines: 40)");
+            JRadioButton amateurButton = new JRadioButton(categoryNames[1] + ". (Field: " +
+                    defaultOptions[1][0] + "x" + defaultOptions[1][1] + "; mines: " + defaultOptions[1][2] + ")");
             optionalsFrameLayout.setConstraints(amateurButton, optionalsLayoutConstraints);
             optionsFrame.add(amateurButton);
 
-            JRadioButton professionalButton = new JRadioButton("Professional (Field: 30x16; mines: 99)");
+            JRadioButton professionalButton = new JRadioButton(categoryNames[2] + ". (Field: " +
+                    defaultOptions[2][0] + "x" + defaultOptions[2][1] + "; mines: " + defaultOptions[2][2] + ")");
             optionalsFrameLayout.setConstraints(professionalButton, optionalsLayoutConstraints);
             optionsFrame.add(professionalButton);
 
@@ -113,11 +111,11 @@ public class OptionalsView {
                 desiredMinesTextField.setEditable(true);
             });
 
-            if (Arrays.equals(currentOptionals, defaultBeginnersOptionals)) {
+            if (Arrays.equals(currentOptionals, defaultOptions[0])) {
                 beginnersButton.setSelected(true);
-            } else if (Arrays.equals(currentOptionals, defaultAmateurOptionals)) {
+            } else if (Arrays.equals(currentOptionals, defaultOptions[1])) {
                 amateurButton.setSelected(true);
-            } else if (Arrays.equals(currentOptionals, defaultProfessionalOptionals)) {
+            } else if (Arrays.equals(currentOptionals, defaultOptions[2])) {
                 professionalButton.setSelected(true);
             } else {
                 specialButton.setSelected(true);
@@ -141,13 +139,13 @@ public class OptionalsView {
 
             applyButton.addActionListener(actionEvent -> {
                 if (beginnersButton.isSelected()) {
-                    frameView.saveOptions(defaultBeginnersOptionals);
+                    frameView.saveOptions(defaultOptions[0], 0);
                     optionsFrame.dispose();
                 } else if (amateurButton.isSelected()) {
-                    frameView.saveOptions(defaultAmateurOptionals);
+                    frameView.saveOptions(defaultOptions[1], 1);
                     optionsFrame.dispose();
                 } else if (professionalButton.isSelected()) {
-                    frameView.saveOptions(defaultProfessionalOptionals);
+                    frameView.saveOptions(defaultOptions[2], 2);
                     optionsFrame.dispose();
                 } else {
                     try {
@@ -162,7 +160,7 @@ public class OptionalsView {
                         }
 
                         optionsFrame.dispose();
-                        frameView.saveOptions(specialOptionals);
+                        frameView.saveOptions(specialOptionals, 3);
                     } catch (NumberFormatException exception1) {
                         String message = "Invalid data format." + System.lineSeparator() + "Fill in all fields with numbers";
                         JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);

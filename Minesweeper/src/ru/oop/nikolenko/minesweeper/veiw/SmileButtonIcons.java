@@ -2,25 +2,29 @@ package ru.oop.nikolenko.minesweeper.veiw;
 
 import javax.swing.*;
 
-public class SmileButtonIcons {
+public class SmileButtonIcons implements MainButtonIcons {
     private final Icon normalFace = new ImageIcon("Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/face-normal.png");
     private final Icon winnerFace = new ImageIcon("Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/face-win.png");
     private final Icon loserFace = new ImageIcon("Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/face-lose.png");
     private final Icon anxiousFace = new ImageIcon("Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/face-click.png");
 
-    public Icon getNormalFace() {
+    @Override
+    public Icon getNormalButtonIcon() {
         return normalFace;
     }
 
-    public Icon getWinnerFace() {
+    @Override
+    public Icon getWinnerButtonIcon() {
         return winnerFace;
     }
 
-    public Icon getLoserFace() {
+    @Override
+    public Icon getLoserButtonIcon() {
         return loserFace;
     }
 
-    public Icon getAnxiousFace() {
+    @Override
+    public Icon getCellClickButtonIcon() {
         return anxiousFace;
     }
 }

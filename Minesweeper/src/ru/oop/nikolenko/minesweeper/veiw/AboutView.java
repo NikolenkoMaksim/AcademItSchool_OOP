@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class AboutView {
-    public static void createAboutFrame(String fileAboutPath) {
+    public void openAboutFrame(String fileAboutPath) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {

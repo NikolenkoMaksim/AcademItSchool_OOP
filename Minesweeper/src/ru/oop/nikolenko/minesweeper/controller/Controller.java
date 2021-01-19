@@ -1,46 +1,50 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
 import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
-import ru.oop.nikolenko.minesweeper.veiw.FrameView;
+import ru.oop.nikolenko.minesweeper.veiw.View;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Controller {
+public class Controller implements MinesweeperController {
     private final MinesweeperModel model;
-    private FrameView view;
+    private View view;
     private String[][] field;
-    private int fieldWidth;
-    private int fieldHeight;
+    private int cellsInWidthAmount;
+    private int cellsInHeightAmount;
 
     public Controller(MinesweeperModel model) {
         this.model = model;
     }
 
-    public void setView(FrameView view) {
+    @Override
+    public void setView(View view) {
         this.view = view;
     }
 
-    public void startNewGame(int fieldWidth, int fieldHeight, int minesNumber) {
-        this.fieldWidth = fieldWidth;
-        this.fieldHeight = fieldHeight;
+    @Override
+    public void startNewGame(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
+        this.cellsInWidthAmount = cellsInWidthAmount;
+        this.cellsInHeightAmount = cellsInHeightAmount;
 
-        field = model.getField(fieldWidth, fieldHeight, minesNumber);
+        field = model.getField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
     }
 
-    public String getTypeOfCell(int x, int y) {
-        return field[y][x];
+    @Override
+    public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
+        return field[cellNumberByHeight][cellNumberByWidth];
     }
 
-    public boolean[][] openCells(int openedCellX, int openedCellY, boolean[][] isOpened, boolean[][] isMarked) {
+    @Override
+    public boolean[][] openCells(int openedCellNumberByWidth, int openedCellNumberByHeight, boolean[][] isOpened, boolean[][] isMarked) {
         boolean isEndOfGame = false;
 
-        if (!field[openedCellY][openedCellX].equals("0")) {
+        if (!field[openedCellNumberByHeight][openedCellNumberByWidth].equals("0")) {
             int markedCellsCount = 0;
 
-            for (int i = Math.max(0, openedCellY - 1); i <= Math.min(fieldHeight - 1, openedCellY + 1); i++) {
-                for (int j = Math.max(0, openedCellX - 1); j <= Math.min(fieldWidth - 1, openedCellX + 1); j++) {
+            for (int i = Math.max(0, openedCellNumberByHeight - 1); i <= Math.min(cellsInHeightAmount - 1, openedCellNumberByHeight + 1); i++) {
+                for (int j = Math.max(0, openedCellNumberByWidth - 1); j <= Math.min(cellsInWidthAmount - 1, openedCellNumberByWidth + 1); j++) {
                     if (isMarked[i][j]) {
                         markedCellsCount++;
 
@@ -51,7 +55,7 @@ public class Controller {
                 }
             }
 
-            if (markedCellsCount != Integer.parseInt(field[openedCellY][openedCellX])) {
+            if (markedCellsCount != Integer.parseInt(field[openedCellNumberByHeight][openedCellNumberByWidth])) {
                 return isOpened;
             }
         }
@@ -59,19 +63,18 @@ public class Controller {
         if (isEndOfGame) {
             view.endGame(false);
         } else {
-
             boolean[][] needBeOpened = Arrays.copyOf(isOpened, isOpened.length);
 
             Queue<int[]> queue = new LinkedList<>();
-            queue.add(new int[]{openedCellX, openedCellY});
+            queue.add(new int[]{openedCellNumberByWidth, openedCellNumberByHeight});
 
             while (!queue.isEmpty()) {
                 int[] xy = queue.remove();
                 int x = xy[0];
                 int y = xy[1];
 
-                for (int i = Math.max(0, y - 1); i <= Math.min(fieldHeight - 1, y + 1); i++) {
-                    for (int j = Math.max(0, x - 1); j <= Math.min(fieldWidth - 1, x + 1); j++) {
+                for (int i = Math.max(0, y - 1); i <= Math.min(cellsInHeightAmount - 1, y + 1); i++) {
+                    for (int j = Math.max(0, x - 1); j <= Math.min(cellsInWidthAmount - 1, x + 1); j++) {
                         if (!isMarked[i][j] && !needBeOpened[i][j]) {
                             needBeOpened[i][j] = true;
 
