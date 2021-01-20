@@ -16,7 +16,7 @@ public class Main {
         MainButtonIcons mainButtonIcons = new SmileButtonIcons();
 
         final int[][] defaultOptionals = new int[][]{
-                new int[]{9, 9, 3},
+                new int[]{9, 9, 10},
                 new int[]{16, 16, 40},
                 new int[]{30, 16, 99}
         };
