@@ -17,6 +17,7 @@ public class FrameView implements View {
     private final OptionsFrame optionsFrame = new OptionsFrame();
     private final LeaderboardsFrame leaderboardsFrame = new LeaderboardsFrame();
     private final MinesweeperMenuBar menuBar;
+    final String fileAboutPath;
     private final AboutView aboutView = new AboutView();
 
     JLabel timerLabel;
@@ -41,7 +42,7 @@ public class FrameView implements View {
     private int minesAmount;
 
     public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons,
-                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders) {
+                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders, String fileAboutPath) {
         this.controller = controller;
         this.fieldIcons = fieldIcons;
         this.mainButtonIcons = mainButtonIcons;
@@ -50,6 +51,7 @@ public class FrameView implements View {
         this.menuBar = new MenuBar();
         this.defaultOptionals = minesweeperOptions.getDefaultOptions();
         this.categoriesNames = leaders.getCategoriesNames();
+        this.fileAboutPath = fileAboutPath;
 
         if (categoriesNames.length != defaultOptionals.length) {
             throw new IllegalArgumentException("categoriesNames.length = [" + categoriesNames.length +
@@ -412,7 +414,6 @@ public class FrameView implements View {
     }
 
     public void openAboutFrame() {
-        final String fileAboutPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/about.txt";
         aboutView.openAboutFrame(fileAboutPath);
     }
 }

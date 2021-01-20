@@ -53,7 +53,7 @@ public class Leaders implements MinesweeperLeaders {
                     j++;
                 }
             }
-        } catch (FileNotFoundException | NumberFormatException| NoSuchElementException ignored ) {
+        } catch (FileNotFoundException | NumberFormatException | NoSuchElementException ignored) {
         }
     }
 

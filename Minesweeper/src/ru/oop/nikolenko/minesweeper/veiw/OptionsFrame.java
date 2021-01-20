@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 public class OptionsFrame {
-    public void openOptionsFrame(int[] currentOptionals, FrameView frameView, int[][] defaultOptions, String[] categoryNames) {
+    public void openOptionsFrame(int[] currentOptions, FrameView frameView, int[][] defaultOptions, String[] categoryNames) {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception ignored) {
             }
 
-            JFrame optionsFrame = new JFrame("Optionals");
+            JFrame optionsFrame = new JFrame("Options");
 
             final int frameDefaultWidth = 300;
             final int frameDefaultHeight = 450;
@@ -44,29 +44,27 @@ public class OptionsFrame {
             optionalsLayoutConstraints.weightx = 0;
             optionalsLayoutConstraints.weighty = 0;
 
-            JRadioButton beginnersButton = new JRadioButton(categoryNames[0] + ". (Field: " +
-                    defaultOptions[0][0] + "x" + defaultOptions[0][1] + "; mines: " + defaultOptions[0][2] + ")");
-            optionalsFrameLayout.setConstraints(beginnersButton, optionalsLayoutConstraints);
-            optionsFrame.add(beginnersButton);
+            JRadioButton[] standardRadioButtons = new JRadioButton[defaultOptions.length];
 
-            JRadioButton amateurButton = new JRadioButton(categoryNames[1] + ". (Field: " +
-                    defaultOptions[1][0] + "x" + defaultOptions[1][1] + "; mines: " + defaultOptions[1][2] + ")");
-            optionalsFrameLayout.setConstraints(amateurButton, optionalsLayoutConstraints);
-            optionsFrame.add(amateurButton);
+            for (int i = 0; i < standardRadioButtons.length; i++) {
+                JRadioButton radioButton = new JRadioButton(categoryNames[i] + ". Field: " +
+                        defaultOptions[i][0] + "x" + defaultOptions[i][1] + "; mines: " + defaultOptions[i][2]);
+                optionalsFrameLayout.setConstraints(radioButton, optionalsLayoutConstraints);
+                optionsFrame.add(radioButton);
 
-            JRadioButton professionalButton = new JRadioButton(categoryNames[2] + ". (Field: " +
-                    defaultOptions[2][0] + "x" + defaultOptions[2][1] + "; mines: " + defaultOptions[2][2] + ")");
-            optionalsFrameLayout.setConstraints(professionalButton, optionalsLayoutConstraints);
-            optionsFrame.add(professionalButton);
+                standardRadioButtons[i] = radioButton;
+            }
 
             JRadioButton specialButton = new JRadioButton("Special:");
             optionalsFrameLayout.setConstraints(specialButton, optionalsLayoutConstraints);
             optionsFrame.add(specialButton);
 
             ButtonGroup optionalsButtonGroup = new ButtonGroup();
-            optionalsButtonGroup.add(beginnersButton);
-            optionalsButtonGroup.add(amateurButton);
-            optionalsButtonGroup.add(professionalButton);
+
+            for (JRadioButton radioButton : standardRadioButtons) {
+                optionalsButtonGroup.add(radioButton);
+            }
+
             optionalsButtonGroup.add(specialButton);
 
             optionalsLayoutConstraints.insets = new Insets(0, 30, 10, 0);
@@ -101,9 +99,9 @@ public class OptionsFrame {
                 desiredMinesTextField.setEditable(false);
             };
 
-            beginnersButton.addActionListener(standardButtonSelected);
-            amateurButton.addActionListener(standardButtonSelected);
-            professionalButton.addActionListener(standardButtonSelected);
+            for (JRadioButton radioButton : standardRadioButtons) {
+                radioButton.addActionListener(standardButtonSelected);
+            }
 
             specialButton.addActionListener(e -> {
                 desiredWidthTextField.setEditable(true);
@@ -111,17 +109,27 @@ public class OptionsFrame {
                 desiredMinesTextField.setEditable(true);
             });
 
-            if (Arrays.equals(currentOptionals, defaultOptions[0])) {
-                beginnersButton.setSelected(true);
-            } else if (Arrays.equals(currentOptionals, defaultOptions[1])) {
-                amateurButton.setSelected(true);
-            } else if (Arrays.equals(currentOptionals, defaultOptions[2])) {
-                professionalButton.setSelected(true);
-            } else {
+            boolean isStandardOptions = false;
+
+            for (int i = 0; i < standardRadioButtons.length; i++) {
+                if (Arrays.equals(currentOptions, defaultOptions[i])) {
+                    standardRadioButtons[i].setSelected(true);
+                    isStandardOptions = true;
+                    desiredWidthTextField.setEditable(false);
+                    desiredHeightTextField.setEditable(false);
+                    desiredMinesTextField.setEditable(false);
+                    break;
+                }
+            }
+
+            if (!isStandardOptions) {
                 specialButton.setSelected(true);
-                desiredWidthTextField.setText(String.valueOf(currentOptionals[0]));
-                desiredHeightTextField.setText(String.valueOf(currentOptionals[1]));
-                desiredMinesTextField.setText(String.valueOf(currentOptionals[2]));
+                desiredWidthTextField.setEditable(true);
+                desiredHeightTextField.setEditable(true);
+                desiredMinesTextField.setEditable(true);
+                desiredWidthTextField.setText(String.valueOf(currentOptions[0]));
+                desiredHeightTextField.setText(String.valueOf(currentOptions[1]));
+                desiredMinesTextField.setText(String.valueOf(currentOptions[2]));
             }
 
             JButton applyButton = new JButton("Apply");
@@ -138,36 +146,34 @@ public class OptionsFrame {
             optionsFrame.add(cancelButton);
 
             applyButton.addActionListener(actionEvent -> {
-                if (beginnersButton.isSelected()) {
-                    frameView.saveOptions(defaultOptions[0], 0);
-                    optionsFrame.dispose();
-                } else if (amateurButton.isSelected()) {
-                    frameView.saveOptions(defaultOptions[1], 1);
-                    optionsFrame.dispose();
-                } else if (professionalButton.isSelected()) {
-                    frameView.saveOptions(defaultOptions[2], 2);
-                    optionsFrame.dispose();
-                } else {
-                    try {
-                        int[] specialOptionals = new int[]{
-                                Integer.parseInt(desiredWidthTextField.getText()),
-                                Integer.parseInt(desiredHeightTextField.getText()),
-                                Integer.parseInt(desiredMinesTextField.getText())
-                        };
-
-                        if (specialOptionals[0] * specialOptionals[1] < specialOptionals[2]) {
-                            throw new IllegalArgumentException();
-                        }
-
+                for (int i = 0; i < standardRadioButtons.length; i++) {
+                    if (standardRadioButtons[i].isSelected()) {
+                        frameView.saveOptions(defaultOptions[i], i);
                         optionsFrame.dispose();
-                        frameView.saveOptions(specialOptionals, 3);
-                    } catch (NumberFormatException exception1) {
-                        String message = "Invalid data format." + System.lineSeparator() + "Fill in all fields with numbers";
-                        JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (IllegalArgumentException exception2) {
-                        String message = "The number of bombs exceeds the number of cells";
-                        JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
+
+                        return;
                     }
+                }
+
+                try {
+                    int[] specialOptionals = new int[]{
+                            Integer.parseInt(desiredWidthTextField.getText()),
+                            Integer.parseInt(desiredHeightTextField.getText()),
+                            Integer.parseInt(desiredMinesTextField.getText())
+                    };
+
+                    if (specialOptionals[0] * specialOptionals[1] < specialOptionals[2]) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    optionsFrame.dispose();
+                    frameView.saveOptions(specialOptionals, 3);
+                } catch (NumberFormatException exception1) {
+                    String message = "Invalid data format." + System.lineSeparator() + "Fill in all fields with numbers";
+                    JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException exception2) {
+                    String message = "The number of bombs exceeds the number of cells";
+                    JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
