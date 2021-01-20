@@ -380,7 +380,17 @@ public class FrameView implements View {
     }
 
     public void openLeaderboardsFrame() {
-        leaderboardsFrame.openLeaderboardsFrame(leaders.getLeadersNames(), leaders.getLeadersTimes(), categoriesNames);
+        leaderboardsFrame.openLeaderboardsFrame(leaders.getLeadersNames(), leaders.getLeadersTimes(), categoriesNames, this);
+    }
+
+    public void clearLeaderboard() {
+        try {
+            leaders.clearLeaders();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(frame, "Failed to updateLeaderBoard", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        openLeaderboardsFrame();
     }
 
     public void openOptionalsFrame() {
@@ -389,7 +399,7 @@ public class FrameView implements View {
 
     public void saveOptions(int[] newOptions, int newMode) {
         try {
-            minesweeperOptions.saveOptionals(newOptions);
+            minesweeperOptions.saveOptions(newOptions);
             cellsInWidthAmount = newOptions[0];
             cellsInHeightAmount = newOptions[1];
             minesAmount = newOptions[2];
@@ -397,7 +407,7 @@ public class FrameView implements View {
             startNewGame();
             SwingUtilities.updateComponentTreeUI(frame);
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(frame, "Failed to update the leaderboard", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Failed to save options", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

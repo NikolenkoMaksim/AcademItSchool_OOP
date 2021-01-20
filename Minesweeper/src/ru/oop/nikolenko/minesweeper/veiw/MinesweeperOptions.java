@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 public interface MinesweeperOptions {
     int[] getMimeSweeperOptions();
 
-    void saveOptionals(int[] mimeSweeperOptions) throws FileNotFoundException;
+    void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException;
 
     int[][] getDefaultOptions();
 }

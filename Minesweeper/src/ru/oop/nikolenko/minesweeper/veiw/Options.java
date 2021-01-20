@@ -49,7 +49,7 @@ public class Options implements MinesweeperOptions {
     }
 
     @Override
-    public void saveOptionals(int[] mimeSweeperOptions) throws FileNotFoundException {
+    public void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(optionsFilePath)) {
             for (int mimeSweeperOption : mimeSweeperOptions) {
                 writer.println(mimeSweeperOption);

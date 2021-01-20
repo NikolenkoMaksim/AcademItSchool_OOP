@@ -3,11 +3,12 @@ package ru.oop.nikolenko.minesweeper.veiw;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Leaders implements MinesweeperLeaders {
-    private final String[][] leadersNames;
-    private final Integer[][] leadersTimes;
+    private String[][] leadersNames;
+    private Integer[][] leadersTimes;
     private final String leadersFilePath;
     private final int desiredLeadersCountInCategory;
     private final String[] categoriesNames;
@@ -52,7 +53,7 @@ public class Leaders implements MinesweeperLeaders {
                     j++;
                 }
             }
-        } catch (FileNotFoundException | NumberFormatException ignored) {
+        } catch (FileNotFoundException | NumberFormatException| NoSuchElementException ignored ) {
         }
     }
 
@@ -68,6 +69,7 @@ public class Leaders implements MinesweeperLeaders {
         return categoriesNames;
     }
 
+    @Override
     public int getNewWinnerPlace(int categoryNumber, int time) {
         if (leadersTimes[categoryNumber][desiredLeadersCountInCategory - 1] != null && time >= leadersTimes[categoryNumber][desiredLeadersCountInCategory - 1]) {
             return -1;
@@ -82,6 +84,7 @@ public class Leaders implements MinesweeperLeaders {
         return 0;
     }
 
+    @Override
     public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
         for (int i = desiredLeadersCountInCategory - 1; i > place; i--) {
             leadersNames[categoryNumber][i] = leadersNames[categoryNumber][i - 1];
@@ -107,6 +110,16 @@ public class Leaders implements MinesweeperLeaders {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void clearLeaders() throws FileNotFoundException {
+        leadersNames = new String[categoriesNames.length][desiredLeadersCountInCategory];
+        leadersTimes = new Integer[categoriesNames.length][desiredLeadersCountInCategory];
+
+        try (PrintWriter writer = new PrintWriter(leadersFilePath)) {
+            writer.println();
         }
     }
 }

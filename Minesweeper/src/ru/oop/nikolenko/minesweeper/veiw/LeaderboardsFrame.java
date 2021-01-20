@@ -5,7 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class LeaderboardsFrame {
-    public void openLeaderboardsFrame(String[][] championsNames, Integer[][] championsTimes, String[] categoriesNames) {
+    public void openLeaderboardsFrame(String[][] championsNames, Integer[][] championsTimes, String[] categoriesNames, FrameView frameView) {
         if (championsNames.length != categoriesNames.length) {
             throw new IllegalArgumentException("championsNames.length = " + championsNames.length
                     + " is not equal categoriesNames.length = " + categoriesNames.length);
@@ -29,7 +29,7 @@ public class LeaderboardsFrame {
 
             JFrame leaderboardsFrame = new JFrame("Leaderboard");
 
-            final int frameDefaultWidth = 200;
+            final int frameDefaultWidth = 300;
             final int frameDefaultHeight = 500;
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -38,7 +38,7 @@ public class LeaderboardsFrame {
             leaderboardsFrame.setResizable(false);
             leaderboardsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             leaderboardsFrame.setVisible(true);
-            leaderboardsFrame.getRootPane().setBorder(new EmptyBorder(15, 15, 15, 15));
+            leaderboardsFrame.getRootPane().setBorder(new EmptyBorder(15, 40, 15, 30));
 
             GridBagLayout leaderboardsFrameLayout = new GridBagLayout();
             leaderboardsFrame.setLayout(leaderboardsFrameLayout);
@@ -66,7 +66,7 @@ public class LeaderboardsFrame {
                 JLabel categoryName = new JLabel(categoriesNames[i]);
                 leaderboardsConstraints.anchor = GridBagConstraints.CENTER;
                 leaderboardsConstraints.fill = GridBagConstraints.NONE;
-                leaderboardsConstraints.insets = new Insets(5, 0, 5, 0);
+                leaderboardsConstraints.insets = new Insets(5, 15, 5, 0);
                 leaderboardsFrameLayout.setConstraints(categoryName, leaderboardsConstraints);
                 leaderboardsFrame.add(categoryName);
 
@@ -74,7 +74,7 @@ public class LeaderboardsFrame {
                     JLabel gamerNameLabel = new JLabel();
 
                     if (championsNames[i][j] != null) {
-                        gamerNameLabel.setText((j + 1) + ". " + championsNames[i][j]);
+                        gamerNameLabel.setText((j + 1) + ".  " + championsNames[i][j]);
                     } else {
                         gamerNameLabel.setText((j + 1) + ".");
                     }
@@ -82,7 +82,7 @@ public class LeaderboardsFrame {
                     leaderboardsConstraints.anchor = GridBagConstraints.WEST;
                     leaderboardsConstraints.fill = GridBagConstraints.HORIZONTAL;
                     leaderboardsConstraints.gridwidth = 1;
-                    leaderboardsConstraints.insets = new Insets(0, 0, 0, 0);
+                    leaderboardsConstraints.insets = new Insets(0, 0, 0, 15);
                     leaderboardsFrameLayout.setConstraints(gamerNameLabel, leaderboardsConstraints);
                     leaderboardsFrame.add(gamerNameLabel);
 
@@ -98,6 +98,31 @@ public class LeaderboardsFrame {
                     leaderboardsFrame.add(gamerTimeLabel);
                 }
             }
+
+            JButton clearButton = new JButton("Clear");
+            leaderboardsConstraints.anchor = GridBagConstraints.CENTER;
+            leaderboardsConstraints.insets = new Insets(10, 20, 0, 10);
+            leaderboardsConstraints.gridwidth = 1;
+            leaderboardsFrameLayout.setConstraints(clearButton, leaderboardsConstraints);
+            leaderboardsFrame.add(clearButton);
+
+            JButton cancelButton = new JButton("Cancel");
+            leaderboardsConstraints.gridwidth = GridBagConstraints.REMAINDER;
+            leaderboardsConstraints.insets = new Insets(10, 10, 0, 20);
+            leaderboardsFrameLayout.setConstraints(cancelButton, leaderboardsConstraints);
+            leaderboardsFrame.add(cancelButton);
+
+            clearButton.addActionListener(actionEvent -> {
+                int dialogResult = JOptionPane.showConfirmDialog(leaderboardsFrame, "Are you sure you want to clear the leaderboard?",
+                        "Delete confirmation", JOptionPane.YES_NO_OPTION);
+
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    frameView.clearLeaderboard();
+                    leaderboardsFrame.dispose();
+                }
+            });
+
+            cancelButton.addActionListener(e -> leaderboardsFrame.dispose());
         });
     }
 }

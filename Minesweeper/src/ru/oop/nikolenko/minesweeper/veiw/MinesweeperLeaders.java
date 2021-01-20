@@ -12,4 +12,6 @@ public interface MinesweeperLeaders {
     int getNewWinnerPlace(int categoryNumber, int time);
 
     void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException;
+
+    void clearLeaders() throws FileNotFoundException;
 }
