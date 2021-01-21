@@ -2,7 +2,7 @@ package ru.oop.nikolenko.minesweeper.veiw;
 
 import javax.swing.*;
 
-public class MenuBar implements MinesweeperMenuBar{
+public class MenuBar implements MinesweeperMenuBar {
     public JMenuBar getJMenuBar(FrameView frameView) {
         JMenuBar menuBar = new JMenuBar();
         JMenu mFile = new JMenu("File");
@@ -25,19 +25,16 @@ public class MenuBar implements MinesweeperMenuBar{
         mFile.add(new JSeparator());
 
         JMenuItem miExit = new JMenuItem("Exit");
+        miExit.addActionListener(e -> System.exit(0));
         mFile.add(miExit);
 
-        miExit.addActionListener(e -> System.exit(0));
-
-        /*
         JMenuItem miRules = new JMenuItem("Rules");
+        miRules.addActionListener(e -> frameView.openRulesFrame());
         mHelp.add(miRules);
-         */
 
         JMenuItem miAbout = new JMenuItem("About");
-        mHelp.add(miAbout);
-
         miAbout.addActionListener(e -> frameView.openAboutFrame());
+        mHelp.add(miAbout);
 
         menuBar.add(mFile);
         menuBar.add(mHelp);

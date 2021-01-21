@@ -28,8 +28,9 @@ public class Main {
         MinesweeperLeaders leaders = new Leaders(championsFilePath, 5, categoriesNames);
 
         final String fileAboutPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/about.txt";
+        final String fileRulesPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/rules.txt";
 
-        View view = new FrameView(controller, fieldIcons, mainButtonIcons, mineSweeperOptionals, leaders, fileAboutPath);
+        View view = new FrameView(controller, fieldIcons, mainButtonIcons, mineSweeperOptionals, leaders, fileRulesPath, fileAboutPath);
         controller.setView(view);
 
         view.run();

@@ -17,7 +17,7 @@ public class AboutView {
         JFrame aboutFrame = new JFrame("About");
 
         final int frameDefaultWidth = 300;
-        final int frameDefaultHeight = 150;
+        final int frameDefaultHeight = 140;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         aboutFrame.setLocation((screenSize.width - frameDefaultWidth) / 2, (screenSize.height - frameDefaultHeight) / 2);
@@ -27,20 +27,21 @@ public class AboutView {
         aboutFrame.setVisible(true);
         aboutFrame.getRootPane().setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        String textAbout;
+        StringBuilder stringBuilder = new StringBuilder();
 
         try (Scanner scanner = new Scanner(new FileInputStream(fileAboutPath))) {
-            textAbout = scanner.nextLine();
-            textAbout = textAbout + System.lineSeparator() + scanner.nextLine();
+            while (scanner.hasNextLine()) {
+                stringBuilder.append("     ").append(scanner.nextLine()).append(System.lineSeparator());
+            }
         } catch (FileNotFoundException ignored) {
-            textAbout = "There is no data";
+            stringBuilder.append("There is no data");
         }
 
-        JTextArea aboutTextArea = new JTextArea(textAbout);
+        JTextArea aboutTextArea = new JTextArea(stringBuilder.toString());
         aboutTextArea.setEditable(false);
         aboutTextArea.setWrapStyleWord(true);
         aboutTextArea.setLineWrap(true);
-        aboutTextArea.setFont(new Font("", Font.PLAIN, 12));
+        aboutTextArea.setFont(new Font("", Font.PLAIN, 13));
 
         GridBagLayout aboutFrameLayout = new GridBagLayout();
         aboutFrame.setLayout(aboutFrameLayout);
@@ -65,7 +66,7 @@ public class AboutView {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> aboutFrame.dispose());
         aboutLayoutConstraints.fill = GridBagConstraints.NONE;
-        aboutLayoutConstraints.insets = new Insets(10, 10, 10, 10);
+        aboutLayoutConstraints.insets = new Insets(10, 10, 0, 10);
         aboutLayoutConstraints.weightx = 0;
         aboutLayoutConstraints.weighty = 0;
         aboutFrameLayout.setConstraints(cancelButton, aboutLayoutConstraints);

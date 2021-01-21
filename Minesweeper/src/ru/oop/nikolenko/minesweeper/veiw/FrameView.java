@@ -19,6 +19,8 @@ public class FrameView implements View {
     private final MinesweeperMenuBar menuBar;
     final String fileAboutPath;
     private final AboutView aboutView = new AboutView();
+    final String fileRulesPath;
+    private final RulesView rulesView = new RulesView();
 
     JLabel timerLabel;
     AtomicInteger secondsCount;
@@ -42,7 +44,7 @@ public class FrameView implements View {
     private int minesAmount;
 
     public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons,
-                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders, String fileAboutPath) {
+                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders, String fileRulesPath, String fileAboutPath) {
         this.controller = controller;
         this.fieldIcons = fieldIcons;
         this.mainButtonIcons = mainButtonIcons;
@@ -52,6 +54,7 @@ public class FrameView implements View {
         this.defaultOptionals = minesweeperOptions.getDefaultOptions();
         this.categoriesNames = leaders.getCategoriesNames();
         this.fileAboutPath = fileAboutPath;
+        this.fileRulesPath = fileRulesPath;
 
         if (categoriesNames.length != defaultOptionals.length) {
             throw new IllegalArgumentException("categoriesNames.length = [" + categoriesNames.length +
@@ -411,6 +414,10 @@ public class FrameView implements View {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(frame, "Failed to save options", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void openRulesFrame() {
+        rulesView.openRulesFrame(fileRulesPath);
     }
 
     public void openAboutFrame() {
