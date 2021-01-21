@@ -38,24 +38,25 @@ public class Graph {
 
     public void visitInDeep(Consumer<Integer> consumer) {
         boolean[] visited = new boolean[edgesMatrix.length];
-        boolean[] addedInStack = new boolean[edgesMatrix.length];
 
         for (int i = 0; i < visited.length; i++) {
             if (!visited[i]) {
                 Deque<Integer> stack = new LinkedList<>();
                 stack.addLast(i);
-                addedInStack[i] = true;
 
                 while (!stack.isEmpty()) {
                     int currentVertexNumber = stack.removeLast();
+
+                    if (visited[currentVertexNumber]) {
+                        continue;
+                    }
 
                     consumer.accept(currentVertexNumber);
                     visited[currentVertexNumber] = true;
 
                     for (int vertexNumber = edgesMatrix[currentVertexNumber].length - 1; vertexNumber >= 0; vertexNumber--) {
-                        if (edgesMatrix[currentVertexNumber][vertexNumber] == 1 && !addedInStack[vertexNumber]) {
+                        if (edgesMatrix[currentVertexNumber][vertexNumber] == 1) {
                             stack.add(vertexNumber);
-                            addedInStack[vertexNumber] = true;
                         }
                     }
                 }
@@ -65,24 +66,25 @@ public class Graph {
 
     public void visitInWidth(Consumer<Integer> consumer) {
         boolean[] visited = new boolean[edgesMatrix.length];
-        boolean[] addedInStack = new boolean[edgesMatrix.length];
 
         for (int i = 0; i < visited.length; i++) {
             if (!visited[i]) {
                 Queue<Integer> stack = new LinkedList<>();
                 stack.add(i);
-                addedInStack[i] = true;
 
                 while (!stack.isEmpty()) {
                     int currentVertexNumber = stack.remove();
+
+                    if (visited[currentVertexNumber]) {
+                        continue;
+                    }
 
                     consumer.accept(currentVertexNumber);
                     visited[currentVertexNumber] = true;
 
                     for (int vertexNumber = 0; vertexNumber < edgesMatrix[currentVertexNumber].length; vertexNumber++) {
-                        if (edgesMatrix[currentVertexNumber][vertexNumber] == 1 && !addedInStack[vertexNumber]) {
+                        if (edgesMatrix[currentVertexNumber][vertexNumber] == 1) {
                             stack.add(vertexNumber);
-                            addedInStack[vertexNumber] = true;
                         }
                     }
                 }

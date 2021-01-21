@@ -4,7 +4,7 @@ import ru.oop.nikolenko.graph.Graph;
 
 import java.util.function.Consumer;
 
-public class MyGraphMain {
+public class GraphMain {
     public static void main(String[] args) {
         int[][] edgesMatrix = {
                 {0, 1, 0, 0, 1, 0, 0, 0, 0, 0},
