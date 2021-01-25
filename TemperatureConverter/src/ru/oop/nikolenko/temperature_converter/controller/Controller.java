@@ -15,8 +15,8 @@ public class Controller implements ConverterController {
     }
 
     @Override
-    public double convertTemperature(double temperature, String fromScale, String toScale) {
-        return temperatureConverter.convert(temperature, getScaleIndex(fromScale), getScaleIndex(toScale));
+    public double convertTemperature(double temperature, String originalUnitName, String resultingUnitName) {
+        return temperatureConverter.convert(temperature, getScaleIndex(originalUnitName), getScaleIndex(resultingUnitName));
     }
 
     private int getScaleIndex(String scale) {
