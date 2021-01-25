@@ -1,11 +1,11 @@
 package ru.oop.nikolenko.temperature_converter.controller;
 
-import ru.oop.nikolenko.temperature_converter.model.Convecter;
+import ru.oop.nikolenko.temperature_converter.model.Converter;
 
-public class Controller implements ConvectorController {
-    private final Convecter temperatureConverter;
+public class Controller implements ConverterController {
+    private final Converter temperatureConverter;
 
-    public Controller(Convecter temperatureConverter) {
+    public Controller(Converter temperatureConverter) {
         this.temperatureConverter = temperatureConverter;
     }
 

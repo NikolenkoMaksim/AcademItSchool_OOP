@@ -1,106 +1,63 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class TemperatureConverter implements Convecter {
-    private final String[] scales = new String[]{
-            "Celsius",
-            "Kelvin",
-            "Fahrenheit"
-    };
-    private final int mainScaleIndex = 0;
+public class TemperatureConverter implements Converter {
+    private final String[] scalesNames;
+    private final TwoUnitsConverter[] twoUnitsConverters;
+
+    public TemperatureConverter(String[] scalesNames, TwoUnitsConverter[] twoUnitsConverters) {
+        for (int i = 0; i < twoUnitsConverters.length; i++) {
+            if (!twoUnitsConverters[i].getNameOfFirstUnit().equals(scalesNames[0])) {
+                throw new IllegalArgumentException("The first scale of twoUnitsConverters[" + i + "] = \"" + twoUnitsConverters[i].getNameOfFirstUnit() +
+                        "\" must be equal to scalesNames[0] = \"" + scalesNames[0] + "\"");
+            }
+
+            if (!twoUnitsConverters[i].getNameOfSecondUnit().equals(scalesNames[i + 1])) {
+                throw new IllegalArgumentException("The second scale of twoUnitsConverters[" + i + "] = \"" + twoUnitsConverters[i].getNameOfSecondUnit() +
+                        "\" must be equal to scalesNames[" + (i + 1) + "] = \"" + scalesNames[i + 1] + "\")");
+            }
+        }
+
+        this.scalesNames = scalesNames;
+        this.twoUnitsConverters = twoUnitsConverters;
+    }
 
     @Override
     public String[] getScales() {
-        return scales;
+        return scalesNames;
     }
 
     @Override
-    public double convert(double temperature, int scale1Index, int scale2Index) {
-        if (scale1Index < 0) {
-            throw new IllegalArgumentException("scale1Index (" + scale1Index + ") < 0");
+    public double convert(double temperature, int originalUnitIndex, int resultingUnitIndex) {
+        if (originalUnitIndex < 0) {
+            throw new IllegalArgumentException("originalUnitIndex (" + originalUnitIndex + ") < 0");
         }
 
-        if (scale2Index < 0) {
-            throw new IllegalArgumentException("scale2Index (" + scale2Index + ") < 0");
+        if (resultingUnitIndex < 0) {
+            throw new IllegalArgumentException("resultingUnitIndex (" + resultingUnitIndex + ") < 0");
         }
 
-        if (scale1Index >= scales.length) {
-            throw new IllegalArgumentException("scale1Index (" + scale1Index + ") >= scales.length  (" + scales.length + ")");
+        if (originalUnitIndex >= scalesNames.length) {
+            throw new IllegalArgumentException("originalUnitIndex (" + originalUnitIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
         }
 
-        if (scale2Index >= scales.length) {
-            throw new IllegalArgumentException("scale2Index (" + scale2Index + ") >= scales.length  (" + scales.length + ")");
+        if (resultingUnitIndex >= scalesNames.length) {
+            throw new IllegalArgumentException("resultingUnitIndex (" + resultingUnitIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
         }
 
-        if (scale1Index == scale2Index) {
+        if (originalUnitIndex == resultingUnitIndex) {
             return temperature;
         }
 
-        if (scale1Index == mainScaleIndex) {
-            return convertFromMainScale(temperature, scale2Index);
+        if (originalUnitIndex == 0) {
+            return twoUnitsConverters[resultingUnitIndex - 1].convertDataFromFirstToSecondUnit(temperature);
         }
 
-        if (scale2Index == mainScaleIndex) {
-            return convertToMainScale(temperature, scale1Index);
+        if (resultingUnitIndex == 0) {
+            return twoUnitsConverters[originalUnitIndex - 1].convertDataFromSecondToFirstUnit(temperature);
         }
 
-        double convertedToMainTemperature = convertToMainScale(temperature, scale1Index);
+        double convertedToMainTemperature = twoUnitsConverters[originalUnitIndex - 1].convertDataFromSecondToFirstUnit(temperature);
 
-        return convertFromMainScale(convertedToMainTemperature, scale2Index);
-    }
-
-    private double convertFromMainScale(double temperature, int scaleIndex) {
-        if (scaleIndex >= scales.length) {
-            throw new IllegalArgumentException("scaleIndex (" + scaleIndex + ") >= scales.length  (" + scales.length + ")");
-        }
-
-        if (scaleIndex == mainScaleIndex) {
-            return temperature;
-        }
-
-        if (scaleIndex == 1) {
-            return convertCelsiusToKelvin(temperature);
-        }
-
-        if (scaleIndex == 2) {
-            return convertCelsiusToFahrenheit(temperature);
-        }
-
-        throw new IllegalArgumentException("scaleIndex " + scaleIndex + " can't be convert in currentVersion");
-    }
-
-    private double convertToMainScale(double temperature, int scaleIndex) {
-        if (scaleIndex >= scales.length) {
-            throw new IllegalArgumentException("scaleIndex (" + scaleIndex + ") >= scales.length  (" + scales.length + ")");
-        }
-
-        if (scaleIndex == mainScaleIndex) {
-            return temperature;
-        }
-
-        if (scaleIndex == 1) {
-            return convertKelvinToCelsius(temperature);
-        }
-
-        if (scaleIndex == 2) {
-            return convertFahrenheitToCelsius(temperature);
-        }
-
-        throw new IllegalArgumentException("scaleIndex " + scaleIndex + " can't be convert in currentVersion");
-    }
-
-    private double convertCelsiusToKelvin(double celsiusTemperature) {
-        return celsiusTemperature + 273.15;
-    }
-
-    public double convertCelsiusToFahrenheit(double celsiusTemperature) {
-        return celsiusTemperature * 1.8 + 32;
-    }
-
-    public double convertKelvinToCelsius(double kelvinTemperature) {
-        return kelvinTemperature - 273.15;
-    }
-
-    public double convertFahrenheitToCelsius(double fahrenheitTemperature) {
-        return (fahrenheitTemperature - 32) * 5 / 9;
+        return twoUnitsConverters[resultingUnitIndex - 1].convertDataFromFirstToSecondUnit(convertedToMainTemperature);
     }
 }

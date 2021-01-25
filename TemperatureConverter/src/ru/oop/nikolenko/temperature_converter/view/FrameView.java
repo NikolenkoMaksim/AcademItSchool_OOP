@@ -1,6 +1,6 @@
 package ru.oop.nikolenko.temperature_converter.view;
 
-import ru.oop.nikolenko.temperature_converter.controller.ConvectorController;
+import ru.oop.nikolenko.temperature_converter.controller.ConverterController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FrameView implements View {
-    private final ConvectorController controller;
+    private final ConverterController controller;
 
-    public FrameView(ConvectorController controller) {
+    public FrameView(ConverterController controller) {
         this.controller = controller;
     }
 

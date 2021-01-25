@@ -200,16 +200,16 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        boolean isRetained = false;
+        boolean isRemoved = false;
 
         for (int i = size - 1; i >= 0; i--) {
             if (!c.contains(items[i])) {
                 remove(i);
-                isRetained = true;
+                isRemoved = true;
             }
         }
 
-        return isRetained;
+        return isRemoved;
     }
 
     @Override
@@ -318,14 +318,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int hashCode() {
-        final int prime = 13;
-        int hash = 1;
-
-        for (int i = 0; i < size; i++) {
-            hash = prime * hash + (items[i] != null ? items[i].hashCode() : 0);
-        }
-
-        return hash;
+        return Arrays.hashCode(items);
     }
 
     @Override

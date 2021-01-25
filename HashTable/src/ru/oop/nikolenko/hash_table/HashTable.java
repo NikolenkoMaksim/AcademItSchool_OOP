@@ -121,7 +121,7 @@ public class HashTable<T> implements Collection<T> {
     public boolean add(T element) {
         int listIndex = getListIndex(element);
 
-        provideList(listIndex);
+        createList(listIndex);
 
         boolean isAdded = lists[listIndex].add(element);
 
@@ -133,7 +133,7 @@ public class HashTable<T> implements Collection<T> {
         return isAdded;
     }
 
-    private void provideList(int listIndex) {
+    private void createList(int listIndex) {
         if (lists[listIndex] == null) {
             lists[listIndex] = new ArrayList<>();
         }
