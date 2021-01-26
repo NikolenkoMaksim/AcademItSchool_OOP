@@ -69,11 +69,11 @@ public class Graph {
 
         for (int i = 0; i < visited.length; i++) {
             if (!visited[i]) {
-                Queue<Integer> stack = new LinkedList<>();
-                stack.add(i);
+                Queue<Integer> queue = new LinkedList<>();
+                queue.add(i);
 
-                while (!stack.isEmpty()) {
-                    int currentVertexNumber = stack.remove();
+                while (!queue.isEmpty()) {
+                    int currentVertexNumber = queue.remove();
 
                     if (visited[currentVertexNumber]) {
                         continue;
@@ -84,7 +84,7 @@ public class Graph {
 
                     for (int vertexNumber = 0; vertexNumber < edgesMatrix[currentVertexNumber].length; vertexNumber++) {
                         if (edgesMatrix[currentVertexNumber][vertexNumber] == 1) {
-                            stack.add(vertexNumber);
+                            queue.add(vertexNumber);
                         }
                     }
                 }
