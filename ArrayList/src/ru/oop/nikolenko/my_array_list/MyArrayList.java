@@ -72,14 +72,14 @@ public class MyArrayList<T> implements List<T> {
         private final int initialModCount = modCount;
 
         public boolean hasNext() {
-            if (initialModCount != modCount) {
-                throw new ConcurrentModificationException("list was changed");
-            }
-
             return currentIndex + 1 < size;
         }
 
         public T next() {
+            if (initialModCount != modCount) {
+                throw new ConcurrentModificationException("list was changed");
+            }
+
             if (!hasNext()) {
                 throw new NoSuchElementException("there isn't next element (current Index = " + currentIndex + ", size = " + size + ")");
             }
