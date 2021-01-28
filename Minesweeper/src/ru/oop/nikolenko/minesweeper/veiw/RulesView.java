@@ -37,11 +37,14 @@ public class RulesView {
             stringBuilder.append("There is no data");
         }
 
-        JTextArea aboutTextArea = new JTextArea(stringBuilder.toString());
-        aboutTextArea.setEditable(false);
-        aboutTextArea.setWrapStyleWord(true);
-        aboutTextArea.setLineWrap(true);
-        aboutTextArea.setFont(new Font("", Font.PLAIN, 13));
+        Font font = new Font("", Font.PLAIN, 14);
+
+        JTextArea rulesTextArea = new JTextArea(stringBuilder.toString());
+        rulesTextArea.setFont(font);
+        rulesTextArea.setEditable(false);
+        rulesTextArea.setWrapStyleWord(true);
+        rulesTextArea.setLineWrap(true);
+        rulesTextArea.setFont(new Font("", Font.PLAIN, 13));
 
         GridBagLayout rulesFrameLayout = new GridBagLayout();
         rulesFrame.setLayout(rulesFrameLayout);
@@ -60,10 +63,11 @@ public class RulesView {
         rulesLayoutConstraints.weightx = 1;
         rulesLayoutConstraints.weighty = 1;
 
-        rulesFrameLayout.setConstraints(aboutTextArea, rulesLayoutConstraints);
-        rulesFrame.add(aboutTextArea);
+        rulesFrameLayout.setConstraints(rulesTextArea, rulesLayoutConstraints);
+        rulesFrame.add(rulesTextArea);
 
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(font);
         cancelButton.addActionListener(e -> rulesFrame.dispose());
         rulesLayoutConstraints.fill = GridBagConstraints.NONE;
         rulesLayoutConstraints.insets = new Insets(10, 10, 10, 10);

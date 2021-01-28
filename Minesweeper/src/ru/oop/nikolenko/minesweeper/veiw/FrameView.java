@@ -3,6 +3,7 @@ package ru.oop.nikolenko.minesweeper.veiw;
 import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -86,26 +87,14 @@ public class FrameView implements View {
 
             frame.setJMenuBar(menuBar.getJMenuBar(this));
 
-            GridBagLayout pageStartLayout = new GridBagLayout();
+            GridLayout pageStartLayout = new GridLayout(1, 3, 0, 0);
             JPanel pageStartPanel = new JPanel(pageStartLayout);
+            pageStartPanel.setBorder(new EmptyBorder(0, 15, 0, 15));
             frame.add(pageStartPanel, BorderLayout.PAGE_START);
 
-            GridBagConstraints c = new GridBagConstraints();
-
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.gridx = GridBagConstraints.RELATIVE;
-            c.gridy = GridBagConstraints.RELATIVE;
-            c.insets = new Insets(5, 15, 5, 15);
-            c.ipadx = 0;
-            c.ipady = 0;
-            c.weightx = 1.0;
-            c.weighty = 1.0;
-
             timerLabel = new JLabel("0");
-            pageStartLayout.setConstraints(timerLabel, c);
+            Font font = new Font("", Font.PLAIN, 17);
+            timerLabel.setFont(font);
             pageStartPanel.add(timerLabel);
 
             secondsCount = new AtomicInteger();
@@ -117,28 +106,25 @@ public class FrameView implements View {
                 }
             });
 
-            mainButton = new JButton(mainButtonIcons.getNormalButtonIcon());
-            mainButton.setSize(26, 26);
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.NONE;
-            pageStartLayout.setConstraints(mainButton, c);
-            pageStartPanel.add(mainButton);
+            JPanel mainButtonPanel = new JPanel(new FlowLayout());
+            pageStartPanel.add(mainButtonPanel);
 
+            mainButton = new JButton(mainButtonIcons.getNormalButtonIcon());
+            mainButton.setFocusable(false);
+            mainButton.setPreferredSize(new Dimension(48, 48));
+            mainButtonPanel.add(mainButton);
             mainButton.addActionListener(e -> startNewGame());
 
             remainingMinesLabel = new JLabel();
+            remainingMinesLabel.setFont(font);
             remainingMinesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            pageStartLayout.setConstraints(remainingMinesLabel, c);
             pageStartPanel.add(remainingMinesLabel);
 
             startNewGame();
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-            frame.setLocation((screenSize.width - frame.getWidth()) / 2, (screenSize.height - frame.getWidth()) / 2);
+            frame.setLocation((screenSize.width - frame.getWidth()) / 2, (screenSize.height - frame.getHeight()) / 2);
             frame.setResizable(false);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
@@ -251,6 +237,7 @@ public class FrameView implements View {
 
     private JButton getCellButton(int x, int y, JPanel panelXY, boolean isGameEnd) {
         JButton buttonXY = new JButton();
+        buttonXY.setFocusable(false);
 
         if (isGameEnd) {
             boolean isMine = controller.getTypeOfCell(x, y).equals("mine");
@@ -325,6 +312,7 @@ public class FrameView implements View {
 
                 public void mouseReleased(MouseEvent e) {
                     mainButton.setIcon(mainButtonIcons.getNormalButtonIcon());
+
                 }
             });
         }

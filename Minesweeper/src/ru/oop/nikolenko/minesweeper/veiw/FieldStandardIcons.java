@@ -90,11 +90,11 @@ public class FieldStandardIcons implements FieldIcons {
 
     @Override
     public int getIconsWidth() {
-        return 16;
+        return 32;
     }
 
     @Override
     public int getIconsHeight() {
-        return 16;
+        return 32;
     }
 }

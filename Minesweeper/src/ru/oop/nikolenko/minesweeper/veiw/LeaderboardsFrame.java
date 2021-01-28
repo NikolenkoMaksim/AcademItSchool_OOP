@@ -58,12 +58,15 @@ public class LeaderboardsFrame {
             leaderboardsConstraints.weighty = 1.0;
 
             JLabel title = new JLabel("Leaderboard");
-            title.setFont(new Font("", Font.BOLD, 13));
+            title.setFont(new Font("", Font.BOLD, 15));
             leaderboardsFrameLayout.setConstraints(title, leaderboardsConstraints);
             leaderboardsFrame.add(title);
 
+            Font font = new Font("", Font.PLAIN, 14);
+
             for (int i = 0; i < championsNames.length; i++) {
                 JLabel categoryName = new JLabel(categoriesNames[i]);
+                categoryName.setFont(font);
                 leaderboardsConstraints.anchor = GridBagConstraints.CENTER;
                 leaderboardsConstraints.fill = GridBagConstraints.NONE;
                 leaderboardsConstraints.insets = new Insets(5, 15, 5, 0);
@@ -72,6 +75,7 @@ public class LeaderboardsFrame {
 
                 for (int j = 0; j < championsNames[0].length; j++) {
                     JLabel gamerNameLabel = new JLabel();
+                    gamerNameLabel.setFont(font);
 
                     if (championsNames[i][j] != null) {
                         gamerNameLabel.setText((j + 1) + ".  " + championsNames[i][j]);
@@ -87,6 +91,7 @@ public class LeaderboardsFrame {
                     leaderboardsFrame.add(gamerNameLabel);
 
                     JLabel gamerTimeLabel = new JLabel();
+                    gamerTimeLabel.setFont(font);
                     gamerTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                     if (championsTimes[i][j] != null) {
@@ -100,6 +105,7 @@ public class LeaderboardsFrame {
             }
 
             JButton clearButton = new JButton("Clear");
+            clearButton.setFont(font);
             leaderboardsConstraints.anchor = GridBagConstraints.CENTER;
             leaderboardsConstraints.insets = new Insets(10, 20, 0, 10);
             leaderboardsConstraints.gridwidth = 1;
@@ -107,6 +113,7 @@ public class LeaderboardsFrame {
             leaderboardsFrame.add(clearButton);
 
             JButton cancelButton = new JButton("Cancel");
+            cancelButton.setFont(font);
             leaderboardsConstraints.gridwidth = GridBagConstraints.REMAINDER;
             leaderboardsConstraints.insets = new Insets(10, 10, 0, 20);
             leaderboardsFrameLayout.setConstraints(cancelButton, leaderboardsConstraints);

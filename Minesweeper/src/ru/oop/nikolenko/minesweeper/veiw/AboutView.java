@@ -17,7 +17,7 @@ public class AboutView {
         JFrame aboutFrame = new JFrame("About");
 
         final int frameDefaultWidth = 300;
-        final int frameDefaultHeight = 140;
+        final int frameDefaultHeight = 145;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         aboutFrame.setLocation((screenSize.width - frameDefaultWidth) / 2, (screenSize.height - frameDefaultHeight) / 2);
@@ -38,6 +38,8 @@ public class AboutView {
         }
 
         JTextArea aboutTextArea = new JTextArea(stringBuilder.toString());
+        Font font = new Font("", Font.PLAIN, 14);
+        aboutTextArea.setFont(font);
         aboutTextArea.setEditable(false);
         aboutTextArea.setWrapStyleWord(true);
         aboutTextArea.setLineWrap(true);
@@ -64,6 +66,7 @@ public class AboutView {
         aboutFrame.add(aboutTextArea);
 
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(font);
         cancelButton.addActionListener(e -> aboutFrame.dispose());
         aboutLayoutConstraints.fill = GridBagConstraints.NONE;
         aboutLayoutConstraints.insets = new Insets(10, 10, 0, 10);
