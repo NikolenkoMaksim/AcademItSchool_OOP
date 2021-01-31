@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.model;
 
 import java.io.FileNotFoundException;
 

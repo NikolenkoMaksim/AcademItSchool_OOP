@@ -1,8 +1,9 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
 import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
-import ru.oop.nikolenko.minesweeper.veiw.View;
+import ru.oop.nikolenko.minesweeper.view.View;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -13,6 +14,7 @@ public class Controller implements MinesweeperController {
     private String[][] field;
     private int cellsInWidthAmount;
     private int cellsInHeightAmount;
+    private int minesAmount;
 
     public Controller(MinesweeperModel model) {
         this.model = model;
@@ -27,8 +29,21 @@ public class Controller implements MinesweeperController {
     public void startNewGame(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
         this.cellsInWidthAmount = cellsInWidthAmount;
         this.cellsInHeightAmount = cellsInHeightAmount;
+        this.minesAmount = minesAmount;
 
         field = model.getField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+    }
+
+    @Override
+    public void recreateField(int notBombCoordinateX, int notBombCoordinateY) {
+        while (true) {
+            String[][] minesField = model.getMinesField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+
+            if (minesField[notBombCoordinateY][notBombCoordinateX] == null) {
+                field = model.getField(minesField);
+                break;
+            }
+        }
     }
 
     @Override
@@ -90,5 +105,60 @@ public class Controller implements MinesweeperController {
         }
 
         return null;
+    }
+
+    @Override
+    public int[] getMinesweeperOptions() {
+        return model.getMinesweeperOptions();
+    }
+
+    @Override
+    public void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException {
+        model.saveOptions(mimeSweeperOptions);
+    }
+
+    @Override
+    public int[][] getDefaultOptions() {
+        return model.getDefaultOptions();
+    }
+
+    @Override
+    public String[][] getLeadersNames() {
+        return model.getLeadersNames();
+    }
+
+    @Override
+    public Integer[][] getLeadersTimes() {
+        return model.getLeadersTimes();
+    }
+
+    @Override
+    public String[] getCategoriesNames() {
+        return model.getCategoriesNames();
+    }
+
+    @Override
+    public int getNewWinnerPlace(int categoryNumber, int time) {
+        return model.getNewWinnerPlace(categoryNumber, time);
+    }
+
+    @Override
+    public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
+        model.saveLeader(categoryNumber, newLeaderTime, newLeaderName, place);
+    }
+
+    @Override
+    public void clearLeaders() throws FileNotFoundException {
+        model.clearLeaders();
+    }
+
+    @Override
+    public StringBuilder getAboutFileStringBuilder() throws FileNotFoundException {
+        return model.getAboutFileStringBuilder();
+    }
+
+    @Override
+    public StringBuilder getRulesFileStringBuilder() throws FileNotFoundException {
+        return model.getRulesFileStringBuilder();
     }
 }

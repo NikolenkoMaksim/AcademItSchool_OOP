@@ -2,18 +2,14 @@ package ru.oop.nikolenko.minesweeper.main;
 
 import ru.oop.nikolenko.minesweeper.controller.Controller;
 import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
-import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
-import ru.oop.nikolenko.minesweeper.model.Model;
-import ru.oop.nikolenko.minesweeper.veiw.*;
+import ru.oop.nikolenko.minesweeper.model.*;
+import ru.oop.nikolenko.minesweeper.view.*;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        MinesweeperModel model = new Model();
-
-        MinesweeperController controller = new Controller(model);
-
-        FieldIcons fieldIcons = new FieldStandardIcons();
-        MainButtonIcons mainButtonIcons = new SmileButtonIcons();
+        MinesweeperField minesweeperField = new Field();
 
         final int[][] defaultOptionals = new int[][]{
                 new int[]{9, 9, 10},
@@ -21,16 +17,27 @@ public class Main {
                 new int[]{30, 16, 99}
         };
         String optionsPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/optionals.txt";
-        MinesweeperOptions mineSweeperOptionals = new Options(optionsPath, defaultOptionals);
+        MinesweeperOptions minesweeperOptionals = new Options(optionsPath, defaultOptionals);
 
         final String[] categoriesNames = new String[]{"Beginner", "Amateur", "Professional"};
         String championsFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/champions.txt";
-        MinesweeperLeaders leaders = new Leaders(championsFilePath, 5, categoriesNames);
+        MinesweeperLeaders minesweeperLeaders = new Leaders(championsFilePath, 5, categoriesNames);
 
-        final String fileAboutPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/about.txt";
-        final String fileRulesPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/rules.txt";
+        FileToStringBuilderConverter fileToStringBuilderConverter = new FileToStringBuilderReader();
+        final String aboutFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/about.txt";
+        final String rulesFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/rules.txt";
 
-        View view = new FrameView(controller, fieldIcons, mainButtonIcons, mineSweeperOptionals, leaders, fileRulesPath, fileAboutPath);
+        MinesweeperModel model = new Model(minesweeperField, minesweeperOptionals, minesweeperLeaders,
+                fileToStringBuilderConverter, aboutFilePath, rulesFilePath);
+
+        MinesweeperController controller = new Controller(model);
+
+        FieldIcons fieldIcons = new FieldStandardIcons();
+        MainButtonIcons mainButtonIcons = new SmileButtonIcons();
+
+        ImageIcon mainIcon = new ImageIcon("Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/mainIcon.png");
+
+        View view = new FrameView(controller, fieldIcons, mainButtonIcons, mainIcon);
         controller.setView(view);
 
         view.run();

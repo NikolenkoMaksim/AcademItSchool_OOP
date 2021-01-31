@@ -1,14 +1,11 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 
-public class RulesView {
-    public void openRulesFrame(String fileRulesPath) {
+public class RulesFrame {
+    public void openRulesFrame(StringBuilder fileRulesStringBuilder) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
@@ -27,24 +24,14 @@ public class RulesView {
         rulesFrame.setVisible(true);
         rulesFrame.getRootPane().setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try (Scanner scanner = new Scanner(new FileInputStream(fileRulesPath))) {
-            while (scanner.hasNextLine()) {
-                stringBuilder.append("     ").append(scanner.nextLine()).append(System.lineSeparator()).append(System.lineSeparator());
-            }
-        } catch (FileNotFoundException ignored) {
-            stringBuilder.append("There is no data");
-        }
-
         Font font = new Font("", Font.PLAIN, 14);
 
-        JTextArea rulesTextArea = new JTextArea(stringBuilder.toString());
+        JTextArea rulesTextArea = new JTextArea(fileRulesStringBuilder.toString());
         rulesTextArea.setFont(font);
         rulesTextArea.setEditable(false);
         rulesTextArea.setWrapStyleWord(true);
         rulesTextArea.setLineWrap(true);
-        rulesTextArea.setFont(new Font("", Font.PLAIN, 13));
+        rulesTextArea.setFont(new Font("", Font.PLAIN, 14));
 
         GridBagLayout rulesFrameLayout = new GridBagLayout();
         rulesFrame.setLayout(rulesFrameLayout);
@@ -75,5 +62,8 @@ public class RulesView {
         rulesLayoutConstraints.weighty = 0;
         rulesFrameLayout.setConstraints(cancelButton, rulesLayoutConstraints);
         rulesFrame.add(cancelButton);
+
+        rulesFrame.requestFocusInWindow();
+        cancelButton.requestFocus();
     }
 }

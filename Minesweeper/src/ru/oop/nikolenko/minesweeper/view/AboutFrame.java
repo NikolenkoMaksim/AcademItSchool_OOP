@@ -1,14 +1,11 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 
-public class AboutView {
-    public void openAboutFrame(String fileAboutPath) {
+public class AboutFrame {
+    public void openAboutFrame(StringBuilder fileAboutStringBuilder) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
@@ -27,23 +24,13 @@ public class AboutView {
         aboutFrame.setVisible(true);
         aboutFrame.getRootPane().setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try (Scanner scanner = new Scanner(new FileInputStream(fileAboutPath))) {
-            while (scanner.hasNextLine()) {
-                stringBuilder.append("     ").append(scanner.nextLine()).append(System.lineSeparator());
-            }
-        } catch (FileNotFoundException ignored) {
-            stringBuilder.append("There is no data");
-        }
-
-        JTextArea aboutTextArea = new JTextArea(stringBuilder.toString());
+        JTextArea aboutTextArea = new JTextArea(fileAboutStringBuilder.toString());
         Font font = new Font("", Font.PLAIN, 14);
         aboutTextArea.setFont(font);
         aboutTextArea.setEditable(false);
         aboutTextArea.setWrapStyleWord(true);
         aboutTextArea.setLineWrap(true);
-        aboutTextArea.setFont(new Font("", Font.PLAIN, 13));
+        aboutTextArea.setFont(new Font("", Font.PLAIN, 14));
 
         GridBagLayout aboutFrameLayout = new GridBagLayout();
         aboutFrame.setLayout(aboutFrameLayout);
@@ -74,5 +61,8 @@ public class AboutView {
         aboutLayoutConstraints.weighty = 0;
         aboutFrameLayout.setConstraints(cancelButton, aboutLayoutConstraints);
         aboutFrame.add(cancelButton);
+
+        aboutFrame.requestFocusInWindow();
+        cancelButton.requestFocus();
     }
 }

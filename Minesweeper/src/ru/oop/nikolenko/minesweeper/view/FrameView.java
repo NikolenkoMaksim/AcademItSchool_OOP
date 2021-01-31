@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.view;
 
 import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
 
@@ -7,21 +7,19 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FrameView implements View {
     private final MinesweeperController controller;
     private JFrame frame;
-    private final MinesweeperLeaders leaders;
-    private final MinesweeperOptions minesweeperOptions;
     private final OptionsFrame optionsFrame = new OptionsFrame();
     private final LeaderboardsFrame leaderboardsFrame = new LeaderboardsFrame();
     private final MinesweeperMenuBar menuBar;
-    final String fileAboutPath;
-    private final AboutView aboutView = new AboutView();
-    final String fileRulesPath;
-    private final RulesView rulesView = new RulesView();
+    private final AboutFrame aboutFrame = new AboutFrame();
+    private final RulesFrame rulesFrame = new RulesFrame();
+    private final ImageIcon mainIcon;
 
     JLabel timerLabel;
     AtomicInteger secondsCount;
@@ -39,30 +37,26 @@ public class FrameView implements View {
     private boolean[][] isOpened;
     private boolean[][] isMarked;
     private final FieldIcons fieldIcons;
-    private int notOpenCellCount;
+    private int notOpenedCellCount;
     private int cellsInWidthAmount;
     private int cellsInHeightAmount;
     private int minesAmount;
 
-    public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons,
-                     MinesweeperOptions minesweeperOptions, MinesweeperLeaders leaders, String fileRulesPath, String fileAboutPath) {
+    public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons, ImageIcon mainIcon) {
         this.controller = controller;
         this.fieldIcons = fieldIcons;
         this.mainButtonIcons = mainButtonIcons;
-        this.minesweeperOptions = minesweeperOptions;
-        this.leaders = leaders;
         this.menuBar = new MenuBar();
-        this.defaultOptionals = minesweeperOptions.getDefaultOptions();
-        this.categoriesNames = leaders.getCategoriesNames();
-        this.fileAboutPath = fileAboutPath;
-        this.fileRulesPath = fileRulesPath;
+        this.defaultOptionals = controller.getDefaultOptions();
+        this.categoriesNames = controller.getCategoriesNames();
+        this.mainIcon = mainIcon;
 
         if (categoriesNames.length != defaultOptionals.length) {
             throw new IllegalArgumentException("categoriesNames.length = [" + categoriesNames.length +
                     "] != defaultOptionals.length = [" + defaultOptionals.length + "]");
         }
 
-        int[] optionals = minesweeperOptions.getMimeSweeperOptions();
+        int[] optionals = controller.getMinesweeperOptions();
 
         if (optionals.length != 4) {
             throw new IllegalArgumentException("optionals.length = " + optionals.length +
@@ -84,6 +78,7 @@ public class FrameView implements View {
             }
 
             frame = new JFrame("Minesweeper");
+            frame.setIconImage(mainIcon.getImage());
 
             frame.setJMenuBar(menuBar.getJMenuBar(this));
 
@@ -147,7 +142,7 @@ public class FrameView implements View {
         isOpened = new boolean[cellsInHeightAmount][cellsInWidthAmount];
         createField(false);
         setFrameSizes();
-        notOpenCellCount = cellsInWidthAmount * cellsInHeightAmount;
+        notOpenedCellCount = cellsInWidthAmount * cellsInHeightAmount;
         isFirstCellOpened = false;
         remainingMinesCount = minesAmount;
         remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
@@ -166,14 +161,14 @@ public class FrameView implements View {
             mainButton.setIcon(mainButtonIcons.getWinnerButtonIcon());
 
             if (currentMode < defaultOptionals.length) {
-                int gamerPlace = leaders.getNewWinnerPlace(currentMode, secondsCount.get());
+                int gamerPlace = controller.getNewWinnerPlace(currentMode, secondsCount.get());
 
                 if (gamerPlace != -1) {
-                    String message = "You are on the leaderboards!" + System.lineSeparator() + "Please enter  your name:";
+                    String message = "You are on the leaderboard!" + System.lineSeparator() + "Please enter  your name:";
                     String championName = JOptionPane.showInputDialog(frame, message, "", JOptionPane.PLAIN_MESSAGE);
 
                     try {
-                        leaders.saveLeader(currentMode, secondsCount.get(), championName, gamerPlace);
+                        controller.saveLeader(currentMode, secondsCount.get(), championName, gamerPlace);
                     } catch (FileNotFoundException e) {
                         JOptionPane.showMessageDialog(frame, "Failed to update the leaderboard", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -191,17 +186,17 @@ public class FrameView implements View {
 
         if (needBeOpened != null) {
             isOpened = controller.openCells(openedCellX, openedCellY, isOpened, isMarked);
-            notOpenCellCount = cellsInHeightAmount * cellsInWidthAmount;
+            notOpenedCellCount = cellsInHeightAmount * cellsInWidthAmount;
 
             for (int i = 0; i < cellsInHeightAmount; i++) {
                 for (int j = 0; j < cellsInWidthAmount; j++) {
                     if (isOpened[i][j]) {
-                        notOpenCellCount--;
+                        notOpenedCellCount--;
                     }
                 }
             }
 
-            if (notOpenCellCount == minesAmount) {
+            if (notOpenedCellCount == minesAmount) {
                 endGame(true);
             } else {
                 createField(false);
@@ -219,7 +214,6 @@ public class FrameView implements View {
         frame.add(centrePanel, BorderLayout.CENTER);
 
         for (int y = 0; y < cellsInHeightAmount; y++) {
-
             for (int x = 0; x < cellsInWidthAmount; x++) {
                 JPanel panelXY = new JPanel(new BorderLayout());
                 centrePanel.add(panelXY);
@@ -238,6 +232,56 @@ public class FrameView implements View {
     private JButton getCellButton(int x, int y, JPanel panelXY, boolean isGameEnd) {
         JButton buttonXY = new JButton();
         buttonXY.setFocusable(false);
+
+        MouseListener cellReleasedListener = new MouseAdapter() {
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == 1 && !isMarked[y][x]) {
+                    isOpened[y][x] = true;
+                    String typeOfCell = controller.getTypeOfCell(x, y);
+
+                    if (!isFirstCellOpened) {
+                        if (typeOfCell.equals("mine")) {
+                            controller.recreateField(x, y);
+                            typeOfCell = controller.getTypeOfCell(x, y);
+                        }
+
+                        timer.start();
+                        isFirstCellOpened = true;
+                    }
+
+                    if (typeOfCell.equals("mine")) {
+                        endGame(false);
+                    } else if (typeOfCell.equals("0")) {
+                        openCells(x, y);
+                    } else {
+                        notOpenedCellCount--;
+
+                        if (notOpenedCellCount == minesAmount) {
+                            endGame(true);
+                        } else {
+                            panelXY.remove(buttonXY);
+                            panelXY.add(getCellLabel(x, y, false));
+                        }
+                    }
+                }
+
+                if (e.getButton() == 3) {
+                    if (!isMarked[y][x]) {
+                        buttonXY.setIcon(fieldIcons.getMarkedCellIcon());
+                        isMarked[y][x] = true;
+                        remainingMinesCount--;
+                    } else {
+                        buttonXY.setIcon(fieldIcons.getEmptyCellIcon());
+                        isMarked[y][x] = false;
+                        remainingMinesCount++;
+                    }
+
+                    remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
+                }
+
+                SwingUtilities.updateComponentTreeUI(frame);
+            }
+        };
 
         if (isGameEnd) {
             boolean isMine = controller.getTypeOfCell(x, y).equals("mine");
@@ -259,51 +303,6 @@ public class FrameView implements View {
             return buttonXY;
         } else {
             buttonXY.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getButton() == 1 && !isMarked[y][x]) {
-                        isOpened[y][x] = true;
-
-                        if (!isFirstCellOpened) {
-                            timer.start();
-                            isFirstCellOpened = true;
-                        }
-
-
-                        String typeOfCell = controller.getTypeOfCell(x, y);
-
-                        if (typeOfCell.equals("mine")) {
-                            endGame(false);
-                        } else if (typeOfCell.equals("0")) {
-                            openCells(x, y);
-                        } else {
-                            notOpenCellCount--;
-
-                            if (notOpenCellCount == minesAmount) {
-                                endGame(true);
-                            } else {
-                                panelXY.remove(buttonXY);
-                                panelXY.add(getCellLabel(x, y, false));
-                            }
-                        }
-                    }
-
-                    if (e.getButton() == 3) {
-                        if (!isMarked[y][x]) {
-                            buttonXY.setIcon(fieldIcons.getMarkedCellIcon());
-                            isMarked[y][x] = true;
-                            remainingMinesCount--;
-                        } else {
-                            buttonXY.setIcon(fieldIcons.getEmptyCellIcon());
-                            isMarked[y][x] = false;
-                            remainingMinesCount++;
-                        }
-
-                        remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
-                    }
-
-                    SwingUtilities.updateComponentTreeUI(frame);
-                }
-
                 public void mousePressed(MouseEvent e) {
                     if (e.getButton() == 1) {
                         mainButton.setIcon(mainButtonIcons.getCellClickButtonIcon());
@@ -312,7 +311,14 @@ public class FrameView implements View {
 
                 public void mouseReleased(MouseEvent e) {
                     mainButton.setIcon(mainButtonIcons.getNormalButtonIcon());
+                }
 
+                public void mouseEntered(MouseEvent e) {
+                    buttonXY.addMouseListener(cellReleasedListener);
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    buttonXY.removeMouseListener(cellReleasedListener);
                 }
             });
         }
@@ -345,27 +351,53 @@ public class FrameView implements View {
             case "8" -> labelXY.setIcon(fieldIcons.getNumber8Icon());
         }
 
+        MouseListener waitingRightMousePressListener = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == 3) {
+                    openCells(x, y);
+                }
+            }
+        };
+
+        MouseListener waitingLeftMousePressListener = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == 1) {
+                    openCells(x, y);
+                }
+            }
+        };
+
+        MouseListener firstButtonPressedListener = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == 1) {
+                    labelXY.addMouseListener(waitingRightMousePressListener);
+                }
+
+                if (e.getButton() == 3) {
+                    labelXY.addMouseListener(waitingLeftMousePressListener);
+                }
+
+                if (e.getButton() == 2) {
+                    openCells(x, y);
+                }
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                labelXY.removeMouseListener(waitingRightMousePressListener);
+                labelXY.removeMouseListener(waitingLeftMousePressListener);
+            }
+        };
+
         if (!isGameEnd) {
             labelXY.addMouseListener(new MouseAdapter() {
-                public void mousePressed(MouseEvent e) {
-                    if (e.getButton() == 1) {
-                        labelXY.addMouseListener(new MouseAdapter() {
-                            public void mouseClicked(MouseEvent e) {
-                                openCells(x, y);
-                            }
-                        });
-                    }
+                public void mouseEntered(MouseEvent e) {
+                    labelXY.addMouseListener(firstButtonPressedListener);
                 }
 
-                public void mouseReleased(MouseEvent e) {
-                    if (e.getButton() == 1) {
-                        labelXY.addMouseListener(new MouseAdapter() {
-                            public void mouseClicked(MouseEvent e) {
-                            }
-                        });
-                    }
+                public void mouseExited(MouseEvent e) {
+                    labelXY.removeMouseListener(firstButtonPressedListener);
+                    labelXY.removeMouseListener(waitingRightMousePressListener);
                 }
-
             });
         }
 
@@ -373,17 +405,16 @@ public class FrameView implements View {
     }
 
     public void openLeaderboardsFrame() {
-        leaderboardsFrame.openLeaderboardsFrame(leaders.getLeadersNames(), leaders.getLeadersTimes(), categoriesNames, this);
+        leaderboardsFrame.openLeaderboardsFrame(controller.getLeadersNames(), controller.getLeadersTimes(), categoriesNames, this);
     }
 
     public void clearLeaderboard() {
         try {
-            leaders.clearLeaders();
+            controller.clearLeaders();
+            openLeaderboardsFrame();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(frame, "Failed to updateLeaderBoard", "Error", JOptionPane.ERROR_MESSAGE);
+            openErrorMessage("Failed to updateLeaderboard");
         }
-
-        openLeaderboardsFrame();
     }
 
     public void openOptionalsFrame() {
@@ -392,7 +423,7 @@ public class FrameView implements View {
 
     public void saveOptions(int[] newOptions, int newMode) {
         try {
-            minesweeperOptions.saveOptions(newOptions);
+            controller.saveOptions(newOptions);
             cellsInWidthAmount = newOptions[0];
             cellsInHeightAmount = newOptions[1];
             minesAmount = newOptions[2];
@@ -400,15 +431,27 @@ public class FrameView implements View {
             startNewGame();
             SwingUtilities.updateComponentTreeUI(frame);
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(frame, "Failed to save options", "Error", JOptionPane.ERROR_MESSAGE);
+            openErrorMessage("Failed to save options");
         }
     }
 
     public void openRulesFrame() {
-        rulesView.openRulesFrame(fileRulesPath);
+        try {
+            rulesFrame.openRulesFrame(controller.getRulesFileStringBuilder());
+        } catch (FileNotFoundException e) {
+            openErrorMessage("There is no data");
+        }
     }
 
     public void openAboutFrame() {
-        aboutView.openAboutFrame(fileAboutPath);
+        try {
+            aboutFrame.openAboutFrame(controller.getAboutFileStringBuilder());
+        } catch (FileNotFoundException e) {
+            openErrorMessage("There is no data");
+        }
+    }
+
+    private void openErrorMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

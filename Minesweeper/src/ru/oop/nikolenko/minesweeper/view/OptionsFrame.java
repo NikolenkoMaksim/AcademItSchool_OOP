@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -189,6 +189,9 @@ public class OptionsFrame {
             });
 
             cancelButton.addActionListener(e -> optionsFrame.dispose());
+
+            optionsFrame.requestFocusInWindow();
+            cancelButton.requestFocus();
         });
     }
 }

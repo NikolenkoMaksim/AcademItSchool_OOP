@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ public class Options implements MinesweeperOptions {
     }
 
     @Override
-    public int[] getMimeSweeperOptions() {
+    public int[] getMinesweeperOptions() {
         int[] minesweeperOptions = new int[3];
 
         try (Scanner scanner = new Scanner(new FileInputStream(optionsFilePath))) {

@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.minesweeper.veiw;
+package ru.oop.nikolenko.minesweeper.model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,14 +57,17 @@ public class Leaders implements MinesweeperLeaders {
         }
     }
 
+    @Override
     public String[][] getLeadersNames() {
         return leadersNames;
     }
 
+    @Override
     public Integer[][] getLeadersTimes() {
         return leadersTimes;
     }
 
+    @Override
     public String[] getCategoriesNames() {
         return categoriesNames;
     }

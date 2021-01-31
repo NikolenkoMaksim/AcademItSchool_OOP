@@ -1,46 +1,92 @@
 package ru.oop.nikolenko.minesweeper.model;
 
-import java.util.Objects;
-import java.util.Random;
+import java.io.FileNotFoundException;
 
 public class Model implements MinesweeperModel {
+    private final MinesweeperField minesweeperField;
+    private final MinesweeperOptions minesweeperOptions;
+    private final MinesweeperLeaders minesweeperLeaders;
+    private final FileToStringBuilderConverter fileToStringBuilderConverter;
+    private final String aboutFilePath;
+    private final String rulesFilePath;
+
+    public Model(MinesweeperField minesweeperField, MinesweeperOptions minesweeperOptions, MinesweeperLeaders minesweeperLeaders,
+                 FileToStringBuilderConverter fileToStringBuilderConverter, String aboutFilePath, String rulesFilePath) {
+        this.minesweeperField = minesweeperField;
+        this.minesweeperOptions = minesweeperOptions;
+        this.minesweeperLeaders = minesweeperLeaders;
+        this.fileToStringBuilderConverter = fileToStringBuilderConverter;
+        this.aboutFilePath = aboutFilePath;
+        this.rulesFilePath = rulesFilePath;
+    }
+
     @Override
     public String[][] getField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
-        String[][] field = new String[cellsInHeightAmount][cellsInWidthAmount];
+        return minesweeperField.getField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+    }
 
-        Random random = new Random();
-        int minesCount = 0;
+    @Override
+    public String[][] getField(String[][] minesField) {
+        return minesweeperField.getField(minesField);
+    }
 
-        while (minesCount < minesAmount) {
-            int cellNumberByWidth = random.nextInt(cellsInWidthAmount);
-            int cellNumberByHeight = random.nextInt(cellsInHeightAmount);
+    @Override
+    public String[][] getMinesField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
+        return minesweeperField.getMinesField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+    }
 
-            if (!Objects.equals(field[cellNumberByHeight][cellNumberByWidth], "mine")) {
-                field[cellNumberByHeight][cellNumberByWidth] = "mine";
-                minesCount++;
-            }
-        }
+    @Override
+    public int[] getMinesweeperOptions() {
+        return minesweeperOptions.getMinesweeperOptions();
+    }
 
-        for (int i = 0; i < cellsInHeightAmount; i++) {
-            for (int j = 0; j < cellsInWidthAmount; j++) {
-                if (!Objects.equals(field[i][j], "mine")) {
-                    int minesAroundCount = 0;
+    @Override
+    public void saveOptions(int[] minesweeperOptions) throws FileNotFoundException {
+        this.minesweeperOptions.saveOptions(minesweeperOptions);
+    }
 
-                    for (int k = Math.max(0, i - 1); k <= Math.min(cellsInHeightAmount - 1, i + 1); k++) {
-                        for (int m = Math.max(0, j - 1); m <= Math.min(cellsInWidthAmount - 1, j + 1); m++) {
-                            if (k != i || m != j) {
-                                if (Objects.equals(field[k][m], "mine")) {
-                                    minesAroundCount++;
-                                }
-                            }
-                        }
-                    }
+    @Override
+    public int[][] getDefaultOptions() {
+        return minesweeperOptions.getDefaultOptions();
+    }
 
-                    field[i][j] = String.valueOf(minesAroundCount);
-                }
-            }
-        }
+    @Override
+    public String[][] getLeadersNames() {
+        return minesweeperLeaders.getLeadersNames();
+    }
 
-        return field;
+    @Override
+    public Integer[][] getLeadersTimes() {
+        return minesweeperLeaders.getLeadersTimes();
+    }
+
+    @Override
+    public String[] getCategoriesNames() {
+        return minesweeperLeaders.getCategoriesNames();
+    }
+
+    @Override
+    public int getNewWinnerPlace(int categoryNumber, int time) {
+        return minesweeperLeaders.getNewWinnerPlace(categoryNumber, time);
+    }
+
+    @Override
+    public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
+        minesweeperLeaders.saveLeader(categoryNumber, newLeaderTime, newLeaderName, place);
+    }
+
+    @Override
+    public void clearLeaders() throws FileNotFoundException {
+        minesweeperLeaders.clearLeaders();
+    }
+
+    @Override
+    public StringBuilder getAboutFileStringBuilder() throws FileNotFoundException {
+        return fileToStringBuilderConverter.convertDataToStringBuilder(aboutFilePath);
+    }
+
+    @Override
+    public StringBuilder getRulesFileStringBuilder() throws FileNotFoundException {
+        return fileToStringBuilderConverter.convertDataToStringBuilder(rulesFilePath);
     }
 }
