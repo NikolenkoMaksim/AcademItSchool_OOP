@@ -318,7 +318,14 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(items);
+        final int prime = 13;
+        int hash = 1;
+
+        for (int i = 0; i < size; i++) {
+            hash = prime * hash + Objects.hashCode(items[i]);
+        }
+
+        return hash;
     }
 
     @Override
