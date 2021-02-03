@@ -1,18 +1,20 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
+import java.util.List;
+
 public class TemperatureConverter implements Converter {
     private final String[] scalesNames;
-    private final TwoUnitsConverter[] twoUnitsConverters;
+    private final List<TwoUnitsConverter> twoUnitsConverters;
 
-    public TemperatureConverter(String[] scalesNames, TwoUnitsConverter[] twoUnitsConverters) {
-        for (int i = 0; i < twoUnitsConverters.length; i++) {
-            if (!twoUnitsConverters[i].getNameOfFirstUnit().equals(scalesNames[0])) {
-                throw new IllegalArgumentException("The first scale of twoUnitsConverters[" + i + "] = \"" + twoUnitsConverters[i].getNameOfFirstUnit() +
+    public TemperatureConverter(String[] scalesNames, List<TwoUnitsConverter> twoUnitsConverters) {
+        for (int i = 0; i < twoUnitsConverters.size(); i++) {
+            if (!twoUnitsConverters.get(i).getFirstUnitName().equals(scalesNames[0])) {
+                throw new IllegalArgumentException("The name of first unit of twoUnitsConvectors.get(" + i + ") = \"" + twoUnitsConverters.get(i).getFirstUnitName() +
                         "\" must be equal to scalesNames[0] = \"" + scalesNames[0] + "\"");
             }
 
-            if (!twoUnitsConverters[i].getNameOfSecondUnit().equals(scalesNames[i + 1])) {
-                throw new IllegalArgumentException("The second scale of twoUnitsConverters[" + i + "] = \"" + twoUnitsConverters[i].getNameOfSecondUnit() +
+            if (!twoUnitsConverters.get(i).getSecondUnitName().equals(scalesNames[i + 1])) {
+                throw new IllegalArgumentException("The name of second unit of twoUnitsConvectors.get(\"" + i + ") = \"" + twoUnitsConverters.get(i).getSecondUnitName() +
                         "\" must be equal to scalesNames[" + (i + 1) + "] = \"" + scalesNames[i + 1] + "\")");
             }
         }
@@ -49,15 +51,15 @@ public class TemperatureConverter implements Converter {
         }
 
         if (originalUnitIndex == 0) {
-            return twoUnitsConverters[resultingUnitIndex - 1].convertDataFromFirstToSecondUnit(temperature);
+            return twoUnitsConverters.get(resultingUnitIndex - 1).convertDataFromFirstToSecondUnit(temperature);
         }
 
         if (resultingUnitIndex == 0) {
-            return twoUnitsConverters[originalUnitIndex - 1].convertDataFromSecondToFirstUnit(temperature);
+            return twoUnitsConverters.get(originalUnitIndex - 1).convertDataFromSecondToFirstUnit(temperature);
         }
 
-        double convertedToMainTemperature = twoUnitsConverters[originalUnitIndex - 1].convertDataFromSecondToFirstUnit(temperature);
+        double convertedToMainTemperature = twoUnitsConverters.get(originalUnitIndex - 1).convertDataFromSecondToFirstUnit(temperature);
 
-        return twoUnitsConverters[resultingUnitIndex - 1].convertDataFromFirstToSecondUnit(convertedToMainTemperature);
+        return twoUnitsConverters.get(resultingUnitIndex - 1).convertDataFromFirstToSecondUnit(convertedToMainTemperature);
     }
 }

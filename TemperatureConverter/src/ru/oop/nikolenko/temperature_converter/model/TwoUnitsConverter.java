@@ -1,33 +1,11 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-import java.util.function.UnaryOperator;
+public interface TwoUnitsConverter {
+    String getFirstUnitName();
 
-public class TwoUnitsConverter {
-    private final String nameOfFirstUnit;
-    private final String nameOfSecondUnit;
-    private final UnaryOperator<Double> operatorOfConversionFromFirstToSecondUnit;
-    private final UnaryOperator<Double> operatorOfConversionFromSecondToFirstUnit;
+    String getSecondUnitName();
 
-    public TwoUnitsConverter(String nameOfFirstUnit, String nameOfSecondUnit, UnaryOperator<Double> operatorOfConversionFromFirstToSecondUnit, UnaryOperator<Double> convertDataFromFirstToSecondUnit1) {
-        this.nameOfFirstUnit = nameOfFirstUnit;
-        this.nameOfSecondUnit = nameOfSecondUnit;
-        this.operatorOfConversionFromFirstToSecondUnit = operatorOfConversionFromFirstToSecondUnit;
-        this.operatorOfConversionFromSecondToFirstUnit = convertDataFromFirstToSecondUnit1;
-    }
+    double convertDataFromFirstToSecondUnit(double temperature);
 
-    public String getNameOfFirstUnit() {
-        return nameOfFirstUnit;
-    }
-
-    public String getNameOfSecondUnit() {
-        return nameOfSecondUnit;
-    }
-
-    public Double convertDataFromFirstToSecondUnit(Double data) {
-        return operatorOfConversionFromFirstToSecondUnit.apply(data);
-    }
-
-    public Double convertDataFromSecondToFirstUnit(Double data) {
-        return operatorOfConversionFromSecondToFirstUnit.apply(data);
-    }
+    double convertDataFromSecondToFirstUnit(double temperature);
 }
