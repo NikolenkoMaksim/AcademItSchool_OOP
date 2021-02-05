@@ -10,24 +10,24 @@ public class Controller implements ConverterController {
     }
 
     @Override
-    public String[] getScales() {
-        return temperatureConverter.getScales();
+    public String[] getScalesNames() {
+        return temperatureConverter.getScalesNames();
     }
 
     @Override
-    public double convertTemperature(double temperature, String originalUnitName, String resultingUnitName) {
-        return temperatureConverter.convert(temperature, getScaleIndex(originalUnitName), getScaleIndex(resultingUnitName));
+    public double convertTemperature(double temperature, String originalScaleName, String resultingScaleName) {
+        return temperatureConverter.convert(temperature, getScaleIndex(originalScaleName), getScaleIndex(resultingScaleName));
     }
 
-    private int getScaleIndex(String scale) {
-        String[] scales = temperatureConverter.getScales();
+    private int getScaleIndex(String scaleName) {
+        String[] scalesNames = temperatureConverter.getScalesNames();
 
-        for (int i = 0; i < scales.length; i++) {
-            if (scales[i].equals(scale)) {
+        for (int i = 0; i < scalesNames.length; i++) {
+            if (scalesNames[i].equals(scaleName)) {
                 return i;
             }
         }
 
-        throw new IllegalArgumentException("scale \"" + scale + "\" not found in scales");
+        throw new IllegalArgumentException("scaleName \"" + scaleName + "\" not found in scalesNames");
     }
 }

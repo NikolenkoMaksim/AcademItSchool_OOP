@@ -76,14 +76,14 @@ public class FrameView implements View {
             frameLayout.setConstraints(labelConvertFrom, constraints);
             frame.add(labelConvertFrom);
 
-            String[] scales = controller.getScales();
-            JComboBox<String> fromScales = new JComboBox<>(scales);
-            fromScales.setFont(font);
+            String[] scales = controller.getScalesNames();
+            JComboBox<String> originalScalesNames = new JComboBox<>(scales);
+            originalScalesNames.setFont(font);
             constraints.fill = GridBagConstraints.HORIZONTAL;
             constraints.insets = new Insets(10, 0, 0, 0);
             constraints.weightx = 1;
-            frameLayout.setConstraints(fromScales, constraints);
-            frame.add(fromScales);
+            frameLayout.setConstraints(originalScalesNames, constraints);
+            frame.add(originalScalesNames);
 
             JLabel labelConvertTo = new JLabel("To");
             labelConvertTo.setFont(font);
@@ -92,12 +92,12 @@ public class FrameView implements View {
             frameLayout.setConstraints(labelConvertTo, constraints);
             frame.add(labelConvertTo);
 
-            JComboBox<String> toScales = new JComboBox<>(scales);
-            toScales.setFont(font);
+            JComboBox<String> resultingScalesNames = new JComboBox<>(scales);
+            resultingScalesNames.setFont(font);
             constraints.fill = GridBagConstraints.HORIZONTAL;
             constraints.insets = new Insets(10, 0, 0, 0);
-            frameLayout.setConstraints(toScales, constraints);
-            frame.add(toScales);
+            frameLayout.setConstraints(resultingScalesNames, constraints);
+            frame.add(resultingScalesNames);
 
             JButton buttonConvert = new JButton("Convert");
             buttonConvert.setFont(font);
@@ -106,39 +106,34 @@ public class FrameView implements View {
             frameLayout.setConstraints(buttonConvert, constraints);
             frame.add(buttonConvert);
 
-            JTextArea outputText = new JTextArea(5, 40);
-            outputText.setEditable(false);
-            outputText.setWrapStyleWord(true);
-            outputText.setLineWrap(true);
-            outputText.setFont(font);
+            JTextArea result = new JTextArea(5, 40);
+            result.setEditable(false);
+            result.setWrapStyleWord(true);
+            result.setLineWrap(true);
+            result.setFont(font);
             constraints.fill = GridBagConstraints.BOTH;
             constraints.weighty = 1.0;
-            frameLayout.setConstraints(outputText, constraints);
-            frame.add(outputText);
+            frameLayout.setConstraints(result, constraints);
+            frame.add(result);
 
-            ActionListener comboBoxListener = e -> outputText.setText("");
-            fromScales.addActionListener(comboBoxListener);
-            toScales.addActionListener(comboBoxListener);
+            ActionListener comboBoxListener = e -> result.setText("");
+            originalScalesNames.addActionListener(comboBoxListener);
+            resultingScalesNames.addActionListener(comboBoxListener);
 
             buttonConvert.addActionListener(actionEvent -> {
-                String fromScale = (String) fromScales.getSelectedItem();
-                String toScale = (String) toScales.getSelectedItem();
-                double convertTemperature = 0;
-                outputText.setText("");
-                boolean isConverted = false;
+                String originalScaleName = (String) originalScalesNames.getSelectedItem();
+                String resultingScaleName = (String) resultingScalesNames.getSelectedItem();
+                double convertTemperature;
+                result.setText("");
 
                 try {
                     double inputTemperature = Double.parseDouble(inputText.getText());
-                    convertTemperature = controller.convertTemperature(inputTemperature, fromScale, toScale);
-                    isConverted = true;
+                    convertTemperature = controller.convertTemperature(inputTemperature, originalScaleName, resultingScaleName);
+                    result.setText(String.valueOf(convertTemperature));
                 } catch (NumberFormatException | NullPointerException e) {
                     String errorMessage = "It is necessary to fill in the temperature value with digits." +
                             System.lineSeparator() + "Use point as decimal separator.";
                     JOptionPane.showMessageDialog(frame, errorMessage, "Warning", JOptionPane.WARNING_MESSAGE);
-                }
-
-                if (isConverted) {
-                    outputText.setText(String.valueOf(convertTemperature));
                 }
             });
 

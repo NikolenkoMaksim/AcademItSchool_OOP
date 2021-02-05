@@ -10,14 +10,14 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<TwoUnitsConverter> twoUnitsConverters = new ArrayList<>(Arrays.asList(
+        List<TwoScalesConverter> twoScalesConverters = new ArrayList<>(Arrays.asList(
                 new CelsiusToKelvinConverter(),
                 new CelsiusToFahrenheitConverter()
         ));
 
         TemperatureConverter temperatureConverter = new TemperatureConverter(
                 new String[]{"Celsius", "Kelvin", "Fahrenheit"},
-                twoUnitsConverters
+                twoScalesConverters
         );
         Controller controller = new Controller(temperatureConverter);
         FrameView frameView = new FrameView(controller);

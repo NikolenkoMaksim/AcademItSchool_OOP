@@ -4,62 +4,62 @@ import java.util.List;
 
 public class TemperatureConverter implements Converter {
     private final String[] scalesNames;
-    private final List<TwoUnitsConverter> twoUnitsConverters;
+    private final List<TwoScalesConverter> twoScalesConverters;
 
-    public TemperatureConverter(String[] scalesNames, List<TwoUnitsConverter> twoUnitsConverters) {
-        for (int i = 0; i < twoUnitsConverters.size(); i++) {
-            if (!twoUnitsConverters.get(i).getFirstUnitName().equals(scalesNames[0])) {
-                throw new IllegalArgumentException("The name of first unit of twoUnitsConvectors.get(" + i + ") = \"" + twoUnitsConverters.get(i).getFirstUnitName() +
+    public TemperatureConverter(String[] scalesNames, List<TwoScalesConverter> twoScalesConverters) {
+        for (int i = 0; i < twoScalesConverters.size(); i++) {
+            if (!twoScalesConverters.get(i).getFirstScaleName().equals(scalesNames[0])) {
+                throw new IllegalArgumentException("The name of first scale of twoScalesConvectors.get(" + i + ") = \"" + twoScalesConverters.get(i).getFirstScaleName() +
                         "\" must be equal to scalesNames[0] = \"" + scalesNames[0] + "\"");
             }
 
-            if (!twoUnitsConverters.get(i).getSecondUnitName().equals(scalesNames[i + 1])) {
-                throw new IllegalArgumentException("The name of second unit of twoUnitsConvectors.get(\"" + i + ") = \"" + twoUnitsConverters.get(i).getSecondUnitName() +
+            if (!twoScalesConverters.get(i).getSecondScaleName().equals(scalesNames[i + 1])) {
+                throw new IllegalArgumentException("The name of second scale of twoScalesConvectors.get(\"" + i + ") = \"" + twoScalesConverters.get(i).getSecondScaleName() +
                         "\" must be equal to scalesNames[" + (i + 1) + "] = \"" + scalesNames[i + 1] + "\")");
             }
         }
 
         this.scalesNames = scalesNames;
-        this.twoUnitsConverters = twoUnitsConverters;
+        this.twoScalesConverters = twoScalesConverters;
     }
 
     @Override
-    public String[] getScales() {
+    public String[] getScalesNames() {
         return scalesNames;
     }
 
     @Override
-    public double convert(double temperature, int originalUnitIndex, int resultingUnitIndex) {
-        if (originalUnitIndex < 0) {
-            throw new IllegalArgumentException("originalUnitIndex (" + originalUnitIndex + ") < 0");
+    public double convert(double temperature, int originalScaleIndex, int resultingScaleIndex) {
+        if (originalScaleIndex < 0) {
+            throw new IllegalArgumentException("originalScaleIndex (" + originalScaleIndex + ") < 0");
         }
 
-        if (resultingUnitIndex < 0) {
-            throw new IllegalArgumentException("resultingUnitIndex (" + resultingUnitIndex + ") < 0");
+        if (resultingScaleIndex < 0) {
+            throw new IllegalArgumentException("resultingScaleIndex (" + resultingScaleIndex + ") < 0");
         }
 
-        if (originalUnitIndex >= scalesNames.length) {
-            throw new IllegalArgumentException("originalUnitIndex (" + originalUnitIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
+        if (originalScaleIndex >= scalesNames.length) {
+            throw new IllegalArgumentException("originalScaleIndex (" + originalScaleIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
         }
 
-        if (resultingUnitIndex >= scalesNames.length) {
-            throw new IllegalArgumentException("resultingUnitIndex (" + resultingUnitIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
+        if (resultingScaleIndex >= scalesNames.length) {
+            throw new IllegalArgumentException("resultingScaleIndex (" + resultingScaleIndex + ") >= scalesNames.length  (" + scalesNames.length + ")");
         }
 
-        if (originalUnitIndex == resultingUnitIndex) {
+        if (originalScaleIndex == resultingScaleIndex) {
             return temperature;
         }
 
-        if (originalUnitIndex == 0) {
-            return twoUnitsConverters.get(resultingUnitIndex - 1).convertDataFromFirstToSecondUnit(temperature);
+        if (originalScaleIndex == 0) {
+            return twoScalesConverters.get(resultingScaleIndex - 1).convertDataFromFirstToSecondScale(temperature);
         }
 
-        if (resultingUnitIndex == 0) {
-            return twoUnitsConverters.get(originalUnitIndex - 1).convertDataFromSecondToFirstUnit(temperature);
+        if (resultingScaleIndex == 0) {
+            return twoScalesConverters.get(originalScaleIndex - 1).convertDataFromSecondToFirstScale(temperature);
         }
 
-        double convertedToMainTemperature = twoUnitsConverters.get(originalUnitIndex - 1).convertDataFromSecondToFirstUnit(temperature);
+        double convertedToMainTemperature = twoScalesConverters.get(originalScaleIndex - 1).convertDataFromSecondToFirstScale(temperature);
 
-        return twoUnitsConverters.get(resultingUnitIndex - 1).convertDataFromFirstToSecondUnit(convertedToMainTemperature);
+        return twoScalesConverters.get(resultingScaleIndex - 1).convertDataFromFirstToSecondScale(convertedToMainTemperature);
     }
 }

@@ -1,26 +1,26 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToKelvinConverter implements TwoUnitsConverter {
+public class CelsiusToKelvinConverter implements TwoScalesConverter {
     public CelsiusToKelvinConverter() {
     }
 
     @Override
-    public String getFirstUnitName() {
+    public String getFirstScaleName() {
         return "Celsius";
     }
 
     @Override
-    public String getSecondUnitName() {
+    public String getSecondScaleName() {
         return "Kelvin";
     }
 
     @Override
-    public double convertDataFromFirstToSecondUnit(double temperature) {
+    public double convertDataFromFirstToSecondScale(double temperature) {
         return temperature + 273.15;
     }
 
     @Override
-    public double convertDataFromSecondToFirstUnit(double temperature) {
+    public double convertDataFromSecondToFirstScale(double temperature) {
         return temperature - 273.15;
     }
 }
