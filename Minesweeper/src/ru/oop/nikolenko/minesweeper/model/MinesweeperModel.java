@@ -3,17 +3,25 @@ package ru.oop.nikolenko.minesweeper.model;
 import java.io.FileNotFoundException;
 
 public interface MinesweeperModel {
-    String[][] getField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount);
+    void createField();
 
-    String[][] getField(String[][] minesField);
+    void recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight);
 
-    String[][] getMinesField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount);
+    String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight);
 
-    int[] getMinesweeperOptions();
+    EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight);
 
-    void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException;
+    boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight);
 
-    int[][] getDefaultOptions();
+    boolean isCellMarked(int cellNumberByWidth, int cellNumberByHeight);
+
+    int getRemainingMinesCount();
+
+    Options getCurrentOptions();
+
+    void saveOptions(Options newOptions) throws FileNotFoundException;
+
+    Options[] getDefaultOptions();
 
     String[][] getLeadersNames();
 

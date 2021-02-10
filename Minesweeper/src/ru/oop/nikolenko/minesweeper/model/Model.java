@@ -4,16 +4,21 @@ import java.io.FileNotFoundException;
 
 public class Model implements MinesweeperModel {
     private final MinesweeperField minesweeperField;
-    private final MinesweeperOptions minesweeperOptions;
+    private final WorkWithMinesweeperOptions workWithMinesweeperOptions;
     private final MinesweeperLeaders minesweeperLeaders;
     private final FileToStringBuilderConverter fileToStringBuilderConverter;
     private final String aboutFilePath;
     private final String rulesFilePath;
 
-    public Model(MinesweeperField minesweeperField, MinesweeperOptions minesweeperOptions, MinesweeperLeaders minesweeperLeaders,
+    public Model(MinesweeperField minesweeperField, WorkWithMinesweeperOptions workWithMinesweeperOptions, MinesweeperLeaders minesweeperLeaders,
                  FileToStringBuilderConverter fileToStringBuilderConverter, String aboutFilePath, String rulesFilePath) {
+        if (minesweeperLeaders.getCategoriesNames().length != workWithMinesweeperOptions.getDefaultOptions().length) {
+            throw new IllegalArgumentException("categoriesNames.length = [" + minesweeperLeaders.getCategoriesNames().length +
+                    "] of MinesweeperLeaders != defaultOptionals.length = [" + workWithMinesweeperOptions.getDefaultOptions().length + "] of WorkWithMinesweeperOptions");
+        }
+
         this.minesweeperField = minesweeperField;
-        this.minesweeperOptions = minesweeperOptions;
+        this.workWithMinesweeperOptions = workWithMinesweeperOptions;
         this.minesweeperLeaders = minesweeperLeaders;
         this.fileToStringBuilderConverter = fileToStringBuilderConverter;
         this.aboutFilePath = aboutFilePath;
@@ -21,33 +26,53 @@ public class Model implements MinesweeperModel {
     }
 
     @Override
-    public String[][] getField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
-        return minesweeperField.getField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+    public void createField() {
+        minesweeperField.createField(workWithMinesweeperOptions.getCurrentOptions());
     }
 
     @Override
-    public String[][] getField(String[][] minesField) {
-        return minesweeperField.getField(minesField);
+    public void recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight) {
+        minesweeperField.recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public String[][] getMinesField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
-        return minesweeperField.getMinesField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
+    public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.getTypeOfCell(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public int[] getMinesweeperOptions() {
-        return minesweeperOptions.getMinesweeperOptions();
+    public EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.handleMouseClick(mouseButton, cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public void saveOptions(int[] minesweeperOptions) throws FileNotFoundException {
-        this.minesweeperOptions.saveOptions(minesweeperOptions);
+    public boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.isCellOpen(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public int[][] getDefaultOptions() {
-        return minesweeperOptions.getDefaultOptions();
+    public boolean isCellMarked(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.isCellMarked(cellNumberByWidth, cellNumberByHeight);
+    }
+
+    @Override
+    public int getRemainingMinesCount() {
+        return minesweeperField.getRemainingMinesCount();
+    }
+
+    @Override
+    public Options getCurrentOptions() {
+        return workWithMinesweeperOptions.getCurrentOptions();
+    }
+
+    @Override
+    public void saveOptions(Options newOptions) throws FileNotFoundException {
+        this.workWithMinesweeperOptions.saveOptions(newOptions);
+    }
+
+    @Override
+    public Options[] getDefaultOptions() {
+        return workWithMinesweeperOptions.getDefaultOptions();
     }
 
     @Override

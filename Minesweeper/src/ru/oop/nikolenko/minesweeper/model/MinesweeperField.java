@@ -1,9 +1,17 @@
 package ru.oop.nikolenko.minesweeper.model;
 
 public interface MinesweeperField {
-    String[][] getMinesField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount);
+    int getRemainingMinesCount();
 
-    String[][] getField(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount);
+    void createField(Options currentOptions);
 
-    String[][] getField(String[][] minesField);
+    void recreateFieldWithoutMineInCell(int notMineCellNumberByWidth, int notMineCellNumberByHeight);
+
+    EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight);
+
+    String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight);
+
+    boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight);
+
+    boolean isCellMarked(int cellNumberByWidth, int cellNumberByHeight);
 }

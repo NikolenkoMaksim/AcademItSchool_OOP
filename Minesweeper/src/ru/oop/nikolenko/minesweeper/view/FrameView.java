@@ -1,6 +1,7 @@
 package ru.oop.nikolenko.minesweeper.view;
 
 import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
+import ru.oop.nikolenko.minesweeper.model.Options;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,52 +22,30 @@ public class FrameView implements View {
     private final RulesFrame rulesFrame = new RulesFrame();
     private final ImageIcon mainIcon;
 
-    JLabel timerLabel;
-    AtomicInteger secondsCount;
-    boolean isFirstCellOpened;
+    private JLabel timerLabel;
+    private AtomicInteger secondsCount;
     private Timer timer;
     private JButton mainButton;
     private final MainButtonIcons mainButtonIcons;
-    private int remainingMinesCount;
     private JLabel remainingMinesLabel;
     private int currentMode;
-    private final int[][] defaultOptionals;
-    final String[] categoriesNames;
 
     private JPanel centrePanel;
-    private boolean[][] isOpened;
-    private boolean[][] isMarked;
     private final FieldIcons fieldIcons;
-    private int notOpenedCellCount;
     private int cellsInWidthAmount;
     private int cellsInHeightAmount;
-    private int minesAmount;
 
     public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons, ImageIcon mainIcon) {
         this.controller = controller;
         this.fieldIcons = fieldIcons;
         this.mainButtonIcons = mainButtonIcons;
         this.menuBar = new MenuBar();
-        this.defaultOptionals = controller.getDefaultOptions();
-        this.categoriesNames = controller.getCategoriesNames();
         this.mainIcon = mainIcon;
 
-        if (categoriesNames.length != defaultOptionals.length) {
-            throw new IllegalArgumentException("categoriesNames.length = [" + categoriesNames.length +
-                    "] != defaultOptionals.length = [" + defaultOptionals.length + "]");
-        }
+        Options currentOptionals = controller.getCurrentOptions();
 
-        int[] optionals = controller.getMinesweeperOptions();
-
-        if (optionals.length != 4) {
-            throw new IllegalArgumentException("optionals.length = " + optionals.length +
-                    "must be 4: {cellsInWidthAmount, cellsInHeightAmount, minesCount, currentMode}");
-        }
-
-        cellsInWidthAmount = optionals[0];
-        cellsInHeightAmount = optionals[1];
-        minesAmount = optionals[2];
-        currentMode = optionals[3];
+        cellsInWidthAmount = currentOptionals.getCellsInWidthAmount();
+        cellsInHeightAmount = currentOptionals.getCellsInHeightAmount();
     }
 
     @Override
@@ -137,15 +116,9 @@ public class FrameView implements View {
 
     @Override
     public void startNewGame() {
-        controller.startNewGame(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
-        isMarked = new boolean[cellsInHeightAmount][cellsInWidthAmount];
-        isOpened = new boolean[cellsInHeightAmount][cellsInWidthAmount];
+        controller.startNewGame();
         createField(false);
         setFrameSizes();
-        notOpenedCellCount = cellsInWidthAmount * cellsInHeightAmount;
-        isFirstCellOpened = false;
-        remainingMinesCount = minesAmount;
-        remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
         timer.stop();
         secondsCount = new AtomicInteger();
         timerLabel.setText(String.valueOf(secondsCount));
@@ -160,7 +133,7 @@ public class FrameView implements View {
         if (isWinner) {
             mainButton.setIcon(mainButtonIcons.getWinnerButtonIcon());
 
-            if (currentMode < defaultOptionals.length) {
+            if (currentMode > -1) {
                 int gamerPlace = controller.getNewWinnerPlace(currentMode, secondsCount.get());
 
                 if (gamerPlace != -1) {
@@ -181,30 +154,8 @@ public class FrameView implements View {
         }
     }
 
-    private void openCells(int openedCellX, int openedCellY) {
-        boolean[][] needBeOpened = controller.openCells(openedCellX, openedCellY, isOpened, isMarked);
-
-        if (needBeOpened != null) {
-            isOpened = controller.openCells(openedCellX, openedCellY, isOpened, isMarked);
-            notOpenedCellCount = cellsInHeightAmount * cellsInWidthAmount;
-
-            for (int i = 0; i < cellsInHeightAmount; i++) {
-                for (int j = 0; j < cellsInWidthAmount; j++) {
-                    if (isOpened[i][j]) {
-                        notOpenedCellCount--;
-                    }
-                }
-            }
-
-            if (notOpenedCellCount == minesAmount) {
-                endGame(true);
-            } else {
-                createField(false);
-            }
-        }
-    }
-
-    private void createField(boolean isGameEnd) {
+    @Override
+    public void createField(boolean isGameEnd) {
         if (centrePanel != null) {
             frame.remove(centrePanel);
         }
@@ -218,10 +169,10 @@ public class FrameView implements View {
                 JPanel panelXY = new JPanel(new BorderLayout());
                 centrePanel.add(panelXY);
 
-                if (isOpened[y][x]) {
+                if (controller.isCellOpen(x, y)) {
                     panelXY.add(getCellLabel(x, y, isGameEnd));
                 } else {
-                    panelXY.add(getCellButton(x, y, panelXY, isGameEnd));
+                    panelXY.add(getCellButton(x, y, isGameEnd));
                 }
             }
         }
@@ -229,64 +180,14 @@ public class FrameView implements View {
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
-    private JButton getCellButton(int x, int y, JPanel panelXY, boolean isGameEnd) {
+    private JButton getCellButton(int x, int y, boolean isGameEnd) {
         JButton buttonXY = new JButton();
         buttonXY.setFocusable(false);
-
-        MouseListener cellReleasedListener = new MouseAdapter() {
-            public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == 1 && !isMarked[y][x]) {
-                    isOpened[y][x] = true;
-                    String typeOfCell = controller.getTypeOfCell(x, y);
-
-                    if (!isFirstCellOpened) {
-                        if (typeOfCell.equals("mine")) {
-                            controller.recreateField(x, y);
-                            typeOfCell = controller.getTypeOfCell(x, y);
-                        }
-
-                        timer.start();
-                        isFirstCellOpened = true;
-                    }
-
-                    if (typeOfCell.equals("mine")) {
-                        endGame(false);
-                    } else if (typeOfCell.equals("0")) {
-                        openCells(x, y);
-                    } else {
-                        notOpenedCellCount--;
-
-                        if (notOpenedCellCount == minesAmount) {
-                            endGame(true);
-                        } else {
-                            panelXY.remove(buttonXY);
-                            panelXY.add(getCellLabel(x, y, false));
-                        }
-                    }
-                }
-
-                if (e.getButton() == 3) {
-                    if (!isMarked[y][x]) {
-                        buttonXY.setIcon(fieldIcons.getMarkedCellIcon());
-                        isMarked[y][x] = true;
-                        remainingMinesCount--;
-                    } else {
-                        buttonXY.setIcon(fieldIcons.getEmptyCellIcon());
-                        isMarked[y][x] = false;
-                        remainingMinesCount++;
-                    }
-
-                    remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
-                }
-
-                SwingUtilities.updateComponentTreeUI(frame);
-            }
-        };
 
         if (isGameEnd) {
             boolean isMine = controller.getTypeOfCell(x, y).equals("mine");
 
-            if (isMarked[y][x]) {
+            if (controller.isCellMarked(x, y)) {
                 if (isMine) {
                     buttonXY.setIcon(fieldIcons.getMarkedCellIcon());
                 } else {
@@ -302,6 +203,12 @@ public class FrameView implements View {
 
             return buttonXY;
         } else {
+            MouseListener cellReleasedListener = new MouseAdapter() {
+                public void mouseReleased(MouseEvent e) {
+                    controller.handleMouseClick(e.getButton(), x, y);
+                }
+            };
+
             buttonXY.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     if (e.getButton() == 1) {
@@ -323,7 +230,7 @@ public class FrameView implements View {
             });
         }
 
-        if (isMarked[y][x]) {
+        if (controller.isCellMarked(x, y)) {
             buttonXY.setIcon(fieldIcons.getMarkedCellIcon());
         } else {
             buttonXY.setIcon(fieldIcons.getEmptyCellIcon());
@@ -353,8 +260,8 @@ public class FrameView implements View {
 
         MouseListener waitingRightMousePressListener = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() == 3) {
-                    openCells(x, y);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    controller.handleMouseClick(MouseEvent.BUTTON2, x, y);
                 }
             }
         };
@@ -362,7 +269,7 @@ public class FrameView implements View {
         MouseListener waitingLeftMousePressListener = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == 1) {
-                    openCells(x, y);
+                    controller.handleMouseClick(MouseEvent.BUTTON2, x, y);
                 }
             }
         };
@@ -378,7 +285,7 @@ public class FrameView implements View {
                 }
 
                 if (e.getButton() == 2) {
-                    openCells(x, y);
+                    controller.handleMouseClick(MouseEvent.BUTTON2, x, y);
                 }
             }
 
@@ -405,7 +312,7 @@ public class FrameView implements View {
     }
 
     public void openLeaderboardsFrame() {
-        leaderboardsFrame.openLeaderboardsFrame(controller.getLeadersNames(), controller.getLeadersTimes(), categoriesNames, this);
+        leaderboardsFrame.openLeaderboardsFrame(controller.getLeadersNames(), controller.getLeadersTimes(), controller.getCategoriesNames(), this);
     }
 
     public void clearLeaderboard() {
@@ -418,18 +325,16 @@ public class FrameView implements View {
     }
 
     public void openOptionalsFrame() {
-        optionsFrame.openOptionsFrame(new int[]{cellsInWidthAmount, cellsInHeightAmount, minesAmount}, this, defaultOptionals, categoriesNames);
+        optionsFrame.openOptionsFrame(controller.getCurrentOptions(), controller.getDefaultOptions(), this);
     }
 
-    public void saveOptions(int[] newOptions, int newMode) {
+    public void saveOptions(Options newOptions) {
         try {
             controller.saveOptions(newOptions);
-            cellsInWidthAmount = newOptions[0];
-            cellsInHeightAmount = newOptions[1];
-            minesAmount = newOptions[2];
-            currentMode = newMode;
+            cellsInWidthAmount = newOptions.getCellsInWidthAmount();
+            cellsInHeightAmount = newOptions.getCellsInHeightAmount();
+            currentMode = newOptions.getNumberOfDefaultOptions();
             startNewGame();
-            SwingUtilities.updateComponentTreeUI(frame);
         } catch (FileNotFoundException e) {
             openErrorMessage("Failed to save options");
         }
@@ -453,5 +358,15 @@ public class FrameView implements View {
 
     private void openErrorMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void startTimer() {
+        timer.start();
+    }
+
+    @Override
+    public void setRemainingMinesLabel(int remainingMinesCount) {
+        remainingMinesLabel.setText(String.valueOf(remainingMinesCount));
     }
 }

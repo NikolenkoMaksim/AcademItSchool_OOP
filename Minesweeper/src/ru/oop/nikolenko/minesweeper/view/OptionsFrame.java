@@ -1,13 +1,14 @@
 package ru.oop.nikolenko.minesweeper.view;
 
+import ru.oop.nikolenko.minesweeper.model.Options;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class OptionsFrame {
-    public void openOptionsFrame(int[] currentOptions, FrameView frameView, int[][] defaultOptions, String[] categoryNames) {
+    public void openOptionsFrame(Options currentOptions, Options[] defaultOptions, FrameView frameView) {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -48,8 +49,9 @@ public class OptionsFrame {
             JRadioButton[] standardRadioButtons = new JRadioButton[defaultOptions.length];
 
             for (int i = 0; i < standardRadioButtons.length; i++) {
-                JRadioButton radioButton = new JRadioButton(categoryNames[i] + ". Field: " +
-                        defaultOptions[i][0] + "x" + defaultOptions[i][1] + "; mines: " + defaultOptions[i][2]);
+                JRadioButton radioButton = new JRadioButton(defaultOptions[i].getName() + ". Field: " +
+                        defaultOptions[i].getCellsInWidthAmount() + "x" + defaultOptions[i].getCellsInHeightAmount() +
+                        "; mines: " + defaultOptions[i].getMinesAmount());
                 radioButton.setFont(font);
                 optionalsFrameLayout.setConstraints(radioButton, optionalsLayoutConstraints);
                 optionsFrame.add(radioButton);
@@ -118,27 +120,19 @@ public class OptionsFrame {
                 desiredMinesTextField.setEditable(true);
             });
 
-            boolean isStandardOptions = false;
-
-            for (int i = 0; i < standardRadioButtons.length; i++) {
-                if (Arrays.equals(currentOptions, defaultOptions[i])) {
-                    standardRadioButtons[i].setSelected(true);
-                    isStandardOptions = true;
-                    desiredWidthTextField.setEditable(false);
-                    desiredHeightTextField.setEditable(false);
-                    desiredMinesTextField.setEditable(false);
-                    break;
-                }
-            }
-
-            if (!isStandardOptions) {
+            if (currentOptions.getNumberOfDefaultOptions() > -1) {
+                standardRadioButtons[currentOptions.getNumberOfDefaultOptions()].setSelected(true);
+                desiredWidthTextField.setEditable(false);
+                desiredHeightTextField.setEditable(false);
+                desiredMinesTextField.setEditable(false);
+            } else {
                 specialButton.setSelected(true);
                 desiredWidthTextField.setEditable(true);
                 desiredHeightTextField.setEditable(true);
                 desiredMinesTextField.setEditable(true);
-                desiredWidthTextField.setText(String.valueOf(currentOptions[0]));
-                desiredHeightTextField.setText(String.valueOf(currentOptions[1]));
-                desiredMinesTextField.setText(String.valueOf(currentOptions[2]));
+                desiredWidthTextField.setText(String.valueOf(currentOptions.getCellsInWidthAmount()));
+                desiredHeightTextField.setText(String.valueOf(currentOptions.getCellsInHeightAmount()));
+                desiredMinesTextField.setText(String.valueOf(currentOptions.getMinesAmount()));
             }
 
             JButton applyButton = new JButton("Apply");
@@ -159,7 +153,7 @@ public class OptionsFrame {
             applyButton.addActionListener(actionEvent -> {
                 for (int i = 0; i < standardRadioButtons.length; i++) {
                     if (standardRadioButtons[i].isSelected()) {
-                        frameView.saveOptions(defaultOptions[i], i);
+                        frameView.saveOptions(defaultOptions[i]);
                         optionsFrame.dispose();
 
                         return;
@@ -167,18 +161,14 @@ public class OptionsFrame {
                 }
 
                 try {
-                    int[] specialOptionals = new int[]{
+                    Options newOptions = new Options(
                             Integer.parseInt(desiredWidthTextField.getText()),
                             Integer.parseInt(desiredHeightTextField.getText()),
                             Integer.parseInt(desiredMinesTextField.getText())
-                    };
+                    );
 
-                    if (specialOptionals[0] * specialOptionals[1] < specialOptionals[2]) {
-                        throw new IllegalArgumentException();
-                    }
-
+                    frameView.saveOptions(newOptions);
                     optionsFrame.dispose();
-                    frameView.saveOptions(specialOptionals, 3);
                 } catch (NumberFormatException exception1) {
                     String message = "Invalid data format." + System.lineSeparator() + "Fill in all fields with numbers";
                     JOptionPane.showMessageDialog(optionsFrame, message, "Error", JOptionPane.ERROR_MESSAGE);

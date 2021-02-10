@@ -1,20 +1,17 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
+import ru.oop.nikolenko.minesweeper.model.EndTheGame;
 import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
+import ru.oop.nikolenko.minesweeper.model.Options;
 import ru.oop.nikolenko.minesweeper.view.View;
 
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Controller implements MinesweeperController {
     private final MinesweeperModel model;
     private View view;
-    private String[][] field;
-    private int cellsInWidthAmount;
-    private int cellsInHeightAmount;
-    private int minesAmount;
+    private boolean isFirstCellOpened;
 
     public Controller(MinesweeperModel model) {
         this.model = model;
@@ -26,99 +23,60 @@ public class Controller implements MinesweeperController {
     }
 
     @Override
-    public void startNewGame(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
-        this.cellsInWidthAmount = cellsInWidthAmount;
-        this.cellsInHeightAmount = cellsInHeightAmount;
-        this.minesAmount = minesAmount;
-
-        field = model.getField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
-    }
-
-    @Override
-    public void recreateField(int notBombCoordinateX, int notBombCoordinateY) {
-        while (true) {
-            String[][] minesField = model.getMinesField(cellsInWidthAmount, cellsInHeightAmount, minesAmount);
-
-            if (minesField[notBombCoordinateY][notBombCoordinateX] == null) {
-                field = model.getField(minesField);
-                break;
-            }
-        }
+    public void startNewGame() {
+        model.createField();
+        isFirstCellOpened = false;
+        view.setRemainingMinesLabel(model.getRemainingMinesCount());
     }
 
     @Override
     public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
-        return field[cellNumberByHeight][cellNumberByWidth];
+        return model.getTypeOfCell(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public boolean[][] openCells(int openedCellNumberByWidth, int openedCellNumberByHeight, boolean[][] isOpened, boolean[][] isMarked) {
-        boolean isEndOfGame = false;
-
-        if (!field[openedCellNumberByHeight][openedCellNumberByWidth].equals("0")) {
-            int markedCellsCount = 0;
-
-            for (int i = Math.max(0, openedCellNumberByHeight - 1); i <= Math.min(cellsInHeightAmount - 1, openedCellNumberByHeight + 1); i++) {
-                for (int j = Math.max(0, openedCellNumberByWidth - 1); j <= Math.min(cellsInWidthAmount - 1, openedCellNumberByWidth + 1); j++) {
-                    if (isMarked[i][j]) {
-                        markedCellsCount++;
-
-                        if (!field[i][j].equals("mine")) {
-                            isEndOfGame = true;
-                        }
-                    }
-                }
+    public void handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight) {
+        if (!isFirstCellOpened && mouseButton == MouseEvent.BUTTON1 && !model.isCellMarked(cellNumberByWidth, cellNumberByHeight)) {
+            if (model.getTypeOfCell(cellNumberByWidth, cellNumberByHeight).equals("mine")) {
+                model.recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
             }
 
-            if (markedCellsCount != Integer.parseInt(field[openedCellNumberByHeight][openedCellNumberByWidth])) {
-                return isOpened;
-            }
+            view.startTimer();
+            isFirstCellOpened = true;
         }
 
-        if (isEndOfGame) {
-            view.endGame(false);
+        EndTheGame endTheGameParameters = model.handleMouseClick(mouseButton, cellNumberByWidth, cellNumberByHeight);
+
+        if (endTheGameParameters.isEndTheGame()) {
+            view.endGame(endTheGameParameters.isWin());
         } else {
-            boolean[][] needBeOpened = Arrays.copyOf(isOpened, isOpened.length);
-
-            Queue<int[]> queue = new LinkedList<>();
-            queue.add(new int[]{openedCellNumberByWidth, openedCellNumberByHeight});
-
-            while (!queue.isEmpty()) {
-                int[] xy = queue.remove();
-                int x = xy[0];
-                int y = xy[1];
-
-                for (int i = Math.max(0, y - 1); i <= Math.min(cellsInHeightAmount - 1, y + 1); i++) {
-                    for (int j = Math.max(0, x - 1); j <= Math.min(cellsInWidthAmount - 1, x + 1); j++) {
-                        if (!isMarked[i][j] && !needBeOpened[i][j]) {
-                            needBeOpened[i][j] = true;
-
-                            if (field[i][j].equals("0")) {
-                                queue.add(new int[]{j, i});
-                            }
-                        }
-                    }
-                }
-            }
-
-            return needBeOpened;
+            view.createField(false);
+            view.setRemainingMinesLabel(model.getRemainingMinesCount());
         }
-
-        return null;
     }
 
     @Override
-    public int[] getMinesweeperOptions() {
-        return model.getMinesweeperOptions();
+    public boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight) {
+        return model.isCellOpen(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException {
-        model.saveOptions(mimeSweeperOptions);
+    public boolean isCellMarked(int cellNumberByWidth, int cellNumberByHeight) {
+        return model.isCellMarked(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public int[][] getDefaultOptions() {
+    public Options getCurrentOptions() {
+        return model.getCurrentOptions();
+    }
+
+    @Override
+    public void saveOptions(Options newOptions) throws FileNotFoundException {
+        model.saveOptions(newOptions);
+    }
+
+    @Override
+    public Options[] getDefaultOptions() {
         return model.getDefaultOptions();
     }
 

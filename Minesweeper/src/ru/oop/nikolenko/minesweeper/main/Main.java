@@ -11,13 +11,13 @@ public class Main {
     public static void main(String[] args) {
         MinesweeperField minesweeperField = new Field();
 
-        final int[][] defaultOptionals = new int[][]{
-                new int[]{9, 9, 10},
-                new int[]{16, 16, 40},
-                new int[]{30, 16, 99}
+        final Options[] defaultOptionals = new Options[]{
+                new Options(9, 9, 10, 0, "Beginner"),
+                new Options(16, 16, 40, 1, "Amateur"),
+                new Options(30, 16, 99, 2, "Professional")
         };
         String optionsPath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/optionals.txt";
-        MinesweeperOptions minesweeperOptionals = new Options(optionsPath, defaultOptionals);
+        WorkWithMinesweeperOptions minesweeperOptionals = new WorkWithOptions(optionsPath, defaultOptionals);
 
         final String[] categoriesNames = new String[]{"Beginner", "Amateur", "Professional"};
         String championsFilePath = "Minesweeper/src/ru/oop/nikolenko/minesweeper/resources/champions.txt";

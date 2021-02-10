@@ -1,5 +1,6 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
+import ru.oop.nikolenko.minesweeper.model.Options;
 import ru.oop.nikolenko.minesweeper.view.View;
 
 import java.io.FileNotFoundException;
@@ -7,19 +8,21 @@ import java.io.FileNotFoundException;
 public interface MinesweeperController {
     void setView(View view);
 
-    void startNewGame(int fieldWidth, int fieldHeight, int minesAmount);
-
-    void recreateField(int notBombCoordinateX, int notBombCoordinateY);
+    void startNewGame();
 
     String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight);
 
-    boolean[][] openCells(int openedCellNumberByWidth, int openedCellNumberByHeight, boolean[][] isOpened, boolean[][] isMarked);
+    void handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight);
 
-    int[] getMinesweeperOptions();
+    boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight);
 
-    void saveOptions(int[] mimeSweeperOptions) throws FileNotFoundException;
+    boolean isCellMarked(int cellNumberByWidth, int cellNumberByHeight);
 
-    int[][] getDefaultOptions();
+    Options getCurrentOptions();
+
+    void saveOptions(Options newOptions) throws FileNotFoundException;
+
+    Options[] getDefaultOptions();
 
     String[][] getLeadersNames();
 
