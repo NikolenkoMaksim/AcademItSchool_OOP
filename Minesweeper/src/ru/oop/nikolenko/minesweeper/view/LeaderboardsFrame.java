@@ -1,24 +1,16 @@
 package ru.oop.nikolenko.minesweeper.view;
 
+import ru.oop.nikolenko.minesweeper.model.Leader;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class LeaderboardsFrame {
-    public void openLeaderboardsFrame(String[][] championsNames, Integer[][] championsTimes, String[] categoriesNames, FrameView frameView) {
-        if (championsNames.length != categoriesNames.length) {
-            throw new IllegalArgumentException("championsNames.length = " + championsNames.length
+    public void openLeaderboardsFrame(Leader[][] leaders, String[] categoriesNames, FrameView frameView) {
+        if (leaders.length != categoriesNames.length) {
+            throw new IllegalArgumentException("leaders.length = " + leaders.length
                     + " is not equal categoriesNames.length = " + categoriesNames.length);
-        }
-
-        if (championsNames.length != championsTimes.length) {
-            throw new IllegalArgumentException("championsNames.length = " + championsNames.length
-                    + " is not equal championsTimes.length = " + championsTimes.length);
-        }
-
-        if (championsNames[0].length != championsTimes[0].length) {
-            throw new IllegalArgumentException("championsNames[0].length = " + championsNames[0].length
-                    + " is not equal championsTimes[0].length = " + championsTimes[0].length);
         }
 
         SwingUtilities.invokeLater(() -> {
@@ -64,7 +56,7 @@ public class LeaderboardsFrame {
 
             Font font = new Font("", Font.PLAIN, 14);
 
-            for (int i = 0; i < championsNames.length; i++) {
+            for (int i = 0; i < leaders.length; i++) {
                 JLabel categoryName = new JLabel(categoriesNames[i]);
                 categoryName.setFont(font);
                 leaderboardsConstraints.anchor = GridBagConstraints.CENTER;
@@ -73,12 +65,12 @@ public class LeaderboardsFrame {
                 leaderboardsFrameLayout.setConstraints(categoryName, leaderboardsConstraints);
                 leaderboardsFrame.add(categoryName);
 
-                for (int j = 0; j < championsNames[0].length; j++) {
+                for (int j = 0; j < leaders[0].length; j++) {
                     JLabel gamerNameLabel = new JLabel();
                     gamerNameLabel.setFont(font);
 
-                    if (championsNames[i][j] != null) {
-                        gamerNameLabel.setText((j + 1) + ".  " + championsNames[i][j]);
+                    if (leaders[i][j] != null && leaders[i][j].getName() != null) {
+                        gamerNameLabel.setText((j + 1) + ".  " + leaders[i][j].getName());
                     } else {
                         gamerNameLabel.setText((j + 1) + ".");
                     }
@@ -94,8 +86,8 @@ public class LeaderboardsFrame {
                     gamerTimeLabel.setFont(font);
                     gamerTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                    if (championsTimes[i][j] != null) {
-                        gamerTimeLabel.setText(String.valueOf(championsTimes[i][j]));
+                    if (leaders[i][j] != null) {
+                        gamerTimeLabel.setText(String.valueOf(leaders[i][j].getTime()));
                     }
 
                     leaderboardsConstraints.gridwidth = GridBagConstraints.REMAINDER;

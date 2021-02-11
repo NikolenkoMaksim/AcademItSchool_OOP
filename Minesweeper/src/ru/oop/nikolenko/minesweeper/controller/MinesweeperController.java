@@ -1,5 +1,6 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
+import ru.oop.nikolenko.minesweeper.model.Leader;
 import ru.oop.nikolenko.minesweeper.model.Options;
 import ru.oop.nikolenko.minesweeper.view.View;
 
@@ -24,15 +25,13 @@ public interface MinesweeperController {
 
     Options[] getDefaultOptions();
 
-    String[][] getLeadersNames();
-
-    Integer[][] getLeadersTimes();
+    Leader[][] getLeaders();
 
     String[] getCategoriesNames();
 
-    int getNewWinnerPlace(int categoryNumber, int time);
+    boolean isLeader(int categoryNumber, int time);
 
-    void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException;
+    void saveLeader(int categoryNumber, Leader newLeader) throws FileNotFoundException;
 
     void clearLeaders() throws FileNotFoundException;
 

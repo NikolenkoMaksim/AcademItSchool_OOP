@@ -7,17 +7,27 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Leaders implements MinesweeperLeaders {
-    private String[][] leadersNames;
-    private Integer[][] leadersTimes;
+    private Leader[][] leaders;
     private final String leadersFilePath;
-    private final int desiredLeadersCountInCategory;
     private final String[] categoriesNames;
 
-    public Leaders(String leadersFilePath, int desiredLeadersCountInCategory, String[] categoriesNames) {
-        leadersNames = new String[categoriesNames.length][desiredLeadersCountInCategory];
-        leadersTimes = new Integer[categoriesNames.length][desiredLeadersCountInCategory];
+    public Leaders(String leadersFilePath, int leadersCountInCategory, String[] categoriesNames) {
+        if (categoriesNames.length < 1) {
+            throw new IllegalArgumentException("categoriesNames.length = " + categoriesNames.length + " can't be < 1");
+        }
+
+        for (int i = 0; i < categoriesNames.length; i++) {
+            if (categoriesNames[i] == null) {
+                throw new IllegalArgumentException("categoriesNames[" + i + "] can't be null");
+            }
+        }
+
+        if (leadersCountInCategory < 0) {
+            throw new IllegalArgumentException("leadersCountInCategory = " + leadersCountInCategory + "can't be < 0");
+        }
+
+        leaders = new Leader[categoriesNames.length][leadersCountInCategory];
         this.leadersFilePath = leadersFilePath;
-        this.desiredLeadersCountInCategory = desiredLeadersCountInCategory;
         this.categoriesNames = categoriesNames;
 
         try (Scanner scanner = new Scanner(new FileInputStream(leadersFilePath))) {
@@ -25,46 +35,46 @@ public class Leaders implements MinesweeperLeaders {
                 int j = 0;
                 int previousTime = -1;
 
-                while (scanner.hasNextLine() && j < desiredLeadersCountInCategory) {
+                while (scanner.hasNextLine() && j < leadersCountInCategory) {
+                    String leaderName = null;
+                    Integer leaderTime = null;
+
                     String s = scanner.nextLine();
 
-                    if (s.isEmpty()) {
-                        leadersNames[i][j] = null;
-                    } else {
-                        leadersNames[i][j] = s;
+                    if (!s.isEmpty()) {
+                        leaderName = s;
                     }
 
                     s = scanner.nextLine();
 
-                    if (s.isEmpty()) {
-                        leadersTimes[i][j] = null;
-                    } else {
-                        leadersTimes[i][j] = Integer.parseInt(s);
+                    if (!s.isEmpty()) {
+                        leaderTime = Integer.parseInt(s);
                     }
 
-                    if (leadersTimes[i][j] != null) {
-                        if (previousTime <= leadersTimes[i][j]) {
-                            previousTime = leadersTimes[i][j];
+                    if (leaderTime != null) {
+                        if (previousTime <= leaderTime) {
+                            previousTime = leaderTime;
                         } else {
-                            throw new FileNotFoundException();
+                            throw new IllegalArgumentException();
+                        }
+
+                        if (leaderName != null) {
+                            leaders[i][j] = new Leader(leaderName, leaderTime);
+                        } else {
+                            leaders[i][j] = new Leader(leaderTime);
                         }
                     }
 
                     j++;
                 }
             }
-        } catch (FileNotFoundException | NumberFormatException | NoSuchElementException ignored) {
+        } catch (FileNotFoundException | NoSuchElementException | IllegalArgumentException ignored) {
         }
     }
 
     @Override
-    public String[][] getLeadersNames() {
-        return leadersNames;
-    }
-
-    @Override
-    public Integer[][] getLeadersTimes() {
-        return leadersTimes;
+    public Leader[][] getLeaders() {
+        return leaders;
     }
 
     @Override
@@ -73,13 +83,40 @@ public class Leaders implements MinesweeperLeaders {
     }
 
     @Override
-    public int getNewWinnerPlace(int categoryNumber, int time) {
-        if (leadersTimes[categoryNumber][desiredLeadersCountInCategory - 1] != null && time >= leadersTimes[categoryNumber][desiredLeadersCountInCategory - 1]) {
+    public boolean isLeader(int categoryNumber, int time) {
+        checkCategoryNumber(categoryNumber);
+        checkTime(time);
+
+        return getNewWinnerPlace(categoryNumber, time) > -1;
+    }
+
+    private void checkCategoryNumber(int categoryNumber) {
+        if (categoryNumber < 0) {
+            throw new IllegalArgumentException("categoryNumber = " + categoryNumber + " can't be < 0");
+        }
+
+        if (categoryNumber > categoriesNames.length) {
+            throw new IllegalArgumentException("categoryNumber = " + categoryNumber + " can't be > categoriesNames.length = " + categoriesNames.length);
+        }
+    }
+
+    private void checkTime(int time) {
+        if (time < 0) {
+            throw new IllegalArgumentException("time = " + time + " can't be < 0");
+        }
+    }
+
+    private int getNewWinnerPlace(int categoryNumber, int time) {
+        if (time < 0) {
+            throw new IllegalArgumentException("time = " + time + " can't be < 0");
+        }
+
+        if (leaders[categoryNumber][leaders[categoryNumber].length - 1] != null && time >= leaders[categoryNumber][leaders[categoryNumber].length - 1].getTime()) {
             return -1;
         }
 
-        for (int i = leadersTimes[categoryNumber].length - 1; i >= 0; i--) {
-            if (leadersTimes[categoryNumber][i] != null && time >= leadersTimes[categoryNumber][i]) {
+        for (int i = leaders[categoryNumber].length - 2; i >= 0; i--) {
+            if (leaders[categoryNumber][i] != null && time >= leaders[categoryNumber][i].getTime()) {
                 return i + 1;
             }
         }
@@ -88,27 +125,27 @@ public class Leaders implements MinesweeperLeaders {
     }
 
     @Override
-    public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
-        for (int i = desiredLeadersCountInCategory - 1; i > place; i--) {
-            leadersNames[categoryNumber][i] = leadersNames[categoryNumber][i - 1];
-            leadersTimes[categoryNumber][i] = leadersTimes[categoryNumber][i - 1];
+    public void saveLeader(int categoryNumber, Leader newLeader) throws FileNotFoundException {
+        checkCategoryNumber(categoryNumber);
+
+        int place = getNewWinnerPlace(categoryNumber, newLeader.getTime());
+
+        if (place > -1) {
+            if (leaders[categoryNumber].length - 1 - place >= 0) {
+                System.arraycopy(leaders[categoryNumber], place, leaders[categoryNumber], place + 1, leaders[categoryNumber].length - 1 - place);
+            }
         }
 
-        leadersNames[categoryNumber][place] = newLeaderName;
-        leadersTimes[categoryNumber][place] = newLeaderTime;
+        leaders[categoryNumber][place] = newLeader;
 
         try (PrintWriter writer = new PrintWriter(leadersFilePath)) {
-            for (int i = 0; i < leadersNames.length; i++) {
-                for (int j = 0; j < desiredLeadersCountInCategory; j++) {
-                    if (leadersNames[i][j] != null) {
-                        writer.println(leadersNames[i][j]);
+            for (Leader[] leader : leaders) {
+                for (int j = 0; j < leaders[0].length; j++) {
+                    if (leader[j] != null) {
+                        writer.println(leader[j].getName());
+                        writer.println(leader[j].getTime());
                     } else {
                         writer.println();
-                    }
-
-                    if (leadersTimes[i][j] != null) {
-                        writer.println(leadersTimes[i][j]);
-                    } else {
                         writer.println();
                     }
                 }
@@ -118,8 +155,7 @@ public class Leaders implements MinesweeperLeaders {
 
     @Override
     public void clearLeaders() throws FileNotFoundException {
-        leadersNames = new String[categoriesNames.length][desiredLeadersCountInCategory];
-        leadersTimes = new Integer[categoriesNames.length][desiredLeadersCountInCategory];
+        leaders = new Leader[categoriesNames.length][leaders[0].length];
 
         try (PrintWriter writer = new PrintWriter(leadersFilePath)) {
             writer.println();

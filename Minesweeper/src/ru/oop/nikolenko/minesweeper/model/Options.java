@@ -7,8 +7,19 @@ public class Options {
     private final int numberOfDefaultOptions;
     private final String name;
 
-
     public Options(int cellsInWidthAmount, int cellsInHeightAmount, int minesAmount) {
+        if (cellsInWidthAmount < 2) {
+            throw new IllegalArgumentException("cellsInWidthAmount = " + cellsInWidthAmount + "can't be < 2");
+        }
+
+        if (cellsInHeightAmount < 2) {
+            throw new IllegalArgumentException("cellsInHeightAmount = " + cellsInHeightAmount + "can't be < 2");
+        }
+
+        if (minesAmount < 1) {
+            throw new IllegalArgumentException("minesAmount = " + minesAmount + "can't be < 1");
+        }
+
         if (cellsInWidthAmount * cellsInHeightAmount < minesAmount) {
             throw new IllegalArgumentException("The number of bombs (" + minesAmount + ") exceeds the number of cells (" +
                     cellsInWidthAmount * cellsInHeightAmount + ")");

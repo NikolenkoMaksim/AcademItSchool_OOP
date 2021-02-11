@@ -12,6 +12,7 @@ public class Model implements MinesweeperModel {
 
     public Model(MinesweeperField minesweeperField, WorkWithMinesweeperOptions workWithMinesweeperOptions, MinesweeperLeaders minesweeperLeaders,
                  FileToStringBuilderConverter fileToStringBuilderConverter, String aboutFilePath, String rulesFilePath) {
+
         if (minesweeperLeaders.getCategoriesNames().length != workWithMinesweeperOptions.getDefaultOptions().length) {
             throw new IllegalArgumentException("categoriesNames.length = [" + minesweeperLeaders.getCategoriesNames().length +
                     "] of MinesweeperLeaders != defaultOptionals.length = [" + workWithMinesweeperOptions.getDefaultOptions().length + "] of WorkWithMinesweeperOptions");
@@ -76,13 +77,8 @@ public class Model implements MinesweeperModel {
     }
 
     @Override
-    public String[][] getLeadersNames() {
-        return minesweeperLeaders.getLeadersNames();
-    }
-
-    @Override
-    public Integer[][] getLeadersTimes() {
-        return minesweeperLeaders.getLeadersTimes();
+    public Leader[][] getLeaders() {
+        return minesweeperLeaders.getLeaders();
     }
 
     @Override
@@ -91,13 +87,13 @@ public class Model implements MinesweeperModel {
     }
 
     @Override
-    public int getNewWinnerPlace(int categoryNumber, int time) {
-        return minesweeperLeaders.getNewWinnerPlace(categoryNumber, time);
+    public boolean isLeader(int categoryNumber, int time) {
+        return minesweeperLeaders.isLeader(categoryNumber, time);
     }
 
     @Override
-    public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
-        minesweeperLeaders.saveLeader(categoryNumber, newLeaderTime, newLeaderName, place);
+    public void saveLeader(int categoryNumber, Leader newLeader) throws FileNotFoundException {
+        minesweeperLeaders.saveLeader(categoryNumber, newLeader);
     }
 
     @Override

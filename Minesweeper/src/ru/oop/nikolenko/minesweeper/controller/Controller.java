@@ -1,6 +1,7 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
 import ru.oop.nikolenko.minesweeper.model.EndTheGame;
+import ru.oop.nikolenko.minesweeper.model.Leader;
 import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
 import ru.oop.nikolenko.minesweeper.model.Options;
 import ru.oop.nikolenko.minesweeper.view.View;
@@ -80,14 +81,8 @@ public class Controller implements MinesweeperController {
         return model.getDefaultOptions();
     }
 
-    @Override
-    public String[][] getLeadersNames() {
-        return model.getLeadersNames();
-    }
-
-    @Override
-    public Integer[][] getLeadersTimes() {
-        return model.getLeadersTimes();
+    public Leader[][] getLeaders() {
+        return model.getLeaders();
     }
 
     @Override
@@ -96,13 +91,13 @@ public class Controller implements MinesweeperController {
     }
 
     @Override
-    public int getNewWinnerPlace(int categoryNumber, int time) {
-        return model.getNewWinnerPlace(categoryNumber, time);
+    public boolean isLeader(int categoryNumber, int time) {
+        return model.isLeader(categoryNumber, time);
     }
 
     @Override
-    public void saveLeader(int categoryNumber, int newLeaderTime, String newLeaderName, int place) throws FileNotFoundException {
-        model.saveLeader(categoryNumber, newLeaderTime, newLeaderName, place);
+    public void saveLeader(int categoryNumber, Leader newLeader) throws FileNotFoundException {
+        model.saveLeader(categoryNumber, newLeader);
     }
 
     @Override

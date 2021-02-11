@@ -1,6 +1,7 @@
 package ru.oop.nikolenko.minesweeper.view;
 
 import ru.oop.nikolenko.minesweeper.controller.MinesweeperController;
+import ru.oop.nikolenko.minesweeper.model.Leader;
 import ru.oop.nikolenko.minesweeper.model.Options;
 
 import javax.swing.*;
@@ -15,12 +16,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FrameView implements View {
     private final MinesweeperController controller;
     private JFrame frame;
+    private final FieldIcons fieldIcons;
+    private final ImageIcon mainIcon;
+
+    private final MinesweeperMenuBar menuBar = new MenuBar();
     private final OptionsFrame optionsFrame = new OptionsFrame();
     private final LeaderboardsFrame leaderboardsFrame = new LeaderboardsFrame();
-    private final MinesweeperMenuBar menuBar;
     private final AboutFrame aboutFrame = new AboutFrame();
     private final RulesFrame rulesFrame = new RulesFrame();
-    private final ImageIcon mainIcon;
 
     private JLabel timerLabel;
     private AtomicInteger secondsCount;
@@ -28,24 +31,22 @@ public class FrameView implements View {
     private JButton mainButton;
     private final MainButtonIcons mainButtonIcons;
     private JLabel remainingMinesLabel;
-    private int currentMode;
-
     private JPanel centrePanel;
-    private final FieldIcons fieldIcons;
     private int cellsInWidthAmount;
     private int cellsInHeightAmount;
+    private int currentMode;
 
     public FrameView(MinesweeperController controller, FieldIcons fieldIcons, MainButtonIcons mainButtonIcons, ImageIcon mainIcon) {
         this.controller = controller;
         this.fieldIcons = fieldIcons;
         this.mainButtonIcons = mainButtonIcons;
-        this.menuBar = new MenuBar();
         this.mainIcon = mainIcon;
 
         Options currentOptionals = controller.getCurrentOptions();
 
         cellsInWidthAmount = currentOptionals.getCellsInWidthAmount();
         cellsInHeightAmount = currentOptionals.getCellsInHeightAmount();
+        currentMode = currentOptionals.getNumberOfDefaultOptions();
     }
 
     @Override
@@ -134,14 +135,12 @@ public class FrameView implements View {
             mainButton.setIcon(mainButtonIcons.getWinnerButtonIcon());
 
             if (currentMode > -1) {
-                int gamerPlace = controller.getNewWinnerPlace(currentMode, secondsCount.get());
-
-                if (gamerPlace != -1) {
+                if (controller.isLeader(currentMode, secondsCount.get())) {
                     String message = "You are on the leaderboard!" + System.lineSeparator() + "Please enter  your name:";
-                    String championName = JOptionPane.showInputDialog(frame, message, "", JOptionPane.PLAIN_MESSAGE);
+                    String leaderName = JOptionPane.showInputDialog(frame, message, "", JOptionPane.PLAIN_MESSAGE);
 
                     try {
-                        controller.saveLeader(currentMode, secondsCount.get(), championName, gamerPlace);
+                        controller.saveLeader(currentMode, new Leader(leaderName, secondsCount.get()));
                     } catch (FileNotFoundException e) {
                         JOptionPane.showMessageDialog(frame, "Failed to update the leaderboard", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -312,7 +311,7 @@ public class FrameView implements View {
     }
 
     public void openLeaderboardsFrame() {
-        leaderboardsFrame.openLeaderboardsFrame(controller.getLeadersNames(), controller.getLeadersTimes(), controller.getCategoriesNames(), this);
+        leaderboardsFrame.openLeaderboardsFrame(controller.getLeaders(), controller.getCategoriesNames(), this);
     }
 
     public void clearLeaderboard() {

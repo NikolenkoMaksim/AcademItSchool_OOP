@@ -11,6 +11,16 @@ public class WorkWithOptions implements WorkWithMinesweeperOptions {
     private Options currentOptions;
 
     public WorkWithOptions(String optionsFilePath, Options[] defaultOptions) {
+        if (defaultOptions.length < 1) {
+            throw new IllegalArgumentException("defaultOptions.length = " + defaultOptions.length + " can't be < 1");
+        }
+
+        for (int i = 0; i < defaultOptions.length; i++) {
+            if (defaultOptions[i] == null) {
+                throw new IllegalArgumentException("defaultOptions[" + i + "] can't be null");
+            }
+        }
+
         this.optionsFilePath = optionsFilePath;
         this.defaultOptions = defaultOptions;
 
