@@ -4,21 +4,15 @@ import ru.oop.nikolenko.temperature_converter.controller.Controller;
 import ru.oop.nikolenko.temperature_converter.model.*;
 import ru.oop.nikolenko.temperature_converter.view.FrameView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
-        List<TwoScalesConverter> twoScalesConverters = new ArrayList<>(Arrays.asList(
+        CelsiusConverter[] celsiusConverters = new CelsiusConverter[]{
+                new CelsiusToCelsiusConverter(),
                 new CelsiusToKelvinConverter(),
                 new CelsiusToFahrenheitConverter()
-        ));
+        };
 
-        TemperatureConverter temperatureConverter = new TemperatureConverter(
-                new String[]{"Celsius", "Kelvin", "Fahrenheit"},
-                twoScalesConverters
-        );
+        TemperatureConverter temperatureConverter = new TemperatureConverter(celsiusConverters);
         Controller controller = new Controller(temperatureConverter);
         FrameView frameView = new FrameView(controller);
 

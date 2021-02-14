@@ -1,12 +1,7 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToKelvinConverter implements TwoScalesConverter {
+public class CelsiusToKelvinConverter implements CelsiusConverter {
     public CelsiusToKelvinConverter() {
-    }
-
-    @Override
-    public String getFirstScaleName() {
-        return "Celsius";
     }
 
     @Override
@@ -15,12 +10,12 @@ public class CelsiusToKelvinConverter implements TwoScalesConverter {
     }
 
     @Override
-    public double convertDataFromFirstToSecondScale(double temperature) {
+    public double convertTemperatureFromCelsius(double temperature) {
         return temperature + 273.15;
     }
 
     @Override
-    public double convertDataFromSecondToFirstScale(double temperature) {
+    public double convertTemperatureToCelsius(double temperature) {
         return temperature - 273.15;
     }
 }

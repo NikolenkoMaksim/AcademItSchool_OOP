@@ -1,18 +1,21 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToFahrenheitConverter implements CelsiusConverter {
+public class CelsiusToCelsiusConverter implements CelsiusConverter {
+    public CelsiusToCelsiusConverter() {
+    }
+
     @Override
     public String getSecondScaleName() {
-        return "Fahrenheit";
+        return "Celsius";
     }
 
     @Override
     public double convertTemperatureFromCelsius(double temperature) {
-        return temperature * 1.8 + 32;
+        return temperature;
     }
 
     @Override
     public double convertTemperatureToCelsius(double temperature) {
-        return (temperature - 32) * 5 / 9;
+        return temperature;
     }
 }
