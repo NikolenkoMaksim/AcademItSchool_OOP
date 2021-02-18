@@ -11,7 +11,9 @@ public interface MinesweeperController {
 
     void startNewGame();
 
-    String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight);
+    boolean isMine(int cellNumberByWidth, int cellNumberByHeight);
+
+    int getMinesAroundCount(int cellNumberByWidth, int cellNumberByHeight);
 
     void handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight);
 

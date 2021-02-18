@@ -1,9 +1,6 @@
 package ru.oop.nikolenko.minesweeper.controller;
 
-import ru.oop.nikolenko.minesweeper.model.EndTheGame;
-import ru.oop.nikolenko.minesweeper.model.Leader;
-import ru.oop.nikolenko.minesweeper.model.MinesweeperModel;
-import ru.oop.nikolenko.minesweeper.model.Options;
+import ru.oop.nikolenko.minesweeper.model.*;
 import ru.oop.nikolenko.minesweeper.view.View;
 
 import java.awt.event.MouseEvent;
@@ -31,25 +28,40 @@ public class Controller implements MinesweeperController {
     }
 
     @Override
-    public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
-        return model.getTypeOfCell(cellNumberByWidth, cellNumberByHeight);
+    public boolean isMine(int cellNumberByWidth, int cellNumberByHeight) {
+        return model.isMine(cellNumberByWidth, cellNumberByHeight);
+    }
+
+    @Override
+    public int getMinesAroundCount(int cellNumberByWidth, int cellNumberByHeight) {
+        return model.getMinesAroundCount(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
     public void handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight) {
         if (!isFirstCellOpened && mouseButton == MouseEvent.BUTTON1 && !model.isCellMarked(cellNumberByWidth, cellNumberByHeight)) {
-            if (model.getTypeOfCell(cellNumberByWidth, cellNumberByHeight).equals("mine")) {
-                model.recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
-            }
-
             view.startTimer();
             isFirstCellOpened = true;
         }
 
-        EndTheGame endTheGameParameters = model.handleMouseClick(mouseButton, cellNumberByWidth, cellNumberByHeight);
+        if (mouseButton == MouseEvent.BUTTON1) {
+            checkEndAndSetView(model.handleFieldEvent(FieldEvent.openClosedCell, cellNumberByWidth, cellNumberByHeight));
+            return;
+        }
 
-        if (endTheGameParameters.isEndTheGame()) {
-            view.endGame(endTheGameParameters.isWin());
+        if (mouseButton == MouseEvent.BUTTON2) {
+            checkEndAndSetView(model.handleFieldEvent(FieldEvent.openCellsAroundOpenedCell, cellNumberByWidth, cellNumberByHeight));
+            return;
+        }
+
+        if (mouseButton == MouseEvent.BUTTON3) {
+            checkEndAndSetView(model.handleFieldEvent(FieldEvent.markedCell, cellNumberByWidth, cellNumberByHeight));
+        }
+    }
+
+    private void checkEndAndSetView(EndGameParameters endGameParametersParameters) {
+        if (endGameParametersParameters.isEndTheGame()) {
+            view.endGame(endGameParametersParameters.isWin());
         } else {
             view.createField(false);
             view.setRemainingMinesLabel(model.getRemainingMinesCount());

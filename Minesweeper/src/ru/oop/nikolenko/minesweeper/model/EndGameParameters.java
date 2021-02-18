@@ -1,10 +1,10 @@
 package ru.oop.nikolenko.minesweeper.model;
 
-public class EndTheGame {
+public class EndGameParameters {
     private final boolean isEndTheGame;
     private final boolean isWin;
 
-    public EndTheGame(boolean isEndTheGame, boolean isWin) {
+    public EndGameParameters(boolean isEndTheGame, boolean isWin) {
         this.isEndTheGame = isEndTheGame;
         this.isWin = isWin;
     }

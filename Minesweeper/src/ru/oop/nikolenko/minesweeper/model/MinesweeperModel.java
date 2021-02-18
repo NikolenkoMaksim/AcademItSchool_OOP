@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 public interface MinesweeperModel {
     void createField();
 
-    void recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight);
+    EndGameParameters recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight);
 
-    String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight);
+    boolean isMine(int cellNumberByWidth, int cellNumberByHeight);
 
-    EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight);
+    int getMinesAroundCount(int cellNumberByWidth, int cellNumberByHeight);
+
+    EndGameParameters handleFieldEvent(FieldEvent fieldEvent, int cellNumberByWidth, int cellNumberByHeight);
 
     boolean isCellOpen(int cellNumberByWidth, int cellNumberByHeight);
 

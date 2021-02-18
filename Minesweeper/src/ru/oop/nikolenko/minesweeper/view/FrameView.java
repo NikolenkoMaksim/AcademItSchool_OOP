@@ -184,7 +184,7 @@ public class FrameView implements View {
         buttonXY.setFocusable(false);
 
         if (isGameEnd) {
-            boolean isMine = controller.getTypeOfCell(x, y).equals("mine");
+            boolean isMine = controller.isMine(x, y);
 
             if (controller.isCellMarked(x, y)) {
                 if (isMine) {
@@ -242,19 +242,21 @@ public class FrameView implements View {
         JLabel labelXY = new JLabel();
         labelXY.setLayout(new BorderLayout());
         labelXY.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        String s = controller.getTypeOfCell(x, y);
 
-        switch (s) {
-            case "mine" -> labelXY.setIcon(fieldIcons.getExplodedMineIcon());
-            case "0" -> labelXY.setIcon(fieldIcons.getEmptyIcon());
-            case "1" -> labelXY.setIcon(fieldIcons.getNumber1Icon());
-            case "2" -> labelXY.setIcon(fieldIcons.getNumber2Icon());
-            case "3" -> labelXY.setIcon(fieldIcons.getNumber3Icon());
-            case "4" -> labelXY.setIcon(fieldIcons.getNumber4Icon());
-            case "5" -> labelXY.setIcon(fieldIcons.getNumber5Icon());
-            case "6" -> labelXY.setIcon(fieldIcons.getNumber6Icon());
-            case "7" -> labelXY.setIcon(fieldIcons.getNumber7Icon());
-            case "8" -> labelXY.setIcon(fieldIcons.getNumber8Icon());
+        if (controller.isMine(x, y)) {
+            labelXY.setIcon(fieldIcons.getExplodedMineIcon());
+        } else {
+            switch (controller.getMinesAroundCount(x, y)) {
+                case 0 -> labelXY.setIcon(fieldIcons.getEmptyIcon());
+                case 1 -> labelXY.setIcon(fieldIcons.getNumber1Icon());
+                case 2 -> labelXY.setIcon(fieldIcons.getNumber2Icon());
+                case 3 -> labelXY.setIcon(fieldIcons.getNumber3Icon());
+                case 4 -> labelXY.setIcon(fieldIcons.getNumber4Icon());
+                case 5 -> labelXY.setIcon(fieldIcons.getNumber5Icon());
+                case 6 -> labelXY.setIcon(fieldIcons.getNumber6Icon());
+                case 7 -> labelXY.setIcon(fieldIcons.getNumber7Icon());
+                case 8 -> labelXY.setIcon(fieldIcons.getNumber8Icon());
+            }
         }
 
         MouseListener waitingRightMousePressListener = new MouseAdapter() {

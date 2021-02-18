@@ -32,18 +32,23 @@ public class Model implements MinesweeperModel {
     }
 
     @Override
-    public void recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight) {
-        minesweeperField.recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
+    public EndGameParameters recreateFieldWithoutMineInCell(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
-        return minesweeperField.getTypeOfCell(cellNumberByWidth, cellNumberByHeight);
+    public boolean isMine(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.isMine(cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override
-    public EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight) {
-        return minesweeperField.handleMouseClick(mouseButton, cellNumberByWidth, cellNumberByHeight);
+    public int getMinesAroundCount(int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.getMinesAroundCount(cellNumberByWidth, cellNumberByHeight);
+    }
+
+    @Override
+    public EndGameParameters handleFieldEvent(FieldEvent fieldEvent, int cellNumberByWidth, int cellNumberByHeight) {
+        return minesweeperField.handleFieldEvent(fieldEvent, cellNumberByWidth, cellNumberByHeight);
     }
 
     @Override

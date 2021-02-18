@@ -55,7 +55,7 @@ public class Leaders implements MinesweeperLeaders {
                         if (previousTime <= leaderTime) {
                             previousTime = leaderTime;
                         } else {
-                            throw new IllegalArgumentException();
+                            throw new IllegalArgumentException("previousTime (= " + previousTime + ") > leaderTime (" + leaderTime + ")");
                         }
 
                         if (leaderName != null) {

@@ -1,6 +1,5 @@
 package ru.oop.nikolenko.minesweeper.model;
 
-import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class Field implements MinesweeperField {
@@ -10,6 +9,7 @@ public class Field implements MinesweeperField {
     private int minesAmount;
     private int remainingMinesCount;
     private int openedCellsCount;
+    private boolean isFirstCellOpened;
 
     @Override
     public int getRemainingMinesCount() {
@@ -23,6 +23,7 @@ public class Field implements MinesweeperField {
         minesAmount = currentOptions.getMinesAmount();
         remainingMinesCount = minesAmount;
         openedCellsCount = 0;
+        isFirstCellOpened = false;
 
         field = new Cell[cellsInHeightAmount][cellsInWidthAmount];
 
@@ -34,7 +35,7 @@ public class Field implements MinesweeperField {
             int cellNumberByHeight = random.nextInt(cellsInHeightAmount);
 
             if (field[cellNumberByHeight][cellNumberByWidth] == null) {
-                field[cellNumberByHeight][cellNumberByWidth] = new Cell("mine", cellNumberByWidth, cellNumberByHeight);
+                field[cellNumberByHeight][cellNumberByWidth] = new Cell(true, 0, cellNumberByWidth, cellNumberByHeight);
                 minesCount++;
             }
         }
@@ -45,13 +46,13 @@ public class Field implements MinesweeperField {
     private void setTypeForNotMineCells() {
         for (int i = 0; i < cellsInHeightAmount; i++) {
             for (int j = 0; j < cellsInWidthAmount; j++) {
-                if (field[i][j] == null || !field[i][j].getValue().equals("mine")) {
+                if (field[i][j] == null || !field[i][j].isMine()) {
                     int minesAroundCount = 0;
 
                     for (int k = Math.max(0, i - 1); k <= Math.min(cellsInHeightAmount - 1, i + 1); k++) {
                         for (int m = Math.max(0, j - 1); m <= Math.min(cellsInWidthAmount - 1, j + 1); m++) {
                             if (k != i || m != j) {
-                                if (field[k][m] != null && field[k][m].getValue().equals("mine")) {
+                                if (field[k][m] != null && field[k][m].isMine()) {
                                     minesAroundCount++;
                                 }
                             }
@@ -59,9 +60,9 @@ public class Field implements MinesweeperField {
                     }
 
                     if (field[i][j] == null) {
-                        field[i][j] = new Cell(String.valueOf(minesAroundCount), j, i);
+                        field[i][j] = new Cell(false, minesAroundCount, j, i);
                     } else {
-                        field[i][j].setValue(String.valueOf(minesAroundCount));
+                        field[i][j].setMinesAroundCount(minesAroundCount);
                     }
                 }
             }
@@ -69,19 +70,25 @@ public class Field implements MinesweeperField {
     }
 
     @Override
-    public EndTheGame handleMouseClick(int mouseButton, int cellNumberByWidth, int cellNumberByHeight) {
+    public EndGameParameters handleFieldEvent(FieldEvent fieldEvent, int cellNumberByWidth, int cellNumberByHeight) {
         checkCellCoordinates(cellNumberByWidth, cellNumberByHeight);
 
-        if (mouseButton == MouseEvent.BUTTON1 && !field[cellNumberByHeight][cellNumberByWidth].isMarked()) {
+        if (fieldEvent == FieldEvent.openClosedCell && !field[cellNumberByHeight][cellNumberByWidth].isMarked()) {
             openedCellsCount++;
+
+            if (!isFirstCellOpened && field[cellNumberByHeight][cellNumberByWidth].isMine()) {
+                isFirstCellOpened = true;
+                return recreateFieldWithoutMineInCell(cellNumberByWidth, cellNumberByHeight);
+            }
+
             return openCellAndCheckEndOfGame(cellNumberByWidth, cellNumberByHeight);
         }
 
-        if (mouseButton == MouseEvent.BUTTON2 && field[cellNumberByHeight][cellNumberByWidth].isOpened()) {
+        if (fieldEvent == FieldEvent.openCellsAroundOpenedCell && field[cellNumberByHeight][cellNumberByWidth].isOpened()) {
             return openCellsAndCheckEndOfGame(cellNumberByWidth, cellNumberByHeight);
         }
 
-        if (mouseButton == MouseEvent.BUTTON3) {
+        if (fieldEvent == FieldEvent.markedCell) {
             if (!field[cellNumberByHeight][cellNumberByWidth].isMarked()) {
                 field[cellNumberByHeight][cellNumberByWidth].setMarked(true);
                 remainingMinesCount--;
@@ -91,7 +98,7 @@ public class Field implements MinesweeperField {
             }
         }
 
-        return new EndTheGame(false, false);
+        return new EndGameParameters(false, false);
     }
 
     private void checkCellCoordinates(int cellNumberByWidth, int cellNumberByHeight) {
@@ -112,30 +119,30 @@ public class Field implements MinesweeperField {
         }
     }
 
-    private EndTheGame openCellAndCheckEndOfGame(int openedCellNumberByWidth, int openedCellNumberByHeight) {
+    private EndGameParameters openCellAndCheckEndOfGame(int openedCellNumberByWidth, int openedCellNumberByHeight) {
         field[openedCellNumberByHeight][openedCellNumberByWidth].setOpened(true);
 
-        if (field[openedCellNumberByHeight][openedCellNumberByWidth].getValue().equals("mine")) {
-            return new EndTheGame(true, false);
+        if (field[openedCellNumberByHeight][openedCellNumberByWidth].isMine()) {
+            return new EndGameParameters(true, false);
         }
 
-        if (field[openedCellNumberByHeight][openedCellNumberByWidth].getValue().equals("0")) {
+        if (field[openedCellNumberByHeight][openedCellNumberByWidth].getMinesAroundCount() == 0) {
             return openCellsAndCheckEndOfGame(openedCellNumberByWidth, openedCellNumberByHeight);
         }
 
         return checkWin();
     }
 
-    private EndTheGame openCellsAndCheckEndOfGame(int openedCellNumberByWidth, int openedCellNumberByHeight) {
+    private EndGameParameters openCellsAndCheckEndOfGame(int openedCellNumberByWidth, int openedCellNumberByHeight) {
         field[openedCellNumberByHeight][openedCellNumberByWidth].setOpened(true);
 
-        if (field[openedCellNumberByHeight][openedCellNumberByWidth].getValue().equals("mine")) {
-            return new EndTheGame(true, false);
+        if (field[openedCellNumberByHeight][openedCellNumberByWidth].isMine()) {
+            return new EndGameParameters(true, false);
         }
 
         boolean isEndOfGame = false;
 
-        if (!field[openedCellNumberByHeight][openedCellNumberByWidth].getValue().equals("0")) {
+        if (field[openedCellNumberByHeight][openedCellNumberByWidth].getMinesAroundCount() != 0) {
             int markedCellsCount = 0;
 
             for (int i = Math.max(0, openedCellNumberByHeight - 1); i <= Math.min(cellsInHeightAmount - 1, openedCellNumberByHeight + 1); i++) {
@@ -143,20 +150,20 @@ public class Field implements MinesweeperField {
                     if (field[i][j].isMarked()) {
                         markedCellsCount++;
 
-                        if (!field[i][j].getValue().equals("mine")) {
+                        if (!field[i][j].isMine()) {
                             isEndOfGame = true;
                         }
                     }
                 }
             }
 
-            if (markedCellsCount != Integer.parseInt(field[openedCellNumberByHeight][openedCellNumberByWidth].getValue())) {
-                return new EndTheGame(false, false);
+            if (markedCellsCount != field[openedCellNumberByHeight][openedCellNumberByWidth].getMinesAroundCount()) {
+                return new EndGameParameters(false, false);
             }
         }
 
         if (isEndOfGame) {
-            return new EndTheGame(true, false);
+            return new EndGameParameters(true, false);
         }
 
         Queue<Cell> queue = new LinkedList<>();
@@ -171,7 +178,7 @@ public class Field implements MinesweeperField {
                         field[i][j].setOpened(true);
                         openedCellsCount++;
 
-                        if (field[i][j].getValue().equals("0")) {
+                        if (field[i][j].getMinesAroundCount() == 0) {
                             queue.add(field[i][j]);
                         }
                     }
@@ -182,23 +189,26 @@ public class Field implements MinesweeperField {
         return checkWin();
     }
 
-    private EndTheGame checkWin() {
+    private EndGameParameters checkWin() {
         if (cellsInWidthAmount * cellsInHeightAmount - openedCellsCount == minesAmount) {
-            return new EndTheGame(true, true);
+            return new EndGameParameters(true, true);
         }
 
-        return new EndTheGame(false, false);
+        return new EndGameParameters(false, false);
     }
 
     @Override
-    public String getTypeOfCell(int cellNumberByWidth, int cellNumberByHeight) {
-        checkCellCoordinates(cellNumberByWidth, cellNumberByHeight);
-
-        return field[cellNumberByHeight][cellNumberByWidth].getValue();
+    public boolean isMine(int cellNumberByWidth, int cellNumberByHeight) {
+        return field[cellNumberByHeight][cellNumberByWidth].isMine();
     }
 
     @Override
-    public void recreateFieldWithoutMineInCell(int notMineCellNumberByWidth, int notMineCellNumberByHeight) {
+    public int getMinesAroundCount(int cellNumberByWidth, int cellNumberByHeight) {
+        return field[cellNumberByHeight][cellNumberByWidth].getMinesAroundCount();
+    }
+
+    @Override
+    public EndGameParameters recreateFieldWithoutMineInCell(int notMineCellNumberByWidth, int notMineCellNumberByHeight) {
         if (notMineCellNumberByWidth < 0) {
             throw new IllegalArgumentException("notMineCellNumberByWidth = " + notMineCellNumberByWidth + " can't be < 0");
         }
@@ -217,7 +227,7 @@ public class Field implements MinesweeperField {
 
         Random random = new Random();
 
-        field[notMineCellNumberByHeight][notMineCellNumberByWidth].setValue("0");
+        field[notMineCellNumberByHeight][notMineCellNumberByWidth].setMine(false);
         field[notMineCellNumberByHeight][notMineCellNumberByWidth].setOpened(true);
         openedCellsCount = 1;
 
@@ -225,13 +235,15 @@ public class Field implements MinesweeperField {
             int cellNumberByWidth = random.nextInt(cellsInWidthAmount);
             int cellNumberByHeight = random.nextInt(cellsInHeightAmount);
 
-            if ((cellNumberByWidth != notMineCellNumberByWidth || cellNumberByHeight != notMineCellNumberByHeight) && !field[cellNumberByHeight][cellNumberByWidth].getValue().equals("mine")) {
-                field[cellNumberByHeight][cellNumberByWidth] = new Cell("mine", cellNumberByWidth, cellNumberByHeight);
+            if ((cellNumberByWidth != notMineCellNumberByWidth || cellNumberByHeight != notMineCellNumberByHeight) && !field[cellNumberByHeight][cellNumberByWidth].isMine()) {
+                field[cellNumberByHeight][cellNumberByWidth] = new Cell(true, 0, cellNumberByWidth, cellNumberByHeight);
                 break;
             }
         }
 
         setTypeForNotMineCells();
+
+        return openCellAndCheckEndOfGame(notMineCellNumberByWidth, notMineCellNumberByHeight);
     }
 
     @Override
