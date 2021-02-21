@@ -1,11 +1,7 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToKelvinConverter implements CelsiusConverter {
-    public CelsiusToKelvinConverter() {
-    }
-
-    @Override
-    public String getSecondScaleName() {
+public class KelvinScale implements Scale {
+    public String getName() {
         return "Kelvin";
     }
 

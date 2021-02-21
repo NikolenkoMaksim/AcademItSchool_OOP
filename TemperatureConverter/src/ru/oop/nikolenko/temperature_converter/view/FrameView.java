@@ -1,6 +1,6 @@
 package ru.oop.nikolenko.temperature_converter.view;
 
-import ru.oop.nikolenko.temperature_converter.controller.ConverterController;
+import ru.oop.nikolenko.temperature_converter.model.Converter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,10 +8,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FrameView implements View {
-    private final ConverterController controller;
+    private final Converter temperatureConverter;
+    private final String[] scalesNames;
 
-    public FrameView(ConverterController controller) {
-        this.controller = controller;
+    public FrameView(Converter temperatureConverter) {
+        this.temperatureConverter = temperatureConverter;
+        scalesNames = temperatureConverter.getScalesNames();
     }
 
     @Override
@@ -76,8 +78,7 @@ public class FrameView implements View {
             frameLayout.setConstraints(labelConvertFrom, constraints);
             frame.add(labelConvertFrom);
 
-            String[] scales = controller.getScalesNames();
-            JComboBox<String> originalScalesNames = new JComboBox<>(scales);
+            JComboBox<String> originalScalesNames = new JComboBox<>(scalesNames);
             originalScalesNames.setFont(font);
             constraints.fill = GridBagConstraints.HORIZONTAL;
             constraints.insets = new Insets(10, 0, 0, 0);
@@ -92,7 +93,7 @@ public class FrameView implements View {
             frameLayout.setConstraints(labelConvertTo, constraints);
             frame.add(labelConvertTo);
 
-            JComboBox<String> resultingScalesNames = new JComboBox<>(scales);
+            JComboBox<String> resultingScalesNames = new JComboBox<>(scalesNames);
             resultingScalesNames.setFont(font);
             constraints.fill = GridBagConstraints.HORIZONTAL;
             constraints.insets = new Insets(10, 0, 0, 0);
@@ -128,7 +129,7 @@ public class FrameView implements View {
 
                 try {
                     double inputTemperature = Double.parseDouble(inputText.getText());
-                    convertTemperature = controller.convertTemperature(inputTemperature, originalScaleName, resultingScaleName);
+                    convertTemperature = temperatureConverter.convert(inputTemperature, getScaleIndex(originalScaleName), getScaleIndex(resultingScaleName));
                     result.setText(String.valueOf(convertTemperature));
                 } catch (NumberFormatException | NullPointerException e) {
                     String errorMessage = "It is necessary to fill in the temperature value with digits." +
@@ -149,6 +150,16 @@ public class FrameView implements View {
                 }
             });
         });
+    }
+
+    private int getScaleIndex(String scaleName) {
+        for (int i = 0; i < scalesNames.length; i++) {
+            if (scalesNames[i].equals(scaleName)) {
+                return i;
+            }
+        }
+
+        throw new IllegalArgumentException("scaleName \"" + scaleName + "\" not found in scalesNames");
     }
 }
 

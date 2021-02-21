@@ -1,11 +1,7 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToCelsiusConverter implements CelsiusConverter {
-    public CelsiusToCelsiusConverter() {
-    }
-
-    @Override
-    public String getSecondScaleName() {
+public class CelsiusScale implements Scale {
+    public String getName() {
         return "Celsius";
     }
 

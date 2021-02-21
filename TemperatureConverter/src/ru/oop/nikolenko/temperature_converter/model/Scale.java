@@ -1,7 +1,7 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public interface CelsiusConverter {
-    String getSecondScaleName();
+public interface Scale {
+    String getName();
 
     double convertTemperatureFromCelsius(double temperature);
 

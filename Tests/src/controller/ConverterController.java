@@ -1,4 +1,4 @@
-package ru.oop.nikolenko.temperature_converter.controller;
+package controller;
 
 public interface ConverterController {
     String[] getScalesNames();

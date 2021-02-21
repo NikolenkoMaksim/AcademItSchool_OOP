@@ -1,8 +1,8 @@
 package ru.oop.nikolenko.temperature_converter.model;
 
-public class CelsiusToFahrenheitConverter implements CelsiusConverter {
+public class FahrenheitScale implements Scale {
     @Override
-    public String getSecondScaleName() {
+    public String getName() {
         return "Fahrenheit";
     }
 

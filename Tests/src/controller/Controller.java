@@ -1,17 +1,20 @@
-package ru.oop.nikolenko.temperature_converter.controller;
+/*
+package controller;
 
 import ru.oop.nikolenko.temperature_converter.model.Converter;
 
 public class Controller implements ConverterController {
     private final Converter temperatureConverter;
+    private final String[] scalesNames;
 
     public Controller(Converter temperatureConverter) {
         this.temperatureConverter = temperatureConverter;
+        scalesNames = temperatureConverter.getScalesNames();
     }
 
     @Override
     public String[] getScalesNames() {
-        return temperatureConverter.getScalesNames();
+        return scalesNames;
     }
 
     @Override
@@ -31,3 +34,5 @@ public class Controller implements ConverterController {
         throw new IllegalArgumentException("scaleName \"" + scaleName + "\" not found in scalesNames");
     }
 }
+
+ */
